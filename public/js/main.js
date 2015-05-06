@@ -1,3 +1,4 @@
+var gitHash;
 jQuery.fn.updateWithText = function(text, speed)
 {
 	var dummy = $('<div/>').html(text);
@@ -8,17 +9,17 @@ jQuery.fn.updateWithText = function(text, speed)
 			$(this).html(text);
 			$(this).fadeIn(speed/2, function() {
 				//done
-			});		
+			});
 		});
 	}
-} 
+}
 
 $.urlParam = function(name, url) {
     if (!url) {
      url = window.location.href;
     }
     var results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(url);
-    if (!results) { 
+    if (!results) {
         return undefined;
     }
     return results[1] || undefined;
@@ -107,21 +108,21 @@ jQuery(document).ready(function($) {
             var evening 	= ['Wow, You look hot!','You look nice!','Hi, sexy!'];
 			var feed		= 'http://lesclesdedemain.lemonde.fr/screens/RSS/sw_getFeed.php?idTheme=HOME';
 			moment.locale('fr');
-            break;     
+            break;
 		case 'es':
             var days 		= ['domingo','lunes','martes','miécoles','jueves','viernes','sábado'];
             var months 		= ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','dicembre'];
-            var dayAbbr 	= ['dim','lun','mar','mer','jeu','ven','sam'];
-            var today 		= 'aujourd\'hui';
-            var tomorrow 	= 'demain';
-            var in_days 	= 'jour(s)';
-            var datelabel 	= 'Jour';
-            var morning 	= ['Good morning, handsome!','Enjoy your day!','How was your sleep?'];
-            var afternoon 	= ['Hello beauty!','You look sexy!','Looking good today!'];
+            var dayAbbr 	= ['dom','lun','mar','mie','jue','vie','sab'];
+            var today 		= 'hoy';
+            var tomorrow 	= 'mañana';
+            var in_days 	= 'días';
+            var datelabel 	= 'Día';
+            var morning 	= ['¡Buenos días!','¡Hola Bebés, que tengais un día super cool!','¿Como has dormido princesa?'];
+            var afternoon 	= ['¡Hola bebé!','You look sexy!','Looking good today!'];
             var evening 	= ['Wow, You look hot!','You look nice!','Hi, sexy!'];
-			var feed		= 'http://lesclesdedemain.lemonde.fr/screens/RSS/sw_getFeed.php?idTheme=HOME';
+			var feed		= 'http://meneame.feedsportal.com/rss';
 			moment.locale('es');
-            break;     			
+            break;
         default:
             var days 		= ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
             var months 		= ['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -137,39 +138,12 @@ jQuery(document).ready(function($) {
 			moment.locale('en');
     }
 
-	//connect do Xbee monitor
-	var socket = io.connect('http://rpi-development.local:8080');
-	socket.on('dishwasher', function (dishwasherReady) {
-		if (dishwasherReady) {
-			$('.dishwasher').fadeIn(2000);
-			$('.lower-third').fadeOut(2000);
-		} else {
-			$('.dishwasher').fadeOut(2000);
-			$('.lower-third').fadeIn(2000);		
-		}
-	});
-
-
 	var weatherParams = {
-		'q':'Duesseldorf,Germany',
+		'q':'Madrid, España',
 		'units':'metric',
 		'lang':lang
 	};
-	
-	(function checkVersion()
-	{
-		$.getJSON('githash.php', {}, function(json, textStatus) {
-			if (json) {
-				if (json.gitHash != gitHash) {
-					window.location.reload();
-					window.location.href=window.location.href;
-				}
-			}
-		});
-		setTimeout(function() {
-			checkVersion();
-		}, 3000);
-	})();
+
 
 	(function updateTime()
 	{
@@ -189,111 +163,23 @@ jQuery(document).ready(function($) {
 			updateTime();
 		}, 1000);
 	})();
-	
-	(function updateCalendarData()
-	{
-		new ical_parser("calendar.php", function(cal){
-        	events = cal.getEvents();
-        	eventList = [];
-
-        	for (var i in events) {
-        		var e = events[i];
-        		for (var key in e) {
-        			var value = e[key];
-					var seperator = key.search(';');
-					if (seperator >= 0) {
-						var mainKey = key.substring(0,seperator);
-						var subKey = key.substring(seperator+1);
-
-						var dt;
-						if (subKey == 'VALUE=DATE') {
-							//date
-							dt = new Date(value.substring(0,4), value.substring(4,6) - 1, value.substring(6,8));
-						} else {
-							//time
-							dt = new Date(value.substring(0,4), value.substring(4,6) - 1, value.substring(6,8), value.substring(9,11), value.substring(11,13), value.substring(13,15));
-						}
-
-						if (mainKey == 'DTSTART') e.startDate = dt;
-						if (mainKey == 'DTEND') e.endDate = dt;
-					}
-        		}
-
-                if (e.startDate == undefined){
-                    //some old events in Gmail Calendar is "start_date"
-                    //FIXME: problems with Gmail's TimeZone
-            		var days = moment(e.DTSTART).diff(moment(), 'days');
-            		var seconds = moment(e.DTSTART).diff(moment(), 'seconds');
-                    var startDate = moment(e.DTSTART);
-                } else {
-            		var days = moment(e.startDate).diff(moment(), 'days');
-            		var seconds = moment(e.startDate).diff(moment(), 'seconds');
-                    var startDate = moment(e.startDate);
-                }
-
-        		//only add fututre events, days doesn't work, we need to check seconds
-        		if (seconds >= 0) {
-                    if (seconds <= 60*60*5 || seconds >= 60*60*24*2) {
-                        var time_string = moment(startDate).fromNow();
-                    }else {
-                        var time_string = moment(startDate).calendar()
-                    }
-                    if (!e.RRULE) {
-    	        		eventList.push({'description':e.SUMMARY,'seconds':seconds,'days':time_string});
-                    }
-                    e.seconds = seconds;
-        		}
-                
-                // Special handling for rrule events
-                if (e.RRULE) {
-                    var options = new RRule.parseString(e.RRULE);
-                    options.dtstart = e.startDate;
-                    var rule = new RRule(options);
-                    
-                    // TODO: don't use fixed end date here, use something like now() + 1 year
-                    var dates = rule.between(new Date(), new Date(2016,12,31), true, function (date, i){return i < 10});
-                    for (date in dates) {
-                        var dt = new Date(dates[date]);
-                        var days = moment(dt).diff(moment(), 'days');
-                        var seconds = moment(dt).diff(moment(), 'seconds');
-                        var startDate = moment(dt);
-                     	if (seconds >= 0) {
-                            if (seconds <= 60*60*5 || seconds >= 60*60*24*2) {
-                                var time_string = moment(dt).fromNow();
-                            } else {
-                                var time_string = moment(dt).calendar()
-                            }
-                            eventList.push({'description':e.SUMMARY,'seconds':seconds,'days':time_string});
-                        }           
-                    }
-                }
-            };
-        	eventList.sort(function(a,b){return a.seconds-b.seconds});
-
-        	setTimeout(function() {
-        		updateCalendarData();
-        	}, 60000);
-    	});
-	})();
 
 	(function updateCalendar()
 	{
-		table = $('<table/>').addClass('xsmall').addClass('calendar-table');
-		opacity = 1;
+		$.getJSON( "/events", function( data ) {
+			table = $('<table/>').addClass('xsmall').addClass('calendar-table');
+			opacity = 1;
+			data.forEach(function(item){
+				var row = $('<tr/>').css('opacity',opacity);
+				row.append($('<td/>').html(item.description).addClass('description'));
+				row.append($('<td/>').html(item.date).addClass('days dimmed'));
+				table.append(row);
 
+				opacity -= 1 / data.length;
+			});
+			$('.calendar').updateWithText(table,1000);
 
-		for (var i in eventList) {
-			var e = eventList[i];
-
-			var row = $('<tr/>').css('opacity',opacity);
-			row.append($('<td/>').html(e.description).addClass('description'));
-			row.append($('<td/>').html(e.days).addClass('days dimmed'));
-			table.append(row);
-
-			opacity -= 1 / eventList.length;
-		}
-
-		$('.calendar').updateWithText(table,1000);
+		});
 
 		setTimeout(function() {
         	updateCalendar();
@@ -303,7 +189,7 @@ jQuery(document).ready(function($) {
 	(function updateCompliment()
 	{
 	  while (compliment == lastCompliment) {
-      //Check for current time  
+      //Check for current time
       var compliments;
       var date = new Date();
       var hour = date.getHours();
@@ -345,9 +231,9 @@ jQuery(document).ready(function($) {
 			'10n':'wi-night-rain',
 			'11n':'wi-night-thunderstorm',
 			'13n':'wi-night-snow',
-			'50n':'wi-night-alt-cloudy-windy'		
+			'50n':'wi-night-alt-cloudy-windy'
 		}
-		
+
 
 		$.getJSON('http://api.openweathermap.org/data/2.5/weather', weatherParams, function(json, textStatus) {
 
@@ -400,7 +286,7 @@ jQuery(document).ready(function($) {
 					};
 				} else {
 					forecastData[dateKey]['temp_min'] = (forecast.main.temp < forecastData[dateKey]['temp_min']) ? forecast.main.temp : forecastData[dateKey]['temp_min'];
-					forecastData[dateKey]['temp_max'] = (forecast.main.temp > forecastData[dateKey]['temp_max']) ? forecast.main.temp : forecastData[dateKey]['temp_max']; 
+					forecastData[dateKey]['temp_max'] = (forecast.main.temp > forecastData[dateKey]['temp_max']) ? forecast.main.temp : forecastData[dateKey]['temp_max'];
 				}
 
 			}
@@ -409,7 +295,7 @@ jQuery(document).ready(function($) {
 			var forecastTable = $('<table />').addClass('forecast-table');
 			var opacity = 1;
 			var rowhead = $('<tr />').css('opacity', opacity);
-			
+
 			rowhead.append($('<td/>').addClass('day').html(datelabel));
 			rowhead.append($('<td/>').addClass('temp-min').html('Min.'));
 			rowhead.append($('<td/>').addClass('temp-max').html('Max.'));
@@ -422,7 +308,7 @@ jQuery(document).ready(function($) {
 				row.append($('<td/>').addClass('day').html(dayAbbr[dt.getDay()]));
 				row.append($('<td/>').addClass('temp-min').html(roundVal(forecast.temp_min).toFixed(1))); //convert into specified number of decimals
 				row.append($('<td/>').addClass('temp-max').html(roundVal(forecast.temp_max).toFixed(1))); //Thanks to thk from KNX Userforum
-			
+
 				forecastTable.append(row);
 				opacity -= 0.155;
 			}
@@ -444,15 +330,15 @@ jQuery(document).ready(function($) {
 				news 	 = [];
 				for (var i in data.item) {
 					var item = data.item[i];
-					
+
 					var pos = item.description.search("<p>")
 					var desc = item.description.substring(pos, item.description.length);
 					var endpos = desc.search("</p>")
 					var desc = desc.substring(0, endpos);
 					news.push(desc);
-					
+
 					newshead.push(item.title);
-					
+
 				}
 			}
 		});
@@ -464,7 +350,7 @@ jQuery(document).ready(function($) {
 	(function showNews() {
 		var newsHead = newshead[newsIndex];
 		var newsItem = news[newsIndex];
-		
+
 		$('.newshead').updateWithText(newsHead,2000);
 		$('.news').updateWithText(newsItem,2000);
 
@@ -472,31 +358,10 @@ jQuery(document).ready(function($) {
 		if (newsIndex < 0) newsIndex = news.length - 1;
 			setTimeout(function() {
 				showNews();
-			}, 7000);	
-		
-		
+			}, 7000);
+
+
 
 	})();
 
-	(function updateOpenHAB()
-        {
-                var temp = "";
-                $.getJSON('http://127.0.0.1:8080/rest/items/MagicMirrorTXT/?type=json', {}, function(json, textStatus) {
-                        if (json) {
-                                temp = json.state;
-                        }
-                        $('.openhab').updateWithText(temp,2000);
-                        if (temp != "") {
-                                $('.openhab').fadeIn(2000);
-                                $('.lower-third').fadeOut(2000);
-                        } else {
-                                $('.openhab').fadeOut(2000);
-                                $('.lower-third').fadeIn(2000);
-                        }
-                });
-                setTimeout(function() {
-                        updateOpenHAB();
-                }, 5000);
-        })();
-	
 });
