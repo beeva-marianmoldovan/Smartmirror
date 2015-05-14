@@ -5,10 +5,13 @@ var fs = require('fs');
 var icalendar = require('icalendar');
 var moment = require('moment');
 require('moment-recur');
-moment.lang("es");
 
 app.get('/', function (req, res) {
   res.sendFile(__dirname + '/index.html');
+});
+
+app.get('/test', function (req, res) {
+  res.sendFile(__dirname + '/test.html');
 });
 
 var exec = require('child_process').exec;
@@ -23,8 +26,10 @@ app.get('/githash', function(req, res){
    });
 });
 
+
+
 app.get('/events', function(req, res){
-  getEvents('marian.ics', function(err, results){
+  getEvents('events.ics', function(err, results){
     if(results)
       res.json(results);
     else res.send('Epic fail');
@@ -72,7 +77,7 @@ function getEvents(file, callback){
                     dateItem.hours(momentItem.hours());
                     dateItem.minutes(momentItem.minutes());
                     dateItem.seconds(momentItem.seconds());
-                    event.date = dateItem.startOf('minute').fromNow();
+                    event.date = dateItem.calendar();
                     event.moment = dateItem;
                     event.description = item.properties.SUMMARY[0].value;
                     event.location = item.properties.LOCATION[0].value;
