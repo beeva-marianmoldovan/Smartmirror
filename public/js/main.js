@@ -1,4 +1,4 @@
- var days 		= ['domingo','lunes','martes','miécoles','jueves','viernes','sábado'];
+var days 		= ['domingo','lunes','martes','miécoles','jueves','viernes','sábado'];
 var months 		= ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','dicembre'];
 var dayAbbr 	= ['dom','lun','mar','mie','jue','vie','sab'];
 var today 		= 'hoy';
@@ -17,6 +17,70 @@ var weatherParams = {
 		'lang':'es'
 	};
 
+
+var queueFeeds = []
+
+function queueFeed(feed, title, author, description){
+
+	if(description){
+		var div = "<div class='more-left'>"
+		+"<div class='newsh'>" + title + " by "+ author+"</div>"
+		+"<div class='newsd'>" + description + "</div>";
+	}
+	else {
+		var div = "<div class='more-left'>"
+		+"<div class='newsh'>" + title + " by "+ author+"</div>";
+	}
+
+	console.log("Añado al feed:" + div);
+	feed.push(div);	
+
+	console.log("Elementos del feed:" + feed.length);
+}
+
+function printFeed(feed){
+	if (feed instanceof Array) console.log('Array!');
+	if (feed instanceof Object) console.log('Object!');
+	var container = $('#bottomRightContainer');
+	container.empty();
+
+	// Print:
+	console.log("Elementos del feed:" + feed.length);
+	elems = feed.length;
+	if(elems > 0){
+		container.html(feed[0]);
+		console.log("Show 1st elem: " + JSON.stringify(feed[0]));
+		feed.shift();
+	}
+
+	//Repeat after timeout:
+	setTimeout(function(){printFeed(feed)}, 20000);
+}
+
+function updateFeed(feed, feed_url){
+	$.ajax({
+	  // 'http://stackoverflow.com/feeds/question/10943544'
+	  url      : document.location.protocol + '//ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=10&callback=?&q=' + encodeURIComponent(feed_url),
+	  dataType : 'json',
+	  success  : function (data) {
+	    if (data.responseData.feed && data.responseData.feed.entries) {
+	      $.each(data.responseData.feed.entries, function (i, e) {
+	        //console.log("------------------------");
+	        //console.log("title      : " + e.title);
+	        //console.log("author     : " + e.author);
+	        //console.log("description: " + e.description);
+
+	        queueFeed(feed, e.title, e.author, e.description)
+
+	      });
+	    }
+	  }
+	});
+
+	setTimeout(function() {
+		if(feed.length < 1) updateFeed(feed, feed_url);
+	}, 10000);
+}
 
 function updateTime() {
 	var now = new Date();
@@ -39,10 +103,8 @@ function updateTime() {
 	container.html(div);
 
 	setTimeout(function() {
-			updateTime();
+		updateTime();
 	}, 1000);
-
-	
 };
 
 function updateCurrentWeather() {
@@ -103,7 +165,10 @@ function updateCurrentWeather() {
 
 $( document ).ready(function() {
 	updateTime();
+	updateFeed(queueFeeds, feed);
 	updateCurrentWeather();
+	printFeed(queueFeeds);
+	
 	$('#topRightContainer').html("<div class='more-right'>"
 		+ "<div class='windsun small dimmed' style='display: block;'><span class='wi wi-strong-wind xdimmed'></span> 1 <span class='wi wi-sunset xdimmed'></span> 21:24</div><div class='temp' style='display: block;'><span class='icon dimmed wi wi-day-sunny'></span>27.9°</div><div class='forecast small dimmed' style='display: block;'></div></div>"
 		+ "</div>");

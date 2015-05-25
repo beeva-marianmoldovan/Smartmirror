@@ -6,13 +6,16 @@ var icalendar = require('icalendar');
 var moment = require('moment');
 require('moment-recur');
 
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 app.get('/', function (req, res) {
   res.sendFile(__dirname + '/index.html');
 });
 
-app.get('/test', function (req, res) {
-  res.sendFile(__dirname + '/test.html');
-});
 
 var exec = require('child_process').exec;
 function execute(command, callback){
@@ -58,13 +61,21 @@ function getEvents(file, callback){
 
         var events = [];
         ical.events().forEach(function(item){
+            console.log(item.properties);
             var momentItem = moment(item.properties.DTSTART[0].value);
             if(now.isBefore(momentItem)){
                 var event = {};
                 event.moment = momentItem;
                 event.date = momentItem.startOf('minute').fromNow();
-                event.description = item.properties.SUMMARY[0].value;
-                event.location = item.properties.LOCATION[0].value;
+
+                if('SUMMARY' in item.properties)
+                  event.description = item.properties.SUMMARY[0].value;
+                else  event.description = ""
+
+                if('LOCATION' in item.properties)
+                  event.location = item.properties.LOCATION[0].value;
+                else  event.location = ""
+
                 events.push(event);
             }
             else if(item.properties.RRULE){
@@ -79,8 +90,14 @@ function getEvents(file, callback){
                     dateItem.seconds(momentItem.seconds());
                     event.date = dateItem.calendar();
                     event.moment = dateItem;
-                    event.description = item.properties.SUMMARY[0].value;
-                    event.location = item.properties.LOCATION[0].value;
+                    if('SUMMARY' in item.properties)
+                      event.description = item.properties.SUMMARY[0].value;
+                    else  event.description = ""
+
+                    if('LOCATION' in item.properties)  
+                      event.location = item.properties.LOCATION[0].value;
+                    else  event.location = ""
+
                     events.push(event);
                 }
               })
