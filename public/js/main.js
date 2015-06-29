@@ -16,7 +16,9 @@ var statusPanel = false;
 if (annyang) {
 	// Let's define a command.
 	var commands = {
-		'hello': function() { alert('Hello world!'); }
+		'hello': function () {
+			alert('Hello world!');
+		}
 	};
 
 	// Add our commands to annyang
@@ -24,6 +26,7 @@ if (annyang) {
 
 	// Start listening.
 	annyang.start();
+}
 
 moment.locale('es');
 
