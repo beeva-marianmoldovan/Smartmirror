@@ -1,0 +1,58 @@
+<html>
+<head>
+	<title>Smart Office</title>
+
+	<link rel="stylesheet" type="text/css" href="public/css/main.css">
+	<link rel="stylesheet" type="text/css" href="public/css/weather-icons.css">
+	<link rel="stylesheet" type="text/css" href="public/css/animate.css">
+
+	<meta name="google" value="notranslate" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+<body>
+
+<div id="mainContainer">
+	<div id="informationPanel" class="ayuda hideTool">
+		<div class="activeHelp">
+			<div id="ActiveHelp" class="activeButton"><span>i</span></div>
+		</div>
+	</div>
+	<div class="comandos">
+		<button onclick="iniciar()">Iniciar</button>
+		<button onclick="standBy()">Reset</button>
+	</div>
+	<div id="topContainer" class="top">
+		<div id="topLeftContainer" class="left">
+		</div>
+		<div id="topRightContainer" class="right">
+		</div>
+	</div>
+
+	<div id="middleContainer" class="middle">
+		<div id="container" class="show"></div>
+		<div id="menuOptions" class="erase">
+			<div id="gestion" class="gestion animated infinite pulse hide">Gestión</div>
+			<div id="imputacion" class="imputacion animated infinite pulse hide">Imputación</div>
+			<div id="agenda" class="agenda animated infinite pulse hide">Agenda</div>
+		</div>
+	</div>
+
+	<div id="bottomContainer" class="bottom">
+		<div id="bottomLeftContainer" class="left">
+		</div>
+		<div id="bottomRightContainer" class="right">
+		</div>
+	</div>
+</div>
+
+<script src="public/js/jquery-2.1.4.min.js"></script>
+<script src="public/js/jquery.feedToJSON.js"></script>
+<script src="public/js/three.min.js"></script>
+<script src="public/js/WelcomeGraphic.js"></script>
+<script src="public/js/moment-with-langs.min.js"></script>
+<script src="public/js/utils.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/annyang/1.6.0/annyang.min.js"></script>
+<script src="public/js/main.js?nocache"></script>
+
+</body>
+</html>
