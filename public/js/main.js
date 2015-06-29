@@ -1,3 +1,5 @@
+'use strict';
+
 var days 		= ['domingo','lunes','martes','miécoles','jueves','viernes','sábado'];
 var months 		= ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','dicembre'];
 var dayAbbr 	= ['dom','lun','mar','mie','jue','vie','sab'];
@@ -10,6 +12,19 @@ var afternoon 	= ['¡Hola bebé!','You look sexy!','Looking good today!'];
 var evening 	= ['Wow, You look hot!','You look nice!','Hi, sexy!'];
 var feed		= 'http://meneame.feedsportal.com/rss';
 var statusPanel = false;
+
+if (annyang) {
+	// Let's define a command.
+	var commands = {
+		'hello': function() { alert('Hello world!'); }
+	};
+
+	// Add our commands to annyang
+	annyang.addCommands(commands);
+
+	// Start listening.
+	annyang.start();
+
 moment.locale('es');
 
 var weatherParams = {
@@ -202,7 +217,7 @@ $( document ).ready(function() {
 	updateFeed(queueFeeds, feed);
 	updateCurrentWeather();
 	printFeed(queueFeeds);
-	
+
 	$('#topRightContainer').html("<div class='more-right'>"
 		+ "<div class='windsun small dimmed' style='display: block;'><span class='wi wi-strong-wind xdimmed'></span> 1 <span class='wi wi-sunset xdimmed'></span> 21:24</div><div class='temp' style='display: block;'><span class='icon dimmed wi wi-day-sunny'></span>27.9°</div><div class='forecast small dimmed' style='display: block;'></div></div>"
 		+ "</div>");
