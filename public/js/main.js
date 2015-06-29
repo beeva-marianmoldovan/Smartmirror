@@ -9,6 +9,7 @@ var morning 	= ['¡Buenos días!','¡Hola Bebés, que tengais un día super cool
 var afternoon 	= ['¡Hola bebé!','You look sexy!','Looking good today!'];
 var evening 	= ['Wow, You look hot!','You look nice!','Hi, sexy!'];
 var feed		= 'http://meneame.feedsportal.com/rss';
+var statusPanel = false;
 moment.locale('es');
 
 var weatherParams = {
@@ -46,7 +47,7 @@ function printFeed(feed){
 
 	// Print:
 	console.log("Elementos del feed:" + feed.length);
-	elems = feed.length;
+	var elems = feed.length;
 	if(elems > 0){
 		container.html(feed[0]);
 		console.log("Show 1st elem: " + JSON.stringify(feed[0]));
@@ -106,6 +107,39 @@ function updateTime() {
 		updateTime();
 	}, 1000);
 };
+
+function iniciar(){
+	$('#container').removeClass('show');
+	$('#container').addClass('hide');
+	setTimeout(function() {
+		$('#container').css('display', 'none');
+		$('#menuOptions').removeClass('erase');
+	}, 1000);
+	setTimeout(function() {
+		$('#gestion').removeClass('hide');
+		$('#gestion').addClass('show');
+		$('#imputacion').removeClass('hide');
+		$('#imputacion').addClass('show');
+		$('#agenda').removeClass('hide');
+		$('#agenda').addClass('show');
+	}, 1200);
+}
+function standBy(){
+	$('#gestion').removeClass('show');
+	$('#gestion').addClass('hide');
+	$('#imputacion').removeClass('show');
+	$('#imputacion').addClass('hide');
+	$('#agenda').removeClass('show');
+	$('#agenda').addClass('hide');
+	setTimeout(function() {
+		$('#menuOptions').addClass('erase');
+		$('#container').css('display', 'block');
+	}, 900);
+	setTimeout(function() {
+		$('#container').removeClass('hide');
+		$('#container').addClass('show');
+	}, 1200);
+}
 
 function updateCurrentWeather() {
 
@@ -172,4 +206,16 @@ $( document ).ready(function() {
 	$('#topRightContainer').html("<div class='more-right'>"
 		+ "<div class='windsun small dimmed' style='display: block;'><span class='wi wi-strong-wind xdimmed'></span> 1 <span class='wi wi-sunset xdimmed'></span> 21:24</div><div class='temp' style='display: block;'><span class='icon dimmed wi wi-day-sunny'></span>27.9°</div><div class='forecast small dimmed' style='display: block;'></div></div>"
 		+ "</div>");
+})
+$('#ActiveHelp').click(function(){
+	if(!statusPanel) {
+		$('#informationPanel').removeClass('hideTool');
+		$('#informationPanel').addClass('showTool');
+		statusPanel = true;
+	}
+	else {
+		$('#informationPanel').removeClass('showTool');
+		$('#informationPanel').addClass('hideTool');
+		statusPanel = false;
+	}
 })
