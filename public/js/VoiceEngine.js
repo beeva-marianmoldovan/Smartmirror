@@ -27,12 +27,12 @@ VoiceEngine = function(){
             var action = this.voiceActions[i];
             var distance = levenshteinDistance(action.text, message);
             console.log('accion y distancia: ', action, distance);
-            if(distance < minimDistance && distance < 5){
+            if(distance < minimDistance && distance < 2){
                 minimDistance = distance;
                 bestAction = action;
             }
         }
-        if(bestAction && isFinal) {
+        if(bestAction) {
             bestAction.event();
         }
     };
