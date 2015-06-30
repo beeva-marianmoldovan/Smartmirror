@@ -19,7 +19,9 @@
 	</div>
 	<div class="comandos">
 		<button onclick="iniciar()">Iniciar</button>
-		<button onclick="standBy()">Reset</button>
+		<button onclick="openGestion()">Gestión</button>
+		<button onclick="openAgenda()">Agenda</button>
+		<button onclick="standBy()">Finalizar</button>
 	</div>
 	<div id="topContainer" class="top">
 		<div id="topLeftContainer" class="left">
@@ -32,8 +34,14 @@
 		<div id="container" class="show"></div>
 		<div id="menuOptions" class="erase">
 			<div id="gestion" class="gestion animated infinite pulse hide">Gestión</div>
-			<div id="imputacion" class="imputacion animated infinite pulse hide">Imputación</div>
 			<div id="agenda" class="agenda animated infinite pulse hide">Agenda</div>
+		</div>
+		<div id="menuGestion" class="erase">
+			<div class="fichasGestion minify"><b>Reservar</b> sala</div>
+			<div class="fichasGestion minify"><b>Solicitar</b> vacaciones</div>
+			<div class="fichasGestion minify"><b>Organizar</b> reunión</div>
+			<div class="fichasGestion minify"><b>Imputar</b> Proyecto</div>
+
 		</div>
 	</div>
 
@@ -51,8 +59,8 @@
 <script src="public/js/WelcomeGraphic.js"></script>
 <script src="public/js/moment-with-langs.min.js"></script>
 <script src="public/js/utils.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/annyang/1.6.0/annyang.min.js"></script>
-<script src="public/js/main.js?nocache"></script>
+<script src="public/js/VoiceEngine.js"></script>
+<script src="public/js/main.js"></script>
 
 </body>
 </html>

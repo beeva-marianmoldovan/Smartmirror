@@ -12,7 +12,7 @@ var linesMesh;
 var particles;
 
 var maxParticleCount = 1000;
-var particleCount = 1000;
+var particleCount = 500;
 var r = 800;
 var rHalf = r / 2;
 
@@ -135,7 +135,7 @@ function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
 
-    renderer.setSize( window.innerWidth, window.innerHeight );
+    renderer.setSize( window.innerWidth-20, window.innerHeight-200 );
 
 }
 

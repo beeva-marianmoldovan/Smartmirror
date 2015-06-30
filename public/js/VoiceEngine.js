@@ -1,4 +1,5 @@
 VoiceAction = function(text, event){
+    console.log('texto y evento: ', this.text, this.event);
     this.text = text;
     this.event = event;
 };
@@ -19,11 +20,13 @@ VoiceEngine = function(){
     };
 
     this.checkActions = function(message, isFinal){
+        console.log('mensaje, is final: ', message, isFinal);
         var minimDistance = 100000;
         var bestAction;
         for(var i = 0; i < this.voiceActions.length;i++){
             var action = this.voiceActions[i];
             var distance = levenshteinDistance(action.text, message);
+            console.log('accion y distancia: ', action, distance);
             if(distance < minimDistance && distance < 5){
                 minimDistance = distance;
                 bestAction = action;
@@ -45,6 +48,7 @@ VoiceEngine = function(){
               // Start recognising
               var self = this;
               this.recognizer.onresult = function (event) {
+                  console.log('eventos: ', event);
                   for (var i = event.resultIndex; i < event.results.length; i++) {
                       if (event.results[i].isFinal) {
                           self.checkActions(event.results[i][0].transcript, true);

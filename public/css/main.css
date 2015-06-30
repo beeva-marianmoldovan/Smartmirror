@@ -320,7 +320,43 @@ body, html {
 	top: -60%;
 	transform: translateY(-50%);
 }
-
+.resumenGestion {
+	display: inline-block;
+	font-size: 40px;
+	width: 30%;
+	text-align: justify;
+	margin-left: 10%;
+	margin-top: 10%;
+}
+.fichasGestion{
+	font-size: 40px;
+	background-color: lightgray;
+	color: black;
+	padding: 0px 20px;
+	border-radius: 3px;
+	text-overflow: ellipsis;
+	margin-left: 10%;
+	margin-bottom: 2%;
+}
+.minify{
+	opacity:0;
+	width: 0%;
+	height: 0%;
+	-webkit-transition: all ease-in-out 0.2s;
+	-moz-transition: all ease-in-out 0.2s;
+	-ms-transition: all ease-in-out 0.2s;
+	-o-transition: all ease-in-out 0.2s;
+	transition: all ease-in-out 0.2s;
+}
+.unminify{
+	opacity: 1;
+	width: 30%;
+	-webkit-transition: all ease-in-out 0.2s;
+	-moz-transition: all ease-in-out 0.2s;
+	-ms-transition: all ease-in-out 0.2s;
+	-o-transition: all ease-in-out 0.2s;
+	transition: all ease-in-out 0.2s;
+}
 @font-face {
   font-family: 'HelveticaNeue-UltraLight';
   src: url('../font/HelveticaNeue-UltraLight.eot'); /* IE9 Compat Modes */

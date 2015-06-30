@@ -12,18 +12,8 @@ var afternoon 	= ['¡Hola bebé!','You look sexy!','Looking good today!'];
 var evening 	= ['Wow, You look hot!','You look nice!','Hi, sexy!'];
 var feed		= 'http://meneame.feedsportal.com/rss';
 var statusPanel = false;
-
-if (annyang) {
-	// Let's define a command.
-	var commands = {
-		'hello': function() { alert('Hello world!'); }
-	};
-
-	// Add our commands to annyang
-	annyang.addCommands(commands);
-
-	// Start listening.
-	annyang.start();
+var voiceEngine = new VoiceEngine();
+voiceEngine.start();
 
 moment.locale('es');
 
@@ -48,24 +38,17 @@ function queueFeed(feed, title, author, description){
 		+"<div class='newsh'>" + title + " by "+ author+"</div>";
 	}
 
-	console.log("Añado al feed:" + div);
-	feed.push(div);	
-
-	console.log("Elementos del feed:" + feed.length);
+	feed.push(div);
 }
 
 function printFeed(feed){
-	if (feed instanceof Array) console.log('Array!');
-	if (feed instanceof Object) console.log('Object!');
 	var container = $('#bottomRightContainer');
 	container.empty();
 
 	// Print:
-	console.log("Elementos del feed:" + feed.length);
 	var elems = feed.length;
 	if(elems > 0){
 		container.html(feed[0]);
-		console.log("Show 1st elem: " + JSON.stringify(feed[0]));
 		feed.shift();
 	}
 
@@ -107,7 +90,6 @@ function updateTime() {
 
 	var date = days[day] + ', ' + date+' ' + months[month] + ' ' + year;
 
-	console.log(date);
 
 	var container = $('#topLeftContainer');
 	container.empty();
@@ -128,7 +110,10 @@ function iniciar(){
 	$('#container').addClass('hide');
 	setTimeout(function() {
 		$('#container').css('display', 'none');
+		$('#menuGestion').addClass('erase');
 		$('#menuOptions').removeClass('erase');
+		$(".fichasGestion").removeClass('unminify');
+		$(".fichasGestion").addClass('minify');
 	}, 1000);
 	setTimeout(function() {
 		$('#gestion').removeClass('hide');
@@ -148,6 +133,9 @@ function standBy(){
 	$('#agenda').addClass('hide');
 	setTimeout(function() {
 		$('#menuOptions').addClass('erase');
+		$('#menuGestion').addClass('erase');
+		$(".fichasGestion").removeClass('unminify');
+		$(".fichasGestion").addClass('minify');
 		$('#container').css('display', 'block');
 	}, 900);
 	setTimeout(function() {
@@ -155,7 +143,23 @@ function standBy(){
 		$('#container').addClass('show');
 	}, 1200);
 }
+function openGestion(){
+	$('#container').removeClass('show');
+	$('#container').addClass('hide');
+	$('#container').css('display', 'none');
+	$('#menuOptions').addClass('erase');
+	$('#menuGestion').removeClass('erase');
+	setTimeout(function() {
+		$(".fichasGestion").removeClass('minify');
+		$(".fichasGestion").addClass('unminify');
+	}, 900);
+}
+function openImputacion(){
 
+}
+function openAgenda(){
+
+}
 function updateCurrentWeather() {
 
 	var iconTable = {
@@ -192,9 +196,6 @@ function updateCurrentWeather() {
 		var icon = $('<span/>').addClass('icon').addClass('dimmed').addClass('wi').addClass(iconClass);
 		$('.temp').updateWithText(icon.outerHTML()+temp+'&deg;', 1000);
 
-		// var forecast = 'Min: '+temp_min+'&deg;, Max: '+temp_max+'&deg;';
-		// $('.forecast').updateWithText(forecast, 1000);
-
 		var now = new Date();
 		var sunrise = new Date(json.sys.sunrise*1000).toTimeString().substring(0,5);
 		var sunset = new Date(json.sys.sunset*1000).toTimeString().substring(0,5);
@@ -222,6 +223,7 @@ $( document ).ready(function() {
 		+ "<div class='windsun small dimmed' style='display: block;'><span class='wi wi-strong-wind xdimmed'></span> 1 <span class='wi wi-sunset xdimmed'></span> 21:24</div><div class='temp' style='display: block;'><span class='icon dimmed wi wi-day-sunny'></span>27.9°</div><div class='forecast small dimmed' style='display: block;'></div></div>"
 		+ "</div>");
 })
+
 $('#ActiveHelp').click(function(){
 	if(!statusPanel) {
 		$('#informationPanel').removeClass('hideTool');
@@ -234,3 +236,30 @@ $('#ActiveHelp').click(function(){
 		statusPanel = false;
 	}
 })
+
+/////////////////////////
+///  CONTROLES DE VOZ
+/////////////////////////
+
+voiceEngine.addAction(new VoiceAction("ayuda", function(){
+	$('#informationPanel').removeClass('hideTool');
+	$('#informationPanel').addClass('showTool');
+	statusPanel = true;
+}));
+voiceEngine.addAction(new VoiceAction("cerrar", function(){
+	$('#informationPanel').removeClass('showTool');
+	$('#informationPanel').addClass('hideTool');
+	statusPanel = false;
+}));
+voiceEngine.addAction(new VoiceAction("gestión", function(){
+	openGestion();
+}));
+voiceEngine.addAction(new VoiceAction("agenda", function(){
+
+}));
+voiceEngine.addAction(new VoiceAction("iniciar", function(){
+	iniciar();
+}));
+voiceEngine.addAction(new VoiceAction("finalizar", function(){
+	standBy();
+}));
