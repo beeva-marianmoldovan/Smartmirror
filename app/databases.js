@@ -10,8 +10,7 @@ var User = new Schema({
     name            : { type : String },
     email           : { type : String },
     token           : { type : String },
-    images_dir      : { type : String },
-    face_features   : { type : String } 
+    faceId		    : { type : String }
 });
 
 mongoose.model( 'User', User );
