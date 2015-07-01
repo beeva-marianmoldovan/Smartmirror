@@ -5,21 +5,17 @@
 	<link rel="stylesheet" type="text/css" href="public/css/main.css">
 	<link rel="stylesheet" type="text/css" href="public/css/weather-icons.css">
 	<link rel="stylesheet" type="text/css" href="public/css/animate.css">
+	<link rel="stylesheet" type="text/css" href="public/css/jquery.e-calendar.css">
 
 	<meta name="google" value="notranslate" />
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 </head>
 <body>
-
 <div id="mainContainer">
 	<div id="informationPanel" class="ayuda hideTool">
 		<div class="activeHelp">
 			<div id="ActiveHelp" class="activeButton"><span>i</span></div>
 		</div>
-	</div>
-	<div class="comandos">
-		<button onclick="iniciar()">Iniciar</button>
-		<button onclick="standBy()">Reset</button>
 	</div>
 	<div id="topContainer" class="top">
 		<div id="topLeftContainer" class="left">
@@ -27,16 +23,31 @@
 		<div id="topRightContainer" class="right">
 		</div>
 	</div>
-
 	<div id="middleContainer" class="middle">
+		<div class="comandos">
+			<button onclick="iniciar()"><b>Inicio</b></button>
+			<button onclick="openGestion()"><b>Gestión</b></button>
+			<button onclick="openAgenda()"><b>Agenda</b></button>
+			<button onclick="standBy()"><b>Salir</b></button>
+		</div>
 		<div id="container" class="show"></div>
+		<div id="menuGestion" class="erase">
+			<div class="fichasGestion minify"><b>Reservar</b> sala</div>
+			<div class="fichasGestion minify"><b>Solicitar</b> vacaciones</div>
+			<div class="fichasGestion minify"><b>Organizar</b> reunión</div>
+			<div class="fichasGestion minify"><b>Imputar</b> Proyecto</div>
+		</div>
+		<div id='calendar' class="erase"></div>
 		<div id="menuOptions" class="erase">
-			<div id="gestion" class="gestion animated infinite pulse hide">Gestión</div>
-			<div id="imputacion" class="imputacion animated infinite pulse hide">Imputación</div>
-			<div id="agenda" class="agenda animated infinite pulse hide">Agenda</div>
+			<div id="comandos" class="hide">
+				<div id="gestion" class="gestionSub animated infinite pulse">Gestión</div>
+				<div id="agenda" class="agendaSub animated infinite pulse">Agenda</div>
+				<img id="imagenMicro" class ="imagenMicroSub" src="public/images/micro.png"/>
+				<div id="inicio" class="inicioSub animated infinite pulse">Inicio</div>
+				<div id="salir" class="salirSub animated infinite pulse">Salir</div>
+			</div>
 		</div>
 	</div>
-
 	<div id="bottomContainer" class="bottom">
 		<div id="bottomLeftContainer" class="left">
 		</div>
@@ -44,15 +55,15 @@
 		</div>
 	</div>
 </div>
-
 <script src="public/js/jquery-2.1.4.min.js"></script>
 <script src="public/js/jquery.feedToJSON.js"></script>
 <script src="public/js/three.min.js"></script>
 <script src="public/js/WelcomeGraphic.js"></script>
 <script src="public/js/moment-with-langs.min.js"></script>
+<script src="public/js/moment.min.js"></script>
+<script src="public/js/jquery.e-calendar.js"></script>
 <script src="public/js/utils.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/annyang/1.6.0/annyang.min.js"></script>
-<script src="public/js/main.js?nocache"></script>
-
+<script src="public/js/VoiceEngine.js"></script>
+<script src="public/js/main.js"></script>
 </body>
 </html>

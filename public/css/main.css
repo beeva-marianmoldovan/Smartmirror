@@ -6,7 +6,7 @@ body, html {
 	height: 100%;
 
 	font-family: "HelveticaNeue-Light";
-	letter-spacing: -2px;
+	/*letter-spacing: -2px;*/
 	color: #fff;
 	font-size: 75px;
 	 -webkit-font-smoothing: antialiased;
@@ -64,7 +64,7 @@ body, html {
 .more-right {
 	position: absolute;
 	top: 50%;
-	right: 20%;
+	right: 3%;
 	transform: translate(-20%, -50%);
 }
 
@@ -211,12 +211,13 @@ body, html {
 }
 
 .comandos {
+	margin-left: 5%;
+	display: inline-block;
 	position: absolute;
-	width:	80px;
-	top: 150px;
+	top: 1%;
 }
 .comandos > button{
-	margin: 2px;
+	margin: 2px 0px;
 }
 .hideTool{
 	right: -200px;
@@ -258,7 +259,7 @@ body, html {
 	width:	200px;
 	height: 300px;
 	background-color: lightgray;
-	top: 150px;
+	top: 20%;
 }
 .activeHelp {
 	position:absolute;
@@ -288,39 +289,216 @@ body, html {
 	font-family: "Arial Black";
 }
 .gestion {
-	display: inline-block;
 	width: 200px;
 	height: 200px;
 	border-radius: 100px;
-	background-color: lightgray;
-	margin-left: 10%;
-	position: relative;
-	top: 50%;
-	transform: translateY(-50%);
+	background-color: #acacac;
+	position: absolute;
+	top: 20%;
+	left: 15%;
+	display: inline-block;
+	-webkit-transition: all ease-in-out 0.7s;
+	-moz-transition: all ease-in-out 0.7s;
+	-ms-transition: all ease-in-out 0.7s;
+	-o-transition: all ease-in-out 0.7s;
+	transition: all ease-in-out 0.7s;
 }
-.imputacion {
-	display: inline-block;
-	width: 200px;
-	height: 200px;
+.gestionSub{
+	width: 70px;
+	height: 70px;
 	border-radius: 100px;
-	background-color: lightgray;
-	margin-left: 20%;
-	position: relative;
-	top: -40%;
-	transform: translateY(-50%);
+	background-color: #acacac;
+	font-size: 45px;
+	position: absolute;
+	top: 75%;
+	left: 5%;
+	display: inline-block;
+	-webkit-transition: all ease-in-out 0.7s;
+	-moz-transition: all ease-in-out 0.7s;
+	-ms-transition: all ease-in-out 0.7s;
+	-o-transition: all ease-in-out 0.7s;
+	transition: all ease-in-out 0.7s;
 }
 .agenda {
-	display: inline-block;
 	width: 200px;
 	height: 200px;
 	border-radius: 100px;
-	background-color: lightgray;
-	margin-left: 25%;
-	position: relative;
-	top: -60%;
-	transform: translateY(-50%);
+	background-color: #acacac;
+	position: absolute;
+	top: 26%;
+	left: 50%;
+	display: inline-block;
+	-webkit-transition: all ease-in-out 0.7s;
+	-moz-transition: all ease-in-out 0.7s;
+	-ms-transition: all ease-in-out 0.7s;
+	-o-transition: all ease-in-out 0.7s;
+	transition: all ease-in-out 0.7s;
 }
-
+.agendaSub {
+	width: 70px;
+	height: 70px;
+	border-radius: 100px;
+	background-color: #acacac;
+	font-size: 45px;
+	position: absolute;
+	top: 75%;
+	left: 25%;
+	display: inline-block;
+	-webkit-transition: all ease-in-out 0.7s;
+	-moz-transition: all ease-in-out 0.7s;
+	-ms-transition: all ease-in-out 0.7s;
+	-o-transition: all ease-in-out 0.7s;
+	transition: all ease-in-out 0.7s;
+}
+.inicio {
+	font-size: 50px;
+	width: 100px;
+	height: 100px;
+	border-radius: 100px;
+	background-color: #acacac;
+	position: absolute;
+	top: 45%;
+	left: 50%;
+	display: inline-block;
+	-webkit-transition: all ease-in-out 0.7s;
+	-moz-transition: all ease-in-out 0.7s;
+	-ms-transition: all ease-in-out 0.7s;
+	-o-transition: all ease-in-out 0.7s;
+	transition: all ease-in-out 0.7s;
+}
+.inicioSub {
+	font-size: 50px;
+	width: 70px;
+	height: 70px;
+	border-radius: 100px;
+	background-color: #acacac;
+	position: absolute;
+	top: 75%;
+	left: 63%;
+	display: inline-block;
+	-webkit-transition: all ease-in-out 0.7s;
+	-moz-transition: all ease-in-out 0.7s;
+	-ms-transition: all ease-in-out 0.7s;
+	-o-transition: all ease-in-out 0.7s;
+	transition: all ease-in-out 0.7s;
+}
+.salir {
+	font-size: 45px;
+	width: 100px;
+	height: 100px;
+	border-radius: 100px;
+	background-color: #acacac;
+	position: absolute;
+	top: 45%;
+	left: 20%;
+	display: inline-block;
+	-webkit-transition: all ease-in-out 0.7s;
+	-moz-transition: all ease-in-out 0.7s;
+	-ms-transition: all ease-in-out 0.7s;
+	-o-transition: all ease-in-out 0.7s;
+	transition: all ease-in-out 0.7s;
+}
+.salirSub{
+	font-size: 45px;
+	width: 70px;
+	height: 70px;
+	border-radius: 100px;
+	background-color: #acacac;
+	position: absolute;
+	top: 75%;
+	left: 81%;
+	display: inline-block;
+	-webkit-transition: all ease-in-out 0.7s;
+	-moz-transition: all ease-in-out 0.7s;
+	-ms-transition: all ease-in-out 0.7s;
+	-o-transition: all ease-in-out 0.7s;
+	transition: all ease-in-out 0.7s;
+}
+.imagenMicro{
+	width: 180px;
+	position: absolute;
+	top: 35%;
+	left: 30%;
+	display: inline-block;
+	-webkit-transition: all ease-in-out 0.7s;
+	-moz-transition: all ease-in-out 0.7s;
+	-ms-transition: all ease-in-out 0.7s;
+	-o-transition: all ease-in-out 0.7s;
+	transition: all ease-in-out 0.7s;
+}
+.imagenMicroSub{
+	width: 100px;
+	position: absolute;
+	top: 75%;
+	left: 45%;
+	display: inline-block;
+	-webkit-transition: all ease-in-out 0.7s;
+	-moz-transition: all ease-in-out 0.7s;
+	-ms-transition: all ease-in-out 0.7s;
+	-o-transition: all ease-in-out 0.7s;
+	transition: all ease-in-out 0.7s;
+}
+.resumenGestion {
+	display: inline-block;
+	font-size: 40px;
+	width: 30%;
+	text-align: justify;
+	margin-left: 10%;
+	margin-top: 10%;
+}
+.fichasGestion{
+	font-size: 40px;
+	background-color: lightgray;
+	color: black;
+	padding: 0px 20px;
+	border-radius: 3px;
+	text-overflow: ellipsis;
+	margin-left: 10%;
+	margin-bottom: 2%;
+}
+.minify{
+	opacity:0;
+	width: 0%;
+	height: 0%;
+	-webkit-transition: all ease-in-out 0.2s;
+	-moz-transition: all ease-in-out 0.2s;
+	-ms-transition: all ease-in-out 0.2s;
+	-o-transition: all ease-in-out 0.2s;
+	transition: all ease-in-out 0.2s;
+}
+.unminify{
+	opacity: 1;
+	width: 35%;
+	-webkit-transition: all ease-in-out 0.2s;
+	-moz-transition: all ease-in-out 0.2s;
+	-ms-transition: all ease-in-out 0.2s;
+	-o-transition: all ease-in-out 0.2s;
+	transition: all ease-in-out 0.2s;
+}
+.welcomePhrase{
+	position: absolute;
+	top: 30%;
+	left: 10%;
+	width: 80%;
+	font-size: 100px;
+	-webkit-transition: all ease-in-out 0.7s;
+	-moz-transition: all ease-in-out 0.7s;
+	-ms-transition: all ease-in-out 0.7s;
+	-o-transition: all ease-in-out 0.7s;
+	transition: all ease-in-out 0.7s;
+}
+.welcomePhraseSub {
+	position: absolute;
+	top: 87%;
+	left: 5%;
+	width: 45%;
+	font-size: 40px;
+	-webkit-transition: all ease-in-out 0.7s;
+	-moz-transition: all ease-in-out 0.7s;
+	-ms-transition: all ease-in-out 0.7s;
+	-o-transition: all ease-in-out 0.7s;
+	transition: all ease-in-out 0.7s;
+}
 @font-face {
   font-family: 'HelveticaNeue-UltraLight';
   src: url('../font/HelveticaNeue-UltraLight.eot'); /* IE9 Compat Modes */
