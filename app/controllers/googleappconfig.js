@@ -51,7 +51,7 @@ exports.getAccessToken = function (idUser, oauth2Client, callback) {
      		 	//response_type: 'code',
       			access_type: 'offline',
       			scope: 'https://www.googleapis.com/auth/calendar'
-    		});
+    		  });
 
           console.log('Visit the url: ', url);
           rl.question('Enter the code here:', function(code) {
