@@ -297,6 +297,7 @@ body, html {
 	top: 20%;
 	left: 15%;
 	display: inline-block;
+	cursor: pointer;
 	-webkit-transition: all ease-in-out 0.7s;
 	-moz-transition: all ease-in-out 0.7s;
 	-ms-transition: all ease-in-out 0.7s;
@@ -313,6 +314,7 @@ body, html {
 	top: 75%;
 	left: 5%;
 	display: inline-block;
+	cursor: pointer;
 	-webkit-transition: all ease-in-out 0.7s;
 	-moz-transition: all ease-in-out 0.7s;
 	-ms-transition: all ease-in-out 0.7s;
@@ -328,6 +330,7 @@ body, html {
 	top: 26%;
 	left: 50%;
 	display: inline-block;
+	cursor: pointer;
 	-webkit-transition: all ease-in-out 0.7s;
 	-moz-transition: all ease-in-out 0.7s;
 	-ms-transition: all ease-in-out 0.7s;
@@ -344,6 +347,7 @@ body, html {
 	top: 75%;
 	left: 25%;
 	display: inline-block;
+	cursor: pointer;
 	-webkit-transition: all ease-in-out 0.7s;
 	-moz-transition: all ease-in-out 0.7s;
 	-ms-transition: all ease-in-out 0.7s;
@@ -360,6 +364,7 @@ body, html {
 	top: 45%;
 	left: 50%;
 	display: inline-block;
+	cursor: pointer;
 	-webkit-transition: all ease-in-out 0.7s;
 	-moz-transition: all ease-in-out 0.7s;
 	-ms-transition: all ease-in-out 0.7s;
@@ -376,6 +381,7 @@ body, html {
 	top: 75%;
 	left: 63%;
 	display: inline-block;
+	cursor: pointer;
 	-webkit-transition: all ease-in-out 0.7s;
 	-moz-transition: all ease-in-out 0.7s;
 	-ms-transition: all ease-in-out 0.7s;
@@ -392,6 +398,7 @@ body, html {
 	top: 45%;
 	left: 20%;
 	display: inline-block;
+	cursor: pointer;
 	-webkit-transition: all ease-in-out 0.7s;
 	-moz-transition: all ease-in-out 0.7s;
 	-ms-transition: all ease-in-out 0.7s;
@@ -408,6 +415,7 @@ body, html {
 	top: 75%;
 	left: 81%;
 	display: inline-block;
+	cursor: pointer;
 	-webkit-transition: all ease-in-out 0.7s;
 	-moz-transition: all ease-in-out 0.7s;
 	-ms-transition: all ease-in-out 0.7s;
