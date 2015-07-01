@@ -34,17 +34,17 @@ def detect_face(image):
 	return faces
 
 def enroll(image, user):
-	payload = { 'gallery_name': 'XXX', 'selector' : 'FACE'}
+	payload = { 'gallery_name': 'beevatest1', 'selector' : 'FACE'}
 	payload['image'] = image 
 	payload['subject_id'] = user
-	headers = {'Content-Type' : 'application/json', 'app_id' : 'e4f0bc81', 'app_key' : 'XXX'}
+	headers = {'Content-Type' : 'application/json', 'app_id' : 'e4f0bc81', 'app_key' : 'x562701d11fc9a9c7eff9a08805ef8ae'}
 	r = requests.post("https://api.kairos.com/enroll", data=json.dumps(payload), headers=headers)
 	return r
 
 def recognize(image):
-	payload = { 'gallery_name': 'XXX', 'threshold':0.75, 'max_num_results' : 3}
+	payload = { 'gallery_name': 'beevatest1', 'threshold':0.75, 'max_num_results' : 3}
 	payload['image'] = image
-	headers = {'Content-Type' : 'application/json', 'app_id' : 'e4f0bc81', 'app_key' : 'XXX'}
+	headers = {'Content-Type' : 'application/json', 'app_id' : 'e4f0bc81', 'app_key' : 'x562701d11fc9a9c7eff9a08805ef8ae'}
 	r = requests.post("https://api.kairos.com/recognize", data=json.dumps(payload), headers=headers)
 	return r
 
@@ -56,19 +56,20 @@ while True:
 	faces = detect_face(img)
 
 	if faces is not None and len(faces) > 0 and not lastHadFace:
-			result = recognize(get_base(img)).json()['images'][0]['transaction']
-			if result['status']  == 'failure':
-				faceId = str(uuid.uuid4())
-				socketIO.emit('face', {'message': 'new_face', 'faceId' : faceId})
-				result = enroll(get_base(img), faceId).json()
-				socketIO.emit('face', {'message': 'new_face_snap', 'faceId' : faceId})
-				result = enroll(get_base(get_image()), faceId).json()
-				print result
-			else :
-				socketIO.emit('face', {'message': 'known_face', 'faceId' :  result['subject'], 'confidence' : result['confidence']})
-				print result['status'] + ', ' + result['subject'] + ', ' + result['confidence']
-			lastHadFace = True
-			print 'New Face'
+		raw = recognize(get_base(img)).json()
+		result = raw['images'][0]['transaction']
+		if result['status']  == 'failure':
+			faceId = str(uuid.uuid4())
+			socketIO.emit('face', {'message': 'new_face', 'faceId' : faceId})
+			result = enroll(get_base(img), faceId).json()
+			socketIO.emit('face', {'message': 'new_face_snap', 'faceId' : faceId})
+			result = enroll(get_base(get_image()), faceId).json()
+			print result
+		else :
+			socketIO.emit('face', {'message': 'known_face', 'faceId' :  result['subject'], 'confidence' : result['confidence']})
+			print result['status'] + ', ' + result['subject'] + ', ' + result['confidence']
+		lastHadFace = True
+		print 'New Face'
 	elif len(faces) <= 0 and lastHadFace:
 		lastHadFace = False
 		socketIO.emit('face', {'message': 'no_face_now'})
