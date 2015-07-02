@@ -71,14 +71,12 @@ exports.apiLogin = function (req, res){
     access_type: 'offline', // will return a refresh token
     scope: scopes // can be a space-delimited string or an array of scopes
   });
-  //var now = new Date.now();
-  var now = process.hrtime();
-  console.log(now);
+
+  var timestamp = process.hrtime();
   var code = qr.image(url, { type: 'png' });  
-  var output = fs.createWriteStream('public/images/'+now+'.png');
+  var output = fs.createWriteStream('public/images/'+timestamp+'.png');
 
   code.pipe(output);
-
   res.json({'url':url}, {'image':output});
 }
 

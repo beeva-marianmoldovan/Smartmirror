@@ -1,5 +1,4 @@
 VoiceAction = function(text, event){
-    console.log('texto y evento: ', this.text, this.event);
     this.text = text;
     this.event = event;
 };
@@ -20,13 +19,11 @@ VoiceEngine = function(){
     };
 
     this.checkActions = function(message, isFinal){
-        console.log('mensaje, is final: ', message, isFinal);
         var minimDistance = 100000;
         var bestAction;
         for(var i = 0; i < this.voiceActions.length;i++){
             var action = this.voiceActions[i];
             var distance = levenshteinDistance(action.text, message);
-            console.log('accion y distancia: ', action, distance);
             if(distance < minimDistance && distance < 2){
                 minimDistance = distance;
                 bestAction = action;
@@ -39,42 +36,41 @@ VoiceEngine = function(){
 
     this.start = function(){
         window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition || null;
-          if(this.browserCompatible()){
-              this.recognizer = new window.SpeechRecognition();
-              this.recognizer.continuous = true;
-              this.recognizer.lang = "es-ES";
-              this.recognizer.interimResults = true;
+        if(this.browserCompatible()){
+            this.recognizer = new window.SpeechRecognition();
+            this.recognizer.continuous = true;
+            this.recognizer.lang = "es-ES";
+            this.recognizer.interimResults = true;
 
-              // Start recognising
-              var self = this;
-              this.recognizer.onresult = function (event) {
-                  console.log('eventos: ', event);
-                  for (var i = event.resultIndex; i < event.results.length; i++) {
-                      if (event.results[i].isFinal) {
-                          self.checkActions(event.results[i][0].transcript, true);
-                          console.error(event.results[i][0].transcript + ' (Confidence: ' + event.results[i][0].confidence + ')');
-                          if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
-                              self.recognizer.start();
-                      } else {
-                          console.log("Interim ", event.results[i][0].transcript);
-                          self.checkActions(event.results[i][0].transcript, false);
-                      }
-                  }
-              };
+            // Start recognising
+            var self = this;
+            this.recognizer.onresult = function (event) {
+                for (var i = event.resultIndex; i < event.results.length; i++) {
+                    if (event.results[i].isFinal) {
+                        self.checkActions(event.results[i][0].transcript, true);
+                        console.error(event.results[i][0].transcript + ' (Confidence: ' + event.results[i][0].confidence + ')');
+                        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+                            self.recognizer.start();
+                    } else {
+                        console.log("Interim ", event.results[i][0].transcript);
+                        self.checkActions(event.results[i][0].transcript, false);
+                    }
+                }
+            };
 
-              // Listen for errors
-              this.recognizer.onerror = function (event) {
-                  console.error('Recognition error: ' + event.message);
-                  self.start();
-              };
+            // Listen for errors
+            this.recognizer.onerror = function (event) {
+                console.error('Recognition error: ' + event.message);
+                self.start();
+            };
 
-              console.log(this.recognizer);
-              try {
-                  this.recognizer.start();
-              } catch (ex) {
-                  console.error(ex);
-              }
-          }
+            console.log(this.recognizer);
+            try {
+                this.recognizer.start();
+            } catch (ex) {
+                console.error(ex);
+            }
+        }
     };
 
     this.stop = function(){
@@ -84,6 +80,7 @@ VoiceEngine = function(){
 
 
 function levenshteinDistance (s, t){
+    console.log('s y t: ', s,t);
     var d = []; //2d matrix
 
     // Step 1
