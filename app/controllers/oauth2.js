@@ -17,8 +17,14 @@
 var readline = require('readline');
 
 var google = require('../lib/googleapis.js');
+
+var qr = require('qr-image');  
+var fs = require('fs');
+
+
 var OAuth2Client = google.auth.OAuth2;
 var plus = google.plus('v1');
+var calendar = google.calendar('v3');
 
 // Client ID and client secret are available at
 // https://code.google.com/apis/console
@@ -39,7 +45,7 @@ function getAccessToken(oauth2Client, callback) {
   // generate consent page url
   var url = oauth2Client.generateAuthUrl({
     access_type: 'offline', // will return a refresh token
-    scope: 'https://www.googleapis.com/auth/plus.me' // can be a space-delimited string or an array of scopes
+    scope: 'https://www.googleapis.com/auth/calendar' // can be a space-delimited string or an array of scopes
   });
 
   console.log('Visit the url: ', url);
@@ -56,11 +62,24 @@ function getAccessToken(oauth2Client, callback) {
 
 exports.apiLogin = function (req, res){
   lastUser = req.query.user;
+  var scopes = [
+    'https://www.googleapis.com/auth/plus.me',
+    'https://www.googleapis.com/auth/calendar'
+  ];
+
   var url = oauth2Client.generateAuthUrl({
     access_type: 'offline', // will return a refresh token
-    scope: 'https://www.googleapis.com/auth/plus.me' // can be a space-delimited string or an array of scopes
+    scope: scopes // can be a space-delimited string or an array of scopes
   });
-  res.send(url);
+  //var now = new Date.now();
+  var now = process.hrtime();
+  console.log(now);
+  var code = qr.image(url, { type: 'png' });  
+  var output = fs.createWriteStream('public/images/'+now+'.png');
+
+  code.pipe(output);
+
+  res.json({'url':url}, {'image':output});
 }
 
 
@@ -83,6 +102,7 @@ exports.apiOauthCallback = function (req, res){
         res.send(profile.displayName);
       }
     });
+
   });
 }
 
