@@ -6,14 +6,12 @@ require('./app/databases');
 var app = require('./config/express')();
 
 
-var userRoutes = require( './app/routes/user.js' );
-userRoutes(app);
+require( './app/routes/user.js' )(app);
+require( './app/routes/ambient.js' )(app);
 
 app.get( '/', function(req, res){
   res.sendFile(__dirname + '/app/views/index.html');
 });
-
-app.get('/ambient', require('./app/controllers/ambient').getAmbientData);
 
 
 var socketServer = require('http').createServer(app);
