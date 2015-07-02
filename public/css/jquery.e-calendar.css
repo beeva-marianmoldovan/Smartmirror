@@ -15,6 +15,13 @@
     height: 85%;
     margin-left: 2%;
 }
+.calendar2{
+    cursor: default;
+    /* width: 600px; */
+    height: 70%;
+    margin-left: 2%;
+    margin-top: 13%;
+}
 
 .calendar-sm .c-pad-top {
     padding-top: 2%;
