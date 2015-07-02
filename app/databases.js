@@ -12,10 +12,17 @@ db.once('open', function (callback) {
 
 var Schema   = mongoose.Schema;
 
+var UserTokens = new Schema({
+	access_token		: { type : String },
+ 	token_type			: { type : String },
+  	id_token			: { type : String },
+  	expiry_date			: { type : Date }
+});
+
 var User = new Schema({
     name            : { type : String },
     email           : { type : String },
-    token           : { type : String },
+    tokens           : [ UserTokens ],
     faceId		    : { type : String }
 });
 mongoose.model( 'User', User );

@@ -23,9 +23,10 @@ io.on('connection', function(socket){
 	console.log('new conenction');
 	socket.on('face', function(data){
 		console.log(data);
+		socket.broadcast.emit('face', data);
 	});
-
 });
+
 socketServer.listen(3000);
 
 var server = app.listen(8000, function () {
@@ -36,4 +37,3 @@ var server = app.listen(8000, function () {
   console.log('Example app listening at http://%s:%s', host, port);
 
 });
-

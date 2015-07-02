@@ -1,25 +1,13 @@
-/**
- * Copyright 2012 Google Inc. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-var readline = require('readline');
+var mongoose    = require( 'mongoose' );
+var User        = mongoose.model('User');
+var _           = require('lodash');
+var readline    = require('readline');
+var qr          = require('qr-image');  
+var fs          = require('fs');
+var socket      = require('socket.io-client')('http://localhost:3000');
 
 var google = require('../lib/googleapis.js');
 
-var qr = require('qr-image');  
-var fs = require('fs');
 
 
 var OAuth2Client = google.auth.OAuth2;
@@ -29,7 +17,7 @@ var calendar = google.calendar('v3');
 // Client ID and client secret are available at
 // https://code.google.com/apis/console
 var CLIENT_ID = '258658410251-na8agl3ilfpg6b39eodnf64h18i7ef3g.apps.googleusercontent.com';
-var CLIENT_SECRET = 'qd3LlfEQQLgteQfJ018MENPY';
+var CLIENT_SECRET = 'q6J-AcHuM5pQi3np7Z2QDvmy';
 var REDIRECT_URL = 'http://localhost:8000/oauth2callback';
 
 var oauth2Client = new OAuth2Client(CLIENT_ID, CLIENT_SECRET, REDIRECT_URL);
@@ -76,17 +64,15 @@ exports.apiLogin = function (req, res){
   var code = qr.image(url, { type: 'png' });  
   var output = fs.createWriteStream('public/images/'+timestamp+'.png');
 
+  console.log(url);
+
   code.pipe(output);
   res.json({'url':url}, {'image':output});
 }
 
 
 exports.apiOauthCallback = function (req, res){
-  console.log(lastUser);
-  console.log(req.query.code);
-
   oauth2Client.getToken(req.query.code, function(err, tokens) {
-    console.log(tokens);
     oauth2Client.setCredentials(tokens);
 
     plus.people.get({ userId: 'me', auth: oauth2Client }, function(err, profile) {
@@ -96,11 +82,54 @@ exports.apiOauthCallback = function (req, res){
         return;
       }
       else {
-        console.log(profile.displayName, ':', profile.tagline);
-        res.send(profile.displayName);
+        var user = new User({
+          'name'    : profile.displayName,
+          'faceId'  : lastUser
+        });
+        user.tokens.push(tokens);
+
+        user.save(function(err, doc){
+          if(err){
+            console.error(err);
+            res.status(500).end();
+          }
+          else{
+            var obj = doc.toObject();
+            obj['message'] = 'user_registered';
+            socket.emit('face', obj);
+            res.redirect('http://beeva.com');
+          }
+        });
       }
     });
-
   });
 }
+
+  //   calendar.events.list({
+  //     auth: oauth2Client,
+  //     calendarId: 'primary',
+  //     timeMin: (new Date()).toISOString(),
+  //     maxResults: 10,
+  //     singleEvents: true,
+  //     orderBy: 'startTime'
+  //   }, function(err, response) {
+  //     if (err) {
+  //       console.log('The API returned an error: ' + err);
+  //       return;
+  //     }
+  //     var events = response.items;
+  //     res.send(events);
+  //     if (events.length == 0) {
+  //       console.log('No upcoming events found.');
+  //     } else {
+  //       console.log('Upcoming 10 events:');
+  //       for (var i = 0; i < events.length; i++) {
+  //         var event = events[i];
+  //         var start = event.start.dateTime || event.start.date;
+  //         console.log('%s - %s', start, event.summary);
+  //       }
+  //     }
+  //   });
+  // });
+
 
