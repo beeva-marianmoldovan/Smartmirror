@@ -115,7 +115,8 @@ function updateTime() {
 function iniciar() {
 	$('#container').removeClass('show');
 	$('#container').addClass('hide');
-
+	$('#reservarOptions').removeClass('show');
+	$('#reservarOptions').addClass('hide');
 	if (contWelcome==0) {
 		setTimeout(function () {
 			var container = $('#middleContainer');
@@ -133,6 +134,7 @@ function iniciar() {
 		$('#container').css('display', 'none');
 		$('#menuGestion').addClass('erase');
 		$('#calendar').addClass('erase');
+		$('#reservarOptions').addClass('erase');
 		$('#menuOptions').removeClass('erase');
 		$(".fichasGestion").removeClass('unminify');
 		$(".fichasGestion").addClass('minify');
@@ -153,13 +155,17 @@ function iniciar() {
 	}, 300);
 }
 function standBy(){
+
 	$('#comandos').removeClass('show');
 	$('#comandos').addClass('hide');
+	$('#reservarOptions').removeClass('show');
+	$('#reservarOptions').addClass('hide');
 	$('#welcomePhrase').remove();
 	contWelcome=0;
 	setTimeout(function() {
 		$('#menuOptions').addClass('erase');
 		$('#menuGestion').addClass('erase');
+		$('#reservarOptions').addClass('erase');
 		$('#calendar').addClass('erase');
 		$(".fichasGestion").removeClass('unminify');
 		$(".fichasGestion").addClass('minify');
@@ -175,6 +181,7 @@ function openGestion(){
 	$('#container').addClass('hide');
 	$('#container').css('display', 'none');
 	$('#calendar').addClass('erase');
+	$('#reservarOptions').addClass('erase');
 	$('#menuGestion').removeClass('erase');
 
 	setTimeout(function() {
@@ -196,7 +203,9 @@ function openGestion(){
 	}, 200);
 }
 function openAgenda(){
+	$('.newsh').css("margin-top", "-40%");
 	$('#menuGestion').addClass('erase');
+	$('#reservarOptions').addClass('erase');
 	$('#container').removeClass('show');
 	$('#container').addClass('hide');
 	$('#container').css('display', 'none');
@@ -216,6 +225,36 @@ function openAgenda(){
 	$('#comandos').addClass('show');
 	$('#calendar').removeClass('erase');
 }
+$('#reservarSala').click(function(){
+	setTimeout(function() {
+		$('#menuGestion').addClass('erase');
+		$('#calendar').addClass('erase');
+		$(".fichasGestion").removeClass('unminify');
+		$(".fichasGestion").addClass('minify');
+		$(".reservarOptions").removeClass('erase');
+	}, 100);
+	setTimeout(function() {
+		$('#reservarOptions').removeClass('hide');
+		$('#reservarOptions').addClass('show');
+	}, 200);
+
+})
+$('.sala').click(function(event){
+	console.log(this.id);
+	$('.salaUp').addClass('salaSub');
+	$('.salaUp').removeClass('salaUp');
+	$('.sala').addClass('salaSub');
+	$('.sala').removeClass('sala');
+	$('#'+this.id).removeClass('salaSub');
+	$('#'+this.id).addClass('salaUp');
+	setTimeout(function(){
+		$('#calendar1').removeClass('erase');
+	},200)
+	setTimeout(function(){
+		$('#calendar1').removeClass('hide');
+		$('#calendar1').addClass('show');
+	},300)
+})
 function updateCurrentWeather() {
 
 	var iconTable = {
@@ -274,7 +313,30 @@ $( document ).ready(function() {
 	updateFeed(queueFeeds, feed);
 	updateCurrentWeather();
 	printFeed(queueFeeds);
-	$('#calendar').eCalendar();
+	$('#calendar').eCalendar(
+		{weekDays: ['Dom', 'Lun', 'Mar', 'Mier', 'Jue', 'Vie', 'Sab'],
+		months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+		textArrows: {previous: '<', next: '>'},
+		eventTitle: 'Eventos',
+		url: '',
+		events: [
+		{title: 'Daily', description: 'Pensando cositas chulas', datetime: new Date(2015, 7, 12, 17)},
+		{title: 'Daily', description: 'Pensando cositas chulas', datetime: new Date(2015, 7, 17, 16)},
+		{title: 'carnaval gay', description: 'Pasear cachitas', datetime: new Date(2015, 7, 23, 16)}
+	]});
+	$('#calendar').addClass('calendar');
+	$('#calendar1').eCalendar(
+		{weekDays: ['Dom', 'Lun', 'Mar', 'Mier', 'Jue', 'Vie', 'Sab'],
+		months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+		textArrows: {previous: '<', next: '>'},
+		eventTitle: 'Reservas',
+		url: '',
+		events: [
+			{title: 'Juanma', description: 'agendada', datetime: new Date(2015, 7, 12, 17)},
+			{title: 'Ira', description: 'Daily casa del libro', datetime: new Date(2015, 7, 12, 18)},
+			{title: 'Josera', description: 'Daily CISM', datetime: new Date(2015, 7, 12, 16)}
+	]});
+	$('#calendar1').addClass('calendar2');
 
 	$('#topRightContainer').html("<div class='more-right'>"
 		+ "<div class='windsun small dimmed' style='display: block;'><span class='wi wi-strong-wind xdimmed'></span> 1 <span class='wi wi-sunset xdimmed'></span> 21:24</div><div class='temp' style='display: block;'><span class='icon dimmed wi wi-day-sunny'></span>27.9°</div><div class='forecast small dimmed' style='display: block;'></div></div>"
