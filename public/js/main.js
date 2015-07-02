@@ -124,7 +124,7 @@ function iniciar() {
 			var div = "<div id='welcomePhrase' class='welcomePhrase'>" + welcomePhrase + ", " + usuario[0].name + "</div>";
 			container.append(div);
 			contWelcome=1;
-		}, 200);
+		}, 100);
 	}
 
 	setTimeout(function() {
@@ -136,7 +136,7 @@ function iniciar() {
 		$('#menuOptions').removeClass('erase');
 		$(".fichasGestion").removeClass('unminify');
 		$(".fichasGestion").addClass('minify');
-	}, 1000);
+	}, 200);
 	setTimeout(function() {
 		$('#gestion').removeClass('gestionSub');
 		$('#gestion').addClass('gestion');
@@ -150,7 +150,7 @@ function iniciar() {
 		$('#inicio').addClass('inicio');
 		$('#comandos').removeClass('hide');
 		$('#comandos').addClass('show');
-	}, 1600);
+	}, 300);
 }
 function standBy(){
 	$('#comandos').removeClass('show');
@@ -164,11 +164,11 @@ function standBy(){
 		$(".fichasGestion").removeClass('unminify');
 		$(".fichasGestion").addClass('minify');
 		$('#container').css('display', 'block');
-	}, 900);
+	}, 100);
 	setTimeout(function() {
 		$('#container').removeClass('hide');
 		$('#container').addClass('show');
-	}, 1200);
+	}, 200);
 }
 function openGestion(){
 	$('#container').removeClass('show');
@@ -193,7 +193,7 @@ function openGestion(){
 		$('#comandos').addClass('show');
 		$(".fichasGestion").removeClass('minify');
 		$(".fichasGestion").addClass('unminify');
-	}, 900);
+	}, 200);
 }
 function openAgenda(){
 	$('#menuGestion').addClass('erase');
@@ -280,34 +280,49 @@ $( document ).ready(function() {
 		+ "<div class='windsun small dimmed' style='display: block;'><span class='wi wi-strong-wind xdimmed'></span> 1 <span class='wi wi-sunset xdimmed'></span> 21:24</div><div class='temp' style='display: block;'><span class='icon dimmed wi wi-day-sunny'></span>27.9°</div><div class='forecast small dimmed' style='display: block;'></div></div>"
 		+ "</div>");
 })
-
-$('#ActiveHelp').click(function(){
-	if(!statusPanel) {
-		$('#informationPanel').removeClass('hideTool');
-		$('#informationPanel').addClass('showTool');
-		statusPanel = true;
-	}
-	else {
-		$('#informationPanel').removeClass('showTool');
-		$('#informationPanel').addClass('hideTool');
-		statusPanel = false;
-	}
+$('#gestion').click(function(){
+	openGestion();
 })
+$('#inicio').click(function(){
+	iniciar();
+})
+$('#topLeftContainer').click(function(){
+	iniciar();
+})
+$('#agenda').click(function(){
+	openAgenda();
+})
+$('#salir').click(function(){
+	standBy();
+})
+
+//$('#ActiveHelp').click(function(){
+//	if(!statusPanel) {
+//		$('#informationPanel').removeClass('hideTool');
+//		$('#informationPanel').addClass('showTool');
+//		statusPanel = true;
+//	}
+//	else {
+//		$('#informationPanel').removeClass('showTool');
+//		$('#informationPanel').addClass('hideTool');
+//		statusPanel = false;
+//	}
+//})
 
 /////////////////////////
 ///  CONTROLES DE VOZ
 /////////////////////////
 
-voiceEngine.addAction(new VoiceAction("ayuda", function(){
-	$('#informationPanel').removeClass('hideTool');
-	$('#informationPanel').addClass('showTool');
-	statusPanel = true;
-}));
-voiceEngine.addAction(new VoiceAction("cerrar", function(){
-	$('#informationPanel').removeClass('showTool');
-	$('#informationPanel').addClass('hideTool');
-	statusPanel = false;
-}));
+//voiceEngine.addAction(new VoiceAction("ayuda", function(){
+//	$('#informationPanel').removeClass('hideTool');
+//	$('#informationPanel').addClass('showTool');
+//	statusPanel = true;
+//}));
+//voiceEngine.addAction(new VoiceAction("cerrar", function(){
+//	$('#informationPanel').removeClass('showTool');
+//	$('#informationPanel').addClass('hideTool');
+//	statusPanel = false;
+//}));
 voiceEngine.addAction(new VoiceAction("gestión", function(){
 	openGestion();
 }));
