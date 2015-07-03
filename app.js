@@ -7,6 +7,7 @@ var app = require('./config/express')();
 
 require( './app/routes/user.js' )(app);
 require( './app/routes/ambient.js' )(app);
+require( './app/routes/calendar.js' )(app);
 require( './app/routes/apis.js' )(app);
 
 var oauthController = require('./app/controllers/oauth2.js');
