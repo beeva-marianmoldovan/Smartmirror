@@ -12,7 +12,7 @@ var afternoon 	= ['¡Hola bebé!','You look sexy!','Looking good today!'];
 var evening 	= ['Wow, You look hot!','You look nice!','Hi, sexy!'];
 var feed		= 'http://meneame.feedsportal.com/rss';
 var contWelcome = 0;
-var usuario;
+var usuario, ambiente;
 var statusPanel = false;
 var voiceEngine = new VoiceEngine();
 //voiceEngine.start();
@@ -28,6 +28,10 @@ var weatherParams = {
 $.get('http://127.0.0.1:8000/user').success(function(resp){
 	usuario=resp;
 	console.log(usuario[0].name);
+})
+$.get('http://127.0.0.1:8000/ambient').success(function(resp){
+	ambiente=resp;
+	console.log(ambiente[0].temperature);
 })
 
 
@@ -203,7 +207,6 @@ function openGestion(){
 	}, 200);
 }
 function openAgenda(){
-	$('.newsh').css("margin-top", "-40%");
 	$('#menuGestion').addClass('erase');
 	$('#reservarOptions').addClass('erase');
 	$('#container').removeClass('show');
