@@ -58,7 +58,7 @@ while True:
 	if faces is not None and len(faces) > 0 and not lastHadFace:
 		raw = recognize(get_base(img)).json()
 		if raw['images'] is not None and len(raw['images']) > 0:
-		result = raw['images'][0]['transaction']
+			result = raw['images'][0]['transaction']
 			if result['status']  == 'failure':
 				faceId = str(uuid.uuid4())
 				socketIO.emit('face', {'message': 'new_face', 'faceId' : faceId})
