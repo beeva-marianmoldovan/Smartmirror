@@ -571,6 +571,14 @@ body, html {
 	font-weight: bolder;
 	width: 200px;
 }
+.loginQR{
+	width: 300px;
+	height: 300px;
+	position: absolute;
+	background-color: lightgray;
+	top: 40%;
+	left: 35%;
+}
 @font-face {
   font-family: 'HelveticaNeue-UltraLight';
   src: url('../font/HelveticaNeue-UltraLight.eot'); /* IE9 Compat Modes */

@@ -19,10 +19,23 @@ var voiceEngine = new VoiceEngine();
 
 moment.locale('es');
 
-var socket = io.connect('http://localhost:3000');
+var socket = io.connect('http://192.168.0.66:3000');
 
 socket.on('face', function (data) {
-	console.log(data);
+	console.log(data.message);
+	if(data.message=='new_face'){
+		$.get( '/login').success(function(results){
+			console.log(results);
+			var QRdiv = $('body');
+			var div = "<div id='QRcode' class='loginQR hide'>"
+				+"<img src='../../"+ results.image.path +"'/>" + "</div>"
+			QRdiv.append(div);
+			setTimeout(function(){
+				$('#QRcode').removeClass('hide');
+				$('#QRcode').addClass('show');
+			},200)
+		});
+	}
 });
 
 var weatherParams = {
@@ -31,11 +44,11 @@ var weatherParams = {
 		'lang':'es'
 	};
 
-$.get('http://127.0.0.1:8000/user').success(function(resp){
+$.get('/user').success(function(resp){
 	usuario=resp;
 	console.log(usuario[0].name);
 })
-$.get('http://127.0.0.1:8000/ambient').success(function(resp){
+$.get('/ambient').success(function(resp){
 	ambiente=resp;
 	console.log(ambiente[0].temperature);
 })
