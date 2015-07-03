@@ -11,7 +11,9 @@ camera = PiCamera()
 camera.rotation = 180
 time.sleep(0.5)
 
-socketIO = SocketIO('localhost', 3000, LoggingNamespace)
+HOST = '192.168.0.66'
+
+socketIO = SocketIO('http://' + HOST, 3000, LoggingNamespace)
 
 def get_image():
 	print 'Smile'
@@ -42,7 +44,7 @@ def detect_face(image):
 	return faces
 
 def enroll(image, user):
-	payload = { 'gallery_name': 'beevatestX', 'selector' : 'FACE'}
+	payload = { 'gallery_name': 'beevatestVIERNES', 'selector' : 'FACE'}
 	payload['image'] = image 
 	payload['subject_id'] = user
 	headers = {'Content-Type' : 'application/json', 'app_id' : 'e4f0bc81', 'app_key' : 'x562701d11fc9a9c7eff9a08805ef8ae'}
@@ -50,7 +52,7 @@ def enroll(image, user):
 	return r
 
 def recognize(image):
-	payload = { 'gallery_name': 'beevatestX', 'threshold':0.78, 'max_num_results' : 3}
+	payload = { 'gallery_name': 'beevatestVIERNES', 'threshold':0.78, 'max_num_results' : 3}
 	payload['image'] = image
 	headers = {'Content-Type' : 'application/json', 'app_id' : 'e4f0bc81', 'app_key' : 'x562701d11fc9a9c7eff9a08805ef8ae'}
 	r = requests.post("https://api.kairos.com/recognize", data=json.dumps(payload), headers=headers)
@@ -63,16 +65,17 @@ while True:
 	faces = detect_face(img)
 
 	if faces is not None and len(faces) > 0 :
+		socketIO.emit('face', {'message': 'face_detected'})
 		raw = recognize(get_base(img)).json()
-		if raw['images'] is not None and len(raw['images']) > 0:
+		if 'images' in raw and len(raw['images']) > 0:
 			result = raw['images'][0]['transaction']
 			if result['status']  == 'failure':
 				print 'Cara desconocida'
 				faceId = str(uuid.uuid4())
 				socketIO.emit('face', {'message': 'new_face', 'faceId' : faceId})
+				secondImage = get_base(get_image())
 				result = enroll(get_base(img), faceId).json()
-				socketIO.emit('face', {'message': 'new_face_snap', 'faceId' : faceId})
-				result = enroll(get_base(get_image()), faceId).json()
+				result = enroll(secondImage, faceId).json()
 				lastHadFace = True
 				print result
 			else :
