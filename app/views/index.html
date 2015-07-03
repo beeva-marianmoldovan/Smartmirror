@@ -12,11 +12,6 @@
 </head>
 <body>
 <div id="mainContainer">
-	<!--<div id="informationPanel" class="ayuda hideTool">-->
-		<!--<div class="activeHelp">-->
-			<!--<div id="ActiveHelp" class="activeButton"><span>i</span></div>-->
-		<!--</div>-->
-	<!--</div>-->
 	<div id="topContainer" class="top">
 		<div id="topLeftContainer" class="left">
 		</div>
@@ -26,10 +21,10 @@
 	<div id="middleContainer" class="middle">
 		<div id="container" class="show"></div>
 		<div id="menuGestion" class="erase">
-			<div class="fichasGestion minify"><b>Reservar</b> sala</div>
-			<div class="fichasGestion minify"><b>Solicitar</b> vacaciones</div>
-			<div class="fichasGestion minify"><b>Organizar</b> reunión</div>
-			<div class="fichasGestion minify"><b>Imputar</b> Proyecto</div>
+			<div id="reservarSala" class="fichasGestion minify"><b>Reservar</b> sala</div>
+			<div id="solicitarVacaciones" class="fichasGestion minify"><b>Solicitar</b> vacaciones</div>
+			<div id="organizarReunion" class="fichasGestion minify"><b>Organizar</b> reunión</div>
+			<div id="imputarProyecto" class="fichasGestion minify"><b>Imputar</b> Proyecto</div>
 		</div>
 		<div id='calendar' class="erase"></div>
 		<div id="menuOptions" class="erase">
@@ -39,6 +34,24 @@
 				<img id="imagenMicro" class ="imagenMicroSub" src="public/images/micro.png"/>
 				<div id="inicio" class="inicioSub animated infinite pulse">Inicio</div>
 				<div id="salir" class="salirSub animated infinite pulse">Salir</div>
+			</div>
+		</div>
+		<div id="reservarOptions" class="reservarOptions erase hide">
+			<div id='calendar1' class="erase hide"></div>
+			<div id="sala1" class="sala">sala 1
+				<p class="salaDisponible">Horarios disponibles</p>
+			</div>
+			<div id="sala2" class="sala">sala 2
+				<p class="salaDisponible">Horarios disponibles</p>
+			</div>
+			<div id="sala4" class="sala">sala 4
+				<p class="salaNoDisponible">Horarios no disponibles</p>
+			</div>
+			<div id="sala5" class="sala">sala 5
+				<p class="salaDisponible">Horarios disponibles</p>
+			</div>
+			<div id="sala6" class="sala">sala 6
+				<p class="salaDisponible">Horarios disponibles</p>
 			</div>
 		</div>
 	</div>
@@ -51,6 +64,7 @@
 </div>
 <script src="public/js/jquery-2.1.4.min.js"></script>
 <script src="public/js/jquery.feedToJSON.js"></script>
+<script src="https://cdn.socket.io/socket.io-1.3.5.js"></script>
 <script src="public/js/three.min.js"></script>
 <script src="public/js/WelcomeGraphic.js"></script>
 <script src="public/js/moment-with-langs.min.js"></script>

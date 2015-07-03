@@ -8,6 +8,7 @@ var app = require('./config/express')();
 require( './app/routes/user.js' )(app);
 require( './app/routes/ambient.js' )(app);
 require( './app/routes/calendar.js' )(app);
+require( './app/routes/apis.js' )(app);
 
 var oauthController = require('./app/controllers/oauth2.js');
 
@@ -25,6 +26,7 @@ io.on('connection', function(socket){
 	socket.on('face', function(data){
 		console.log(data);
 		socket.broadcast.emit('face', data);
+		socket.emit('face', data);
 	});
 });
 
