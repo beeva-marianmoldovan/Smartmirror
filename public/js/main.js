@@ -19,6 +19,12 @@ var voiceEngine = new VoiceEngine();
 
 moment.locale('es');
 
+var socket = io.connect('http://localhost:3000');
+
+socket.on('face', function (data) {
+	console.log(data);
+});
+
 var weatherParams = {
 		'q':'Madrid, España',
 		'units':'metric',
@@ -34,8 +40,7 @@ $.get('http://127.0.0.1:8000/ambient').success(function(resp){
 	console.log(ambiente[0].temperature);
 })
 
-
-var queueFeeds = []
+var queueFeeds = [];
 
 function queueFeed(feed, title, author, description){
 

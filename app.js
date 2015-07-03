@@ -24,6 +24,7 @@ io.on('connection', function(socket){
 	socket.on('face', function(data){
 		console.log(data);
 		socket.broadcast.emit('face', data);
+		socket.emit('face', data);
 	});
 });
 
