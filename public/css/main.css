@@ -520,11 +520,11 @@ body, html {
 	margin-left: 20%;
 	display: inline-block;
 	cursor: pointer;
-	-webkit-transition: all ease-in-out 0.7s;
-	-moz-transition: all ease-in-out 0.7s;
-	-ms-transition: all ease-in-out 0.7s;
-	-o-transition: all ease-in-out 0.7s;
-	transition: all ease-in-out 0.7s;
+	-webkit-transition: all ease-in-out 0.3s;
+	-moz-transition: all ease-in-out 0.3s;
+	-ms-transition: all ease-in-out 0.3s;
+	-o-transition: all ease-in-out 0.3s;
+	transition: all ease-in-out 0.3s;
 }
 .salaUp{
 	left: 5%;
@@ -536,11 +536,11 @@ body, html {
 	position: absolute;
 	display: inline-block;
 	cursor: pointer;
-	-webkit-transition: all ease-in-out 0.7s;
-	-moz-transition: all ease-in-out 0.7s;
-	-ms-transition: all ease-in-out 0.7s;
-	-o-transition: all ease-in-out 0.7s;
-	transition: all ease-in-out 0.7s;
+	-webkit-transition: all ease-in-out 0.3s;
+	-moz-transition: all ease-in-out 0.3s;
+	-ms-transition: all ease-in-out 0.3s;
+	-o-transition: all ease-in-out 0.3s;
+	transition: all ease-in-out 0.3s;
 }
 .salaSub{
 	width: 70px;
@@ -551,11 +551,11 @@ body, html {
 	margin-left: 12%;
 	display: inline-block;
 	cursor: pointer;
-	-webkit-transition: all ease-in-out 0.7s;
-	-moz-transition: all ease-in-out 0.7s;
-	-ms-transition: all ease-in-out 0.7s;
-	-o-transition: all ease-in-out 0.7s;
-	transition: all ease-in-out 0.7s;
+	-webkit-transition: all ease-in-out 0.3s;
+	-moz-transition: all ease-in-out 0.3s;
+	-ms-transition: all ease-in-out 0.3s;
+	-o-transition: all ease-in-out 0.3s;
+	transition: all ease-in-out 0.3s;
 }
 .salaDisponible{
 	font-size: 18px;
