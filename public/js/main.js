@@ -55,7 +55,8 @@ socket.on('face', function (data) {
 					evento.title=agenda[a].summary;
 					if(agenda[a].description==undefined)evento.description='';
 					else evento.description=agenda[a].description;
-					evento.datetime = new Date(agenda[a].start.dateTime);
+					//evento.datetime = new Date(agenda[a].start.dateTime);
+					evento.datetime =  new Date('Tue Jul 07 2015 18:00:00 GMT+0200 (CEST)');
 					//evento.datetime = new Date(2015, 7, 12, 18);
 					queueEvents.push(evento);
 				}
