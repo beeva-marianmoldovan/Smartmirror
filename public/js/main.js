@@ -20,11 +20,13 @@ var voiceEngine = new VoiceEngine();
 
 moment.locale('es');
 
-var socket = io.connect('http://192.168.0.66:3000');
+var socket = io.connect('http://localhost:3000');
 
 socket.on('face', function (data) {
 	console.log(data);
 	if(data.message=='face_detected'){
+
+			$('#QRcode').remove();
 			var QRdiv = $('body');
 			var div = "<div class='WelcomeMessage'>Te estoy viendo, dejame que recuerde si te conozco.</div>"
 			QRdiv.append(div);
@@ -44,12 +46,13 @@ socket.on('face', function (data) {
 		});
 	}
 	if(data.message=='known_face' || data.message=='user_registered'){
-		$.get('/user?faceId='+data.face_id).success(function(resp){
+		$.get('/user?face_id='+data.faceId).success(function(resp){
+			if(resp2.tokens.length>0){
+			$('#QRcode').remove();
 			usuario=resp;
 			console.log(usuario[0]);
-			$.get('/calendar?face_id='+data.face_id).success(function(resp2){
-				console.log(resp2);
-				if(resp2.tokens.length>0){
+			$.get('/calendar?face_id='+data.faceId).success(function(resp2){
+				console.log('resp2: ',resp2);
 					$('.welcomeMessage').remove();
 					agenda=resp2;
 					console.log(agenda);
@@ -71,23 +74,23 @@ socket.on('face', function (data) {
 							events: queueEvents});
 					$('#calendar').addClass('calendar');
 					iniciar();
-				}
-				else {
+				})
+			}
+			else {
+				$('.welcomeMessage').remove();
+				$.get( '/login?user='+data.faceId).success(function(results){
 					$('.welcomeMessage').remove();
-					$.get( '/login').success(function(results){
-						$('.welcomeMessage').remove();
-						console.log(results);
-						var QRdiv = $('body');
-						var div = "<div id='QRcode' class='loginQR hide'>"
-							+"<img src='"+ results.image.path +"'/>" + "</div>"
-						QRdiv.append(div);
-						setTimeout(function(){
-							$('#QRcode').removeClass('hide');
-							$('#QRcode').addClass('show');
-						},200)
-					});
-				}
-			})
+					console.log(results);
+					var QRdiv = $('body');
+					var div = "<div id='QRcode' class='loginQR hide'>"
+						+"<img src='"+ results.image.path +"'/>" + "</div>"
+					QRdiv.append(div);
+					setTimeout(function(){
+						$('#QRcode').removeClass('hide');
+						$('#QRcode').addClass('show');
+					},200)
+				});
+			}
 		})
 	}
 });
