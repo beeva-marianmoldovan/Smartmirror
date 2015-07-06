@@ -72,6 +72,21 @@ socket.on('face', function (data) {
 					$('#calendar').addClass('calendar');
 					iniciar();
 				}
+				else {
+					$('.welcomeMessage').remove();
+					$.get( '/login').success(function(results){
+						$('.welcomeMessage').remove();
+						console.log(results);
+						var QRdiv = $('body');
+						var div = "<div id='QRcode' class='loginQR hide'>"
+							+"<img src='"+ results.image.path +"'/>" + "</div>"
+						QRdiv.append(div);
+						setTimeout(function(){
+							$('#QRcode').removeClass('hide');
+							$('#QRcode').addClass('show');
+						},200)
+					});
+				}
 			})
 		})
 	}
