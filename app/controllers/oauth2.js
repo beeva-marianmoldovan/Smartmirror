@@ -5,8 +5,7 @@ var readline    = require('readline');
 var qr          = require('qr-image');  
 var fs          = require('fs');
 var socket      = require('socket.io-client')('http://localhost:3000');
-
-var google = require('../lib/googleapis.js');
+var google      = require('../lib/googleapis.js');
 
 
 
@@ -52,13 +51,16 @@ exports.apiLogin = function (req, res){
   lastUser = req.query.user;
   var scopes = [
     'https://www.googleapis.com/auth/plus.me',
-    'https://www.googleapis.com/auth/calendar'
+    'https://www.googleapis.com/auth/calendar',
+    'https://apps-apis.google.com/a/feeds/calendar/resource/'
   ];
 
   var url = oauth2Client.generateAuthUrl({
     access_type: 'offline', // will return a refresh token
     scope: scopes // can be a space-delimited string or an array of scopes
   });
+
+  url = url + '&approval_prompt=force';
 
   var timestamp = process.hrtime();
   var code = qr.image(url, { type: 'png' });  
@@ -75,13 +77,17 @@ exports.apiOauthCallback = function (req, res){
   oauth2Client.getToken(req.query.code, function(err, tokens) {
     oauth2Client.setCredentials(tokens);
 
-    plus.people.get({ userId: 'me', auth: oauth2Client }, function(err, profile) {
+    plus.people.get({
+      userId: 'me',
+      auth: oauth2Client
+    }, function(err, profile) {
       if (err) {
         console.log('An error occured', err);
         res.send(err);
         return;
       }
       else {
+        console.log(profile);
         var user = new User({
           'name'    : profile.displayName,
           'faceId'  : lastUser
@@ -105,31 +111,6 @@ exports.apiOauthCallback = function (req, res){
   });
 }
 
-  //   calendar.events.list({
-  //     auth: oauth2Client,
-  //     calendarId: 'primary',
-  //     timeMin: (new Date()).toISOString(),
-  //     maxResults: 10,
-  //     singleEvents: true,
-  //     orderBy: 'startTime'
-  //   }, function(err, response) {
-  //     if (err) {
-  //       console.log('The API returned an error: ' + err);
-  //       return;
-  //     }
-  //     var events = response.items;
-  //     res.send(events);
-  //     if (events.length == 0) {
-  //       console.log('No upcoming events found.');
-  //     } else {
-  //       console.log('Upcoming 10 events:');
-  //       for (var i = 0; i < events.length; i++) {
-  //         var event = events[i];
-  //         var start = event.start.dateTime || event.start.date;
-  //         console.log('%s - %s', start, event.summary);
-  //       }
-  //     }
-  //   });
-  // });
+  
 
 
