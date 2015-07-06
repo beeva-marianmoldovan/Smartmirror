@@ -47,21 +47,18 @@ socket.on('face', function (data) {
 		$.get('/user?faceId='+data.face_id).success(function(resp){
 			usuario=resp;
 			console.log(usuario[0]);
-			$.get('/calendar?face_id='+data.face_id).success(function(resp){
-				agenda=resp;
+			$.get('/calendar?face_id='+data.face_id).success(function(resp2){
+				agenda=resp2;
 				console.log(agenda);
 				for(var a=0; a<agenda.length;a++){
 					var evento={};
 					evento.title=agenda[a].summary;
 					if(agenda[a].description==undefined)evento.description='';
 					else evento.description=agenda[a].description;
-					//evento.datetime = new Date(agenda[a].start.dateTime);
-					evento.datetime =  new Date('Tue Jul 07 2015 18:00:00 GMT+0200 (CEST)');
-					//evento.datetime = new Date(2015, 7, 12, 18);
+					evento.datetime = new Date(agenda[a].start.dateTime);
+					evento.datetime.setMonth(evento.datetime.getMonth()+1);
 					queueEvents.push(evento);
 				}
-				console.log('eventos: ',queueEvents);
-				console.log('eventos bien: ',new Date(2015, 6, 7, 18));
 				$('#calendar').eCalendar(
 					{weekDays: ['Dom', 'Lun', 'Mar', 'Mier', 'Jue', 'Vie', 'Sab'],
 						months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
@@ -335,18 +332,8 @@ function updateCurrentWeather() {
 $( document ).ready(function() {
 	updateTime();
 	updateCurrentWeather();
-	$('#calendar1').eCalendar(
-		{weekDays: ['Dom', 'Lun', 'Mar', 'Mier', 'Jue', 'Vie', 'Sab'],
-		months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-		textArrows: {previous: '<', next: '>'},
-		eventTitle: 'Reservas',
-		url: '',
-		events: [
-			{title: 'Juanma', description: 'agendada', datetime: new Date(2015, 7, 12, 18)},
-			{title: 'Ira', description: 'Daily casa del libro', datetime: new Date(2015, 7, 12, 18)},
-			{title: 'Josera', description: 'Daily CISM', datetime: new Date(2015, 7, 12, 18)}
-	]});
-	$('#calendar1').addClass('calendar2');
+	//$('#calendar1').
+	//$('#calendar1').addClass('calendar2');
 
 	$('#topRightContainer').html("<div class='more-right'>"
 		+ "<div class='windsun small dimmed' style='display: block;'><span class='wi wi-strong-wind xdimmed'></span> 1 <span class='wi wi-sunset xdimmed'></span> </div><div class='temp' style='display: block;'><span class='icon dimmed wi wi-day-sunny'></span></div><div class='forecast small dimmed' style='display: block;'></div>"
