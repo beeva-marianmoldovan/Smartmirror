@@ -1,7 +1,6 @@
 (function ($) {
 
     var eCalendar = function (options, object) {
-        console.log(options);
         // Initializing global variables
         var adDay = new Date().getDate();
         var adMonth = new Date().getMonth();

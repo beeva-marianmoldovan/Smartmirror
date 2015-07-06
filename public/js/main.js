@@ -11,8 +11,9 @@ var morning 	= ['Buenos días','Que tengas un día super cool', 'Que tengas un d
 var afternoon 	= ['¡Hola bebé!','You look sexy!','Looking good today!'];
 var evening 	= ['Wow, You look hot!','You look nice!','Hi, sexy!'];
 var feed		= 'http://meneame.feedsportal.com/rss';
-var contWelcome = 0;
-var usuario, ambiente;
+var contWelcome = 0, contFeed = 0;
+var queueFeeds = [], queueEvents=[];
+var usuario, ambiente, agenda;
 var statusPanel = false;
 var voiceEngine = new VoiceEngine();
 //voiceEngine.start();
@@ -22,15 +23,11 @@ moment.locale('es');
 var socket = io.connect('http://192.168.0.66:3000');
 
 socket.on('face', function (data) {
-	console.log(data.message);
+	console.log(data);
 	if(data.message=='face_detected'){
 			var QRdiv = $('body');
 			var div = "<div class='WelcomeMessage'>Te estoy viendo, dejame que recuerde si te conozco.</div>"
 			QRdiv.append(div);
-			setTimeout(function(){
-				$('#QRcode').removeClass('hide');
-				$('#QRcode').addClass('show');
-			},200)
 	}
 	if(data.message=='new_face'){
 		$.get( '/login').success(function(results){
@@ -46,6 +43,36 @@ socket.on('face', function (data) {
 			},200)
 		});
 	}
+	if(data.message=='known_face'){
+		$.get('/user?faceId='+data.face_id).success(function(resp){
+			usuario=resp;
+			console.log(usuario[0]);
+			$.get('/calendar?face_id='+data.face_id).success(function(resp){
+				agenda=resp;
+				console.log(agenda);
+				for(var a=0; a<agenda.length;a++){
+					var evento={};
+					evento.title=agenda[a].summary;
+					if(agenda[a].description==undefined)evento.description='';
+					else evento.description=agenda[a].description;
+					evento.datetime = new Date(agenda[a].start.dateTime);
+					//evento.datetime = new Date(2015, 7, 12, 18);
+					queueEvents.push(evento);
+				}
+				console.log('eventos: ',queueEvents);
+				console.log('eventos bien: ',new Date(2015, 6, 7, 18));
+				$('#calendar').eCalendar(
+					{weekDays: ['Dom', 'Lun', 'Mar', 'Mier', 'Jue', 'Vie', 'Sab'],
+						months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+						textArrows: {previous: '<', next: '>'},
+						eventTitle: 'Eventos',
+						url: '',
+						events: queueEvents});
+				$('#calendar').addClass('calendar');
+			})
+			iniciar();
+		})
+	}
 });
 
 var weatherParams = {
@@ -54,71 +81,36 @@ var weatherParams = {
 		'lang':'es'
 	};
 
-$.get('/user').success(function(resp){
-	usuario=resp;
-	console.log(usuario[0].name);
-})
 $.get('/ambient').success(function(resp){
 	ambiente=resp;
 	console.log(ambiente[0].temperature);
+	var ambientDiv = $('.more-right');
+	var div ="<div id='insideWeather' style='display: block;'><span class='formatoIcono icon dimmed wi-thermometer-internal'></span>"+ambiente[0].temperature+"º</div><div class='forecast small dimmed' style='display: block;'></div></div>"
+	ambientDiv.append(div);
+
 })
-
-var queueFeeds = [];
-
-function queueFeed(feed, title, author, description){
-
-	if(description){
-		var div = "<div class='more-left'>"
-		+"<div class='newsh'>" + title + " by "+ author+"</div>"
-		+"<div class='newsd'>" + description + "</div>";
+$.get('/twitter').success(function(resp){
+	queueFeeds=resp;
+	printFeed();
+	contFeed = contFeed+1;
+})
+function printFeed(){
+	$('#feed').remove();
+	if(queueFeeds.length>0){
+		var nowFeed = queueFeeds[contFeed].tweet;
+		var feedDiv = $('#bottomRightContainer');
+		var div ="<div id='feed' class='newsh hide'>"+nowFeed+"</div>"
+		feedDiv.append(div);
+		if(contFeed === queueFeeds.length-1) contFeed = 0;
+		else contFeed = contFeed +1;
+		setTimeout(function(){
+			$('#feed').removeClass('hide');
+			$('#feed').addClass('show');
+		},100)
 	}
-	else {
-		var div = "<div class='more-left'>"
-		+"<div class='newsh'>" + title + " by "+ author+"</div>";
-	}
-
-	feed.push(div);
 }
 
-function printFeed(feed){
-	var container = $('#bottomRightContainer');
-	container.empty();
-
-	// Print:
-	var elems = feed.length;
-	if(elems > 0){
-		container.html(feed[0]);
-		feed.shift();
-	}
-
-	//Repeat after timeout:
-	setTimeout(function(){printFeed(feed)}, 20000);
-}
-
-function updateFeed(feed, feed_url){
-	$.ajax({
-	  // 'http://stackoverflow.com/feeds/question/10943544'
-	  url      : document.location.protocol + '//ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=10&callback=?&q=' + encodeURIComponent(feed_url),
-	  dataType : 'json',
-	  success  : function (data) {
-	    if (data.responseData.feed && data.responseData.feed.entries) {
-	      $.each(data.responseData.feed.entries, function (i, e) {
-	        //console.log("------------------------");
-	        //console.log("title      : " + e.title);
-	        //console.log("author     : " + e.author);
-	        //console.log("description: " + e.description);
-
-	        queueFeed(feed, e.title, e.author, e.description)
-
-	      });
-	    }
-	  }
-	});
-
-	setTimeout(function() {
-		if(feed.length < 1) updateFeed(feed, feed_url);
-	}, 10000);
-}
+setInterval(printFeed, 30000);
 
 function updateTime() {
 	var now = new Date();
@@ -341,21 +333,7 @@ function updateCurrentWeather() {
 
 $( document ).ready(function() {
 	updateTime();
-	updateFeed(queueFeeds, feed);
 	updateCurrentWeather();
-	printFeed(queueFeeds);
-	$('#calendar').eCalendar(
-		{weekDays: ['Dom', 'Lun', 'Mar', 'Mier', 'Jue', 'Vie', 'Sab'],
-		months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-		textArrows: {previous: '<', next: '>'},
-		eventTitle: 'Eventos',
-		url: '',
-		events: [
-		{title: 'Daily', description: 'Pensando cositas chulas', datetime: new Date(2015, 7, 12, 17)},
-		{title: 'Daily', description: 'Pensando cositas chulas', datetime: new Date(2015, 7, 17, 16)},
-		{title: 'carnaval gay', description: 'Pasear cachitas', datetime: new Date(2015, 7, 23, 16)}
-	]});
-	$('#calendar').addClass('calendar');
 	$('#calendar1').eCalendar(
 		{weekDays: ['Dom', 'Lun', 'Mar', 'Mier', 'Jue', 'Vie', 'Sab'],
 		months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
@@ -363,25 +341,23 @@ $( document ).ready(function() {
 		eventTitle: 'Reservas',
 		url: '',
 		events: [
-			{title: 'Juanma', description: 'agendada', datetime: new Date(2015, 7, 12, 17)},
+			{title: 'Juanma', description: 'agendada', datetime: new Date(2015, 7, 12, 18)},
 			{title: 'Ira', description: 'Daily casa del libro', datetime: new Date(2015, 7, 12, 18)},
-			{title: 'Josera', description: 'Daily CISM', datetime: new Date(2015, 7, 12, 16)}
+			{title: 'Josera', description: 'Daily CISM', datetime: new Date(2015, 7, 12, 18)}
 	]});
 	$('#calendar1').addClass('calendar2');
 
 	$('#topRightContainer').html("<div class='more-right'>"
-		+ "<div class='windsun small dimmed' style='display: block;'><span class='wi wi-strong-wind xdimmed'></span> 1 <span class='wi wi-sunset xdimmed'></span> 21:24</div><div class='temp' style='display: block;'><span class='icon dimmed wi wi-day-sunny'></span>27.9°</div><div class='forecast small dimmed' style='display: block;'></div></div>"
+		+ "<div class='windsun small dimmed' style='display: block;'><span class='wi wi-strong-wind xdimmed'></span> 1 <span class='wi wi-sunset xdimmed'></span> </div><div class='temp' style='display: block;'><span class='icon dimmed wi wi-day-sunny'></span></div><div class='forecast small dimmed' style='display: block;'></div>"
+		+ "</div>"
 		+ "</div>");
 })
 $('#gestion').click(function(){
 	openGestion();
 })
-$('#inicio').click(function(){
-	iniciar();
-})
-$('#topLeftContainer').click(function(){
-	iniciar();
-})
+//$('#topLeftContainer').click(function(){
+//	iniciar();
+//})
 $('#agenda').click(function(){
 	openAgenda();
 })
@@ -389,33 +365,10 @@ $('#salir').click(function(){
 	standBy();
 })
 
-//$('#ActiveHelp').click(function(){
-//	if(!statusPanel) {
-//		$('#informationPanel').removeClass('hideTool');
-//		$('#informationPanel').addClass('showTool');
-//		statusPanel = true;
-//	}
-//	else {
-//		$('#informationPanel').removeClass('showTool');
-//		$('#informationPanel').addClass('hideTool');
-//		statusPanel = false;
-//	}
-//})
-
 /////////////////////////
 ///  CONTROLES DE VOZ
 /////////////////////////
 
-//voiceEngine.addAction(new VoiceAction("ayuda", function(){
-//	$('#informationPanel').removeClass('hideTool');
-//	$('#informationPanel').addClass('showTool');
-//	statusPanel = true;
-//}));
-//voiceEngine.addAction(new VoiceAction("cerrar", function(){
-//	$('#informationPanel').removeClass('showTool');
-//	$('#informationPanel').addClass('hideTool');
-//	statusPanel = false;
-//}));
 voiceEngine.addAction(new VoiceAction("gestión", function(){
 	openGestion();
 }));
