@@ -26,7 +26,7 @@ exports.agenda_proximos_eventos =  function(request, res) {
       console.log('The API returned an error: ' + err);
       response.status(500).end();
     }
-    else if(user && user.tokens && user.tokens.length > 0) {  
+    else if(user && user.tokens) {  
       var tokens = user.tokens[0];
       oauth2Client.setCredentials(tokens);
   
@@ -48,7 +48,7 @@ exports.agenda_proximos_eventos =  function(request, res) {
           res.json(events);
       });
     }
-    else response.status(404).end();
+    else res.status(404).end();
 
    });
 }
