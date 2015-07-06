@@ -51,13 +51,16 @@ exports.apiLogin = function (req, res){
   lastUser = req.query.user;
   var scopes = [
     'https://www.googleapis.com/auth/plus.me',
-    'https://www.googleapis.com/auth/calendar'
+    'https://www.googleapis.com/auth/calendar',
+    'https://apps-apis.google.com/a/feeds/calendar/resource/'
   ];
 
   var url = oauth2Client.generateAuthUrl({
     access_type: 'offline', // will return a refresh token
     scope: scopes // can be a space-delimited string or an array of scopes
   });
+
+  url = url + '&approval_prompt=force';
 
   var timestamp = process.hrtime();
   var code = qr.image(url, { type: 'png' });  
