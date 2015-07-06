@@ -35,7 +35,7 @@ socket.on('face', function (data) {
 			console.log(results);
 			var QRdiv = $('body');
 			var div = "<div id='QRcode' class='loginQR hide'>"
-				+"<img src='../../"+ results.image.path +"'/>" + "</div>"
+				+"<img src='"+ results.image.path +"'/>" + "</div>"
 			QRdiv.append(div);
 			setTimeout(function(){
 				$('#QRcode').removeClass('hide');
@@ -43,32 +43,36 @@ socket.on('face', function (data) {
 			},200)
 		});
 	}
-	if(data.message=='known_face'){
+	if(data.message=='known_face' || data.message=='user_registered'){
 		$.get('/user?faceId='+data.face_id).success(function(resp){
 			usuario=resp;
 			console.log(usuario[0]);
 			$.get('/calendar?face_id='+data.face_id).success(function(resp2){
-				agenda=resp2;
-				console.log(agenda);
-				for(var a=0; a<agenda.length;a++){
-					var evento={};
-					evento.title=agenda[a].summary;
-					if(agenda[a].description==undefined)evento.description='';
-					else evento.description=agenda[a].description;
-					evento.datetime = new Date(agenda[a].start.dateTime);
-					evento.datetime.setMonth(evento.datetime.getMonth()+1);
-					queueEvents.push(evento);
+				console.log(resp2);
+				if(resp2.tokens.length>0){
+					$('.welcomeMessage').remove();
+					agenda=resp2;
+					console.log(agenda);
+					for(var a=0; a<agenda.length;a++){
+						var evento={};
+						evento.title=agenda[a].summary;
+						if(agenda[a].description==undefined)evento.description='';
+						else evento.description=agenda[a].description;
+						evento.datetime = new Date(agenda[a].start.dateTime);
+						evento.datetime.setMonth(evento.datetime.getMonth()+1);
+						queueEvents.push(evento);
+					}
+					$('#calendar').eCalendar(
+						{weekDays: ['Dom', 'Lun', 'Mar', 'Mier', 'Jue', 'Vie', 'Sab'],
+							months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+							textArrows: {previous: '<', next: '>'},
+							eventTitle: 'Eventos',
+							url: '',
+							events: queueEvents});
+					$('#calendar').addClass('calendar');
+					iniciar();
 				}
-				$('#calendar').eCalendar(
-					{weekDays: ['Dom', 'Lun', 'Mar', 'Mier', 'Jue', 'Vie', 'Sab'],
-						months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-						textArrows: {previous: '<', next: '>'},
-						eventTitle: 'Eventos',
-						url: '',
-						events: queueEvents});
-				$('#calendar').addClass('calendar');
 			})
-			iniciar();
 		})
 	}
 });
@@ -260,7 +264,7 @@ $('#reservarSala').click(function(){
 	}, 200);
 
 })
-$('.sala').click(function(event){
+$('.sala').click(function(){
 	console.log(this.id);
 	$('.salaUp').addClass('salaSub');
 	$('.salaUp').removeClass('salaUp');
@@ -333,7 +337,7 @@ $( document ).ready(function() {
 	updateTime();
 	updateCurrentWeather();
 	//$('#calendar1').
-	//$('#calendar1').addClass('calendar2');
+	$('#calendar1').addClass('calendar2');
 
 	$('#topRightContainer').html("<div class='more-right'>"
 		+ "<div class='windsun small dimmed' style='display: block;'><span class='wi wi-strong-wind xdimmed'></span> 1 <span class='wi wi-sunset xdimmed'></span> </div><div class='temp' style='display: block;'><span class='icon dimmed wi wi-day-sunny'></span></div><div class='forecast small dimmed' style='display: block;'></div>"
