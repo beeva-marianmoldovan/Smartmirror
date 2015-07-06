@@ -14,6 +14,7 @@ var Schema = mongoose.Schema;
 
 var UserTokens = new Schema({
 	access_token		: { type : String },
+	refresh_token		: { type : String },
  	token_type			: { type : String },
   	id_token			: { type : String },
   	expiry_date			: { type : Date }
