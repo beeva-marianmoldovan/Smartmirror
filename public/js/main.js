@@ -23,8 +23,18 @@ var socket = io.connect('http://192.168.0.66:3000');
 
 socket.on('face', function (data) {
 	console.log(data.message);
+	if(data.message=='face_detected'){
+			var QRdiv = $('body');
+			var div = "<div class='WelcomeMessage'>Te estoy viendo, dejame que recuerde si te conozco.</div>"
+			QRdiv.append(div);
+			setTimeout(function(){
+				$('#QRcode').removeClass('hide');
+				$('#QRcode').addClass('show');
+			},200)
+	}
 	if(data.message=='new_face'){
 		$.get( '/login').success(function(results){
+			$('.welcomeMessage').remove();
 			console.log(results);
 			var QRdiv = $('body');
 			var div = "<div id='QRcode' class='loginQR hide'>"
