@@ -31,7 +31,7 @@ socket.on('face', function (data) {
 			QRdiv.append(div);
 	}
 	if(data.message=='new_face'){
-		$.get( '/login').success(function(results){
+		$.get( '/login?user=' + data.faceId).success(function(results){
 			$('.welcomeMessage').remove();
 			console.log(results);
 			var QRdiv = $('body');
@@ -52,7 +52,7 @@ socket.on('face', function (data) {
 				$('.welcomeMessage').remove();
 				usuario=resp;
 				console.log(usuario[0]);
-				$.get('/calendar?faceId='+data.faceId).success(function(resp2){
+				$.get('/calendar?face_id='+data.faceId).success(function(resp2){
 					console.log('resp2: ',resp2);
 						agenda=resp2;
 						console.log(agenda);
