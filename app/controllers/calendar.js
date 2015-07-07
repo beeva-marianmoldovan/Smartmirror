@@ -58,6 +58,7 @@ exports.create_event = function(request, res) {
   var userId = request.query.face_id;
 
   var dataEvent = request.body;
+  dataEvent.summary = "Evento creado desde SmartMirror";
   console.log(dataEvent);
 
   User.findOne({'faceId' : userId}, function(err, user){
@@ -80,6 +81,7 @@ exports.create_event = function(request, res) {
           return;
         }
         console.log('Event created: %s', event.htmlLink);
+        res.json(event.htmlLink);
       });
     }
   });
