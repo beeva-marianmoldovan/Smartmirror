@@ -66,8 +66,14 @@ exports.apiLogin = function (req, res){
   var code = qr.image(url, { type: 'png' });  
   var output = fs.createWriteStream('public/images/'+timestamp+'.png');
 
+  console.log(url);
+  code.on('end', function () { 
+     res.json({'url':url}, {'image':output});
+  });
+  
   code.pipe(output);
-  res.json({'url':url}, {'image':output});
+  console.log("Last User", lastUser);
+  
 }
 
 
@@ -85,7 +91,7 @@ exports.apiOauthCallback = function (req, res){
         return;
       }
       else {
-        console.log(profile);
+        console.log("Callback Last User", lastUser);
         var user = new User({
           'name'    : profile.displayName,
           'faceId'  : lastUser

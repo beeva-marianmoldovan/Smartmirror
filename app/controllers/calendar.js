@@ -27,7 +27,7 @@ exports.get_next_events =  function(request, res) {
       console.log('The API returned an error: ' + err);
       response.status(500).end();
     }
-    else{  
+    else if(user && user.tokens) {  
       var tokens = user.tokens[0];
       oauth2Client.setCredentials(tokens);
   
@@ -49,6 +49,8 @@ exports.get_next_events =  function(request, res) {
           res.json(events);
       });
     }
+    else res.status(404).end();
+
    });
 }
 
@@ -179,4 +181,3 @@ exports.get_calendars_availabily = function(request, res) {
     }
    });
 }
-
