@@ -12,7 +12,7 @@ var afternoon 	= ['¡Hola bebé!','You look sexy!','Looking good today!'];
 var evening 	= ['Wow, You look hot!','You look nice!','Hi, sexy!'];
 var feed		= 'http://meneame.feedsportal.com/rss';
 var contWelcome = 0, contFeed = 0;
-var queueFeeds = [], queueEvents=[];
+var queueFeeds = [], queueEvents=[], salaList=[];
 var usuario, ambiente, agenda;
 var statusPanel = false;
 var voiceEngine = new VoiceEngine();
@@ -51,18 +51,49 @@ socket.on('face', function (data) {
 				$('#QRcode').remove();
 				$('.welcomeMessage').remove();
 				usuario=resp;
-				console.log(usuario[0]);
-				$.get('/calendar?face_id='+data.faceId).success(function(resp2){
+				$.get('/calendar/resources?face_id='+data.faceId).success(function(resp3){
+					console.log('salas: ',resp3);
+					for(var a = 0; a < resp3.length; a++){
+						var nombreSala = resp3[a].apps$property[1].value.match("Sala \[0-9*]");
+						var salasDiv = $('#reservarOptions');
+						var div ="<div id='sala"+a+"'class='sala'>"+nombreSala[0]
+						+"<p class='salaDisponible'>Horarios disponibles</p>"
+						+"</div>"
+						salasDiv.append(div);
+						//var datosSala={};
+						//var nombreSala = resp3[a].apps$property[1].value.match("Sala \[0-9*]");
+						//datosSala.nombreSala = nombreSala[0];
+						//datosSala.idSala = resp3[a].apps$property[2].value;
+						//salaList.push(datosSala);
+					}
+					$('.sala').click(function(){
+						console.log(this.id);
+						$('.salaUp').addClass('salaSub');
+						$('.salaUp').removeClass('salaUp');
+						$('.sala').addClass('salaSub');
+						$('.sala').removeClass('sala');
+						$('#'+this.id).removeClass('salaSub');
+						$('#'+this.id).addClass('salaUp');
+						setTimeout(function(){
+							$('#calendar1').removeClass('erase');
+						},200)
+						setTimeout(function(){
+							$('#calendar1').removeClass('hide');
+							$('#calendar1').addClass('show');
+						},300)
+					})
+				})
+				$.get('/calendar/next?face_id='+data.faceId).success(function(resp2){
 					console.log('resp2: ',resp2);
 						agenda=resp2;
-						console.log(agenda);
-						for(var a=0; a<agenda.length;a++){
-							var evento={};
-							evento.title=agenda[a].summary;
-							if(agenda[a].description==undefined)evento.description='';
-							else evento.description=agenda[a].description;
+						console.log('agenda: ',agenda);
+						for(var a=0; a<agenda.length;a++) {
+							var evento = {};
+							evento.title = agenda[a].summary;
+							if (agenda[a].description == undefined)evento.description = '';
+							else evento.description = agenda[a].description;
 							evento.datetime = new Date(agenda[a].start.dateTime);
-							evento.datetime.setMonth(evento.datetime.getMonth()+1);
+							evento.datetime.setMonth(evento.datetime.getMonth() + 1);
 							queueEvents.push(evento);
 						}
 						$('#calendar').eCalendar(
@@ -285,22 +316,6 @@ $('#reservarSala').click(function(){
 		$('#reservarOptions').addClass('show');
 	}, 200);
 
-})
-$('.sala').click(function(){
-	console.log(this.id);
-	$('.salaUp').addClass('salaSub');
-	$('.salaUp').removeClass('salaUp');
-	$('.sala').addClass('salaSub');
-	$('.sala').removeClass('sala');
-	$('#'+this.id).removeClass('salaSub');
-	$('#'+this.id).addClass('salaUp');
-	setTimeout(function(){
-		$('#calendar1').removeClass('erase');
-	},200)
-	setTimeout(function(){
-		$('#calendar1').removeClass('hide');
-		$('#calendar1').addClass('show');
-	},300)
 })
 function updateCurrentWeather() {
 

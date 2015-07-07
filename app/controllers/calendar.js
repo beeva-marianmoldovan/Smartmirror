@@ -109,7 +109,6 @@ exports.get_calendar_resources =  function(request, res) {
    });
 }
 
-
 exports.get_calendars_availabily = function(request, res) {
   var userId = request.query.face_id;
   var sala = request.body.resourceID;

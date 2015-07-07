@@ -558,8 +558,8 @@ body, html {
 	height: 70px;
 	border-radius: 100px;
 	background-color: #acacac;
-	font-size: 27px;
-	margin-left: 12%;
+	font-size: 26px;
+	margin-left: 10%;
 	display: inline-block;
 	cursor: pointer;
 	-webkit-transition: all ease-in-out 0.3s;
