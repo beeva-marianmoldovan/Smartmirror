@@ -71,6 +71,7 @@ exports.apiLogin = function (req, res){
      res.json({'url':url}, {'image':output});
   });
   code.pipe(output);
+  console.log("Last User", lastUser);
   
 }
 
@@ -89,7 +90,7 @@ exports.apiOauthCallback = function (req, res){
         return;
       }
       else {
-        console.log(profile);
+        console.log("Callback Last User", lastUser);
         var user = new User({
           'name'    : profile.displayName,
           'faceId'  : lastUser
