@@ -12,7 +12,7 @@ var afternoon 	= ['¡Hola bebé!','You look sexy!','Looking good today!'];
 var evening 	= ['Wow, You look hot!','You look nice!','Hi, sexy!'];
 var feed		= 'http://meneame.feedsportal.com/rss';
 var contWelcome = 0, contFeed = 0;
-var queueFeeds = [], queueEvents=[], salaList=[];
+var queueFeeds = [], queueEvents=[], salaList={};
 var usuario, ambiente, agenda;
 var statusPanel = false;
 var voiceEngine = new VoiceEngine();
@@ -60,11 +60,12 @@ socket.on('face', function (data) {
 						+"<p class='salaDisponible'>Horarios disponibles</p>"
 						+"</div>"
 						salasDiv.append(div);
-						//var datosSala={};
-						//var nombreSala = resp3[a].apps$property[1].value.match("Sala \[0-9*]");
-						//datosSala.nombreSala = nombreSala[0];
-						//datosSala.idSala = resp3[a].apps$property[2].value;
-						//salaList.push(datosSala);
+						$.post( "/calendar/availability?face_id="+data.faceId, { resourceID: resp3[a].apps$property[2].value } )
+							.success(function(respSalas){
+								console.log(respSalas);
+							});
+						salaList['sala'+a] = resp3[a].apps$property[2].value;
+						console.log(salaList);
 					}
 					$('.sala').click(function(){
 						console.log(this.id);
