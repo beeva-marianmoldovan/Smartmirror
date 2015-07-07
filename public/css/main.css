@@ -291,8 +291,8 @@ body, html {
 	font-family: "Arial Black";
 }
 .gestion {
-	width: 200px;
-	height: 200px;
+	width: 20%;
+	height: 14%;
 	border-radius: 100px;
 	background-color: #acacac;
 	position: absolute;
@@ -324,8 +324,8 @@ body, html {
 	transition: all ease-in-out 0.7s;
 }
 .agenda {
-	width: 200px;
-	height: 200px;
+	width: 16%;
+	height: 11%;
 	border-radius: 100px;
 	background-color: #acacac;
 	position: absolute;
@@ -358,8 +358,8 @@ body, html {
 }
 .inicio {
 	font-size: 50px;
-	width: 100px;
-	height: 100px;
+	width: 10%;
+	height: 7%;
 	border-radius: 100px;
 	background-color: #acacac;
 	position: absolute;
@@ -392,8 +392,8 @@ body, html {
 }
 .salir {
 	font-size: 45px;
-	width: 100px;
-	height: 100px;
+	width: 10%;
+	height: 7%;
 	border-radius: 100px;
 	background-color: #acacac;
 	position: absolute;
@@ -514,14 +514,15 @@ body, html {
 
 }
 .sala{
-	width: 200px;
-	height: 200px;
+	width: 20%;
+	height: 14%;
 	border-radius: 100px;
 	background-color: #acacac;
 	margin-top: 3%;
 	margin-left: 20%;
 	display: inline-block;
 	cursor: pointer;
+	line-height: 1;
 	-webkit-transition: all ease-in-out 0.3s;
 	-moz-transition: all ease-in-out 0.3s;
 	-ms-transition: all ease-in-out 0.3s;
@@ -597,6 +598,45 @@ body, html {
 .formatoIcono{
 	font-size: 50px;
 	top: 5px;
+}
+@media (max-height: 900px){
+	.calendar2 {
+		cursor: default;
+		/* width: 600px; */
+		height: 46%!important;
+		margin-left: 2%;
+		margin-top: 13%!important;
+		background-color: lightslategray;
+	}
+	.salaUp {
+		left: 5%;
+		top: 18%;
+		width: 15%;
+		height: 19%;
+		border-radius: 100px;
+		background-color: #acacac;
+		position: absolute;
+		display: inline-block;
+		cursor: pointer;
+		-webkit-transition: all ease-in-out 0.3s;
+		-moz-transition: all ease-in-out 0.3s;
+		-ms-transition: all ease-in-out 0.3s;
+		-o-transition: all ease-in-out 0.3s;
+		transition: all ease-in-out 0.3s;
+		font-size: 60px;
+	}
+	.welcomePhraseSub {
+		position: absolute;
+		top: 90%;
+		left: 5%;
+		width: 45%;
+		font-size: 25px;
+		-webkit-transition: all ease-in-out 0.7s;
+		-moz-transition: all ease-in-out 0.7s;
+		-ms-transition: all ease-in-out 0.7s;
+		-o-transition: all ease-in-out 0.7s;
+		transition: all ease-in-out 0.7s;
+	}
 }
 @font-face {
   font-family: 'HelveticaNeue-UltraLight';

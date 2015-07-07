@@ -93,7 +93,9 @@ socket.on('face', function (data) {
 		})
 	}
 	if(data.message=='no_face_now'){
-		standBy();
+		setTimeout(function(){
+			standBy();
+		},3000)
 	}
 });
 
