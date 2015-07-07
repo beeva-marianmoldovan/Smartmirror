@@ -40,12 +40,20 @@ body, html {
 	float: left;
 }
 
-.right
+.rightup
 {
 	position: relative;
 	width: 50%;
 	height: 100%;
 	float: right;
+}
+
+.rightdown {
+	position: absolute;
+	width: 50%;
+	height: 10%;
+	bottom: 3%;
+	right: 0%;
 }
 
 .block {
