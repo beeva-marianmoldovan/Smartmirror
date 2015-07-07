@@ -67,9 +67,11 @@ exports.apiLogin = function (req, res){
   var output = fs.createWriteStream('public/images/'+timestamp+'.png');
 
   console.log(url);
-
+  code.on('end', function () { 
+     res.json({'url':url}, {'image':output});
+  });
   code.pipe(output);
-  res.json({'url':url}, {'image':output});
+  
 }
 
 
