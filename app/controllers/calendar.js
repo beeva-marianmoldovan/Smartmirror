@@ -57,30 +57,8 @@ exports.get_next_events =  function(request, res) {
 exports.create_event = function(request, res) {
   var userId = request.query.face_id;
 
-  var event = {
-    summary: 'Creando eventos',
-    location: 'ES-Av de Burgos,16D-Planta 10-Sala 1/Cap 8-PROYECTOR-TLF',
-    description: 'Probando a crear eventos',
-    start: {
-      dateTime: '2015-07-15T09:00:00-07:00',
-      timeZone: 'Europe/Madrid',
-    },
-    end: {
-      dateTime: '2015-07-15T17:00:00-07:00',
-      timeZone: 'Europe/Madrid',
-    },
-    attendees: [
-      {email: 'sergio.santamaria@beeva.com'},
-      {email: 'marian.claudiu@beeva.com'},
-      {email: 'beeva.com_36303135313532312d363937@resource.calendar.google.com'},
-    ],
-    reminders: {
-      useDefault: false,
-      overrides: [
-        {method: 'email', minutes: 24 * 60}
-      ],
-    },
-  };
+  var dataEvent = request.body;
+  console.log(dataEvent);
 
   User.findOne({'faceId' : userId}, function(err, user){
     console.log(err, user);
@@ -95,7 +73,7 @@ exports.create_event = function(request, res) {
       calendar.events.insert({
         auth: oauth2Client,
         calendarId: 'primary',
-        resource: event,
+        resource: dataEvent,
       }, function(err, event) {
         if (err) {
           console.log('There was an error contacting the Calendar service: ' + err);

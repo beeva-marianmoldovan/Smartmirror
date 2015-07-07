@@ -8,7 +8,7 @@ module.exports = function(app) {
 		.get(calendar.get_next_events);
 
 	app.route('/calendar/create')
-		.get(calendar.create_event);
+		.post(calendar.create_event);
 
 	app.route('/calendar/resources')
 		.get(calendar.get_calendar_resources);
