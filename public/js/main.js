@@ -1,13 +1,13 @@
 'use strict';
 
-var days 		= ['domingo','lunes','martes','miécoles','jueves','viernes','sábado'];
-var months 		= ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','dicembre'];
+var days 		= ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+var months 		= ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 var dayAbbr 	= ['dom','lun','mar','mie','jue','vie','sab'];
 var today 		= 'hoy';
 var tomorrow 	= 'mañana';
 var in_days 	= 'días';
 var datelabel 	= 'Día';
-var morning 	= ['Buenos días','Que tengas un día super cool', 'Que tengas un dia MALACA MALACA'];
+var morning 	= ['Buenos días','Que tengas un día super cool', 'Que tengas un día MALACA MALACA'];
 var afternoon 	= ['¡Hola bebé!','You look sexy!','Looking good today!'];
 var evening 	= ['Wow, You look hot!','You look nice!','Hi, sexy!'];
 var feed		= 'http://meneame.feedsportal.com/rss';
