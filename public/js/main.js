@@ -25,7 +25,6 @@ var socket = io.connect('http://localhost:3000');
 socket.on('face', function (data) {
 	console.log(data);
 	if(data.message=='face_detected'){
-
 			$('#QRcode').remove();
 			var QRdiv = $('body');
 			var div = "<div class='WelcomeMessage'>Te estoy viendo, dejame que recuerde si te conozco.</div>"
@@ -46,40 +45,40 @@ socket.on('face', function (data) {
 		});
 	}
 	if(data.message=='known_face' || data.message=='user_registered'){
-		$.get('/user?face_id='+data.faceId).success(function(resp){
-			if(resp2.tokens.length>0){
-			$('#QRcode').remove();
-			usuario=resp;
-			console.log(usuario[0]);
-			$.get('/calendar?face_id='+data.faceId).success(function(resp2){
-				console.log('resp2: ',resp2);
-					$('.welcomeMessage').remove();
-					agenda=resp2;
-					console.log(agenda);
-					for(var a=0; a<agenda.length;a++){
-						var evento={};
-						evento.title=agenda[a].summary;
-						if(agenda[a].description==undefined)evento.description='';
-						else evento.description=agenda[a].description;
-						evento.datetime = new Date(agenda[a].start.dateTime);
-						evento.datetime.setMonth(evento.datetime.getMonth()+1);
-						queueEvents.push(evento);
-					}
-					$('#calendar').eCalendar(
-						{weekDays: ['Dom', 'Lun', 'Mar', 'Mier', 'Jue', 'Vie', 'Sab'],
-							months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-							textArrows: {previous: '<', next: '>'},
-							eventTitle: 'Eventos',
-							url: '',
-							events: queueEvents});
-					$('#calendar').addClass('calendar');
-					iniciar();
+		$.get('/user?faceId='+data.faceId).success(function(resp){
+			console.log('resp: ',resp);
+			if(resp[0].tokens.length>0){
+				$('#QRcode').remove();
+				$('.welcomeMessage').remove();
+				usuario=resp;
+				console.log(usuario[0]);
+				$.get('/calendar?faceId='+data.faceId).success(function(resp2){
+					console.log('resp2: ',resp2);
+						agenda=resp2;
+						console.log(agenda);
+						for(var a=0; a<agenda.length;a++){
+							var evento={};
+							evento.title=agenda[a].summary;
+							if(agenda[a].description==undefined)evento.description='';
+							else evento.description=agenda[a].description;
+							evento.datetime = new Date(agenda[a].start.dateTime);
+							evento.datetime.setMonth(evento.datetime.getMonth()+1);
+							queueEvents.push(evento);
+						}
+						$('#calendar').eCalendar(
+							{weekDays: ['Dom', 'Lun', 'Mar', 'Mier', 'Jue', 'Vie', 'Sab'],
+								months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+								textArrows: {previous: '<', next: '>'},
+								eventTitle: 'Eventos',
+								url: '',
+								events: queueEvents});
+						$('#calendar').addClass('calendar');
+						iniciar();
 				})
 			}
 			else {
 				$('.welcomeMessage').remove();
 				$.get( '/login?user='+data.faceId).success(function(results){
-					$('.welcomeMessage').remove();
 					console.log(results);
 					var QRdiv = $('body');
 					var div = "<div id='QRcode' class='loginQR hide'>"
