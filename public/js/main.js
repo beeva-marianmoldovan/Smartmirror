@@ -92,6 +92,9 @@ socket.on('face', function (data) {
 			}
 		})
 	}
+	if(data.message=='no_face_now'){
+		standBy();
+	}
 });
 
 var weatherParams = {
