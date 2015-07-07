@@ -58,23 +58,21 @@ exports.create_event = function(request, res) {
   var userId = request.query.face_id;
 
   var event = {
-    summary: 'Google I/O 2015',
+    summary: 'Creando eventos',
     location: 'ES-Av de Burgos,16D-Planta 10-Sala 1/Cap 8-PROYECTOR-TLF',
-    description: 'A chance to hear more about Google\'s developer products.',
+    description: 'Probando a crear eventos',
     start: {
-      dateTime: '2015-07-09T09:00:00-07:00',
+      dateTime: '2015-07-15T09:00:00-07:00',
       timeZone: 'Europe/Madrid',
     },
     end: {
-      dateTime: '2015-07-09T17:00:00-07:00',
+      dateTime: '2015-07-15T17:00:00-07:00',
       timeZone: 'Europe/Madrid',
     },
-    recurrence: [
-      'RRULE:FREQ=DAILY;COUNT=2'
-    ],
     attendees: [
       {email: 'sergio.santamaria@beeva.com'},
       {email: 'marian.claudiu@beeva.com'},
+      {email: 'beeva.com_36303135313532312d363937@resource.calendar.google.com'},
     ],
     reminders: {
       useDefault: false,
@@ -136,6 +134,8 @@ exports.get_calendar_resources =  function(request, res) {
 
 exports.get_calendars_availabily = function(request, res) {
   var userId = request.query.face_id;
+  var sala = request.body.calendarID;
+  console.log(sala);
    
    User.findOne({'faceId' : userId}, function(err, user){
     console.log(err, user);
@@ -147,10 +147,9 @@ exports.get_calendars_availabily = function(request, res) {
       var tokens = user.tokens[0];
       oauth2Client.setCredentials(tokens);
   
-      //var calendarId = "beeva.com_36303135313532312d363937@resource.calendar.google.com"; //ES-Av de Burgos,16D-Planta 10-Sala 1/Cap 8-PROYECTOR-TLF
-      var calendarId = "beeva.com_2d3436323439343032373036@resource.calendar.google.com"; //ES-Av de Burgos,16D-Planta 10-Sala 2/Cap 8-BOARD
+      var sala1 = "beeva.com_36303135313532312d363937@resource.calendar.google.com"; //ES-Av de Burgos,16D-Planta 10-Sala 1/Cap 8-PROYECTOR-TLF
+      var sala2 = "beeva.com_2d3436323439343032373036@resource.calendar.google.com"; //ES-Av de Burgos,16D-Planta 10-Sala 2/Cap 8-BOARD
 
-      
       var todayMin = new Date();
       var todayMax = new Date();
       todayMin.setHours(0, 0, 0, 0);
@@ -159,9 +158,9 @@ exports.get_calendars_availabily = function(request, res) {
       console.log('timeMin: '+todayMin+ ' timeMax: '+todayMax);
 
       var parameters = {
-        items : [{id: calendarId}],
-        timeMax: todayMin,
-        timeMin: todayMax,
+        items : [{id: sala}],
+        timeMin: todayMin,
+        timeMax: todayMax,
         timeZone: 'Europe/Madrid'
       }
 
