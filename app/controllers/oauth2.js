@@ -66,8 +66,6 @@ exports.apiLogin = function (req, res){
   var code = qr.image(url, { type: 'png' });  
   var output = fs.createWriteStream('public/images/'+timestamp+'.png');
 
-  console.log(url);
-
   code.pipe(output);
   res.json({'url':url}, {'image':output});
 }
@@ -110,7 +108,3 @@ exports.apiOauthCallback = function (req, res){
     });
   });
 }
-
-  
-
-
