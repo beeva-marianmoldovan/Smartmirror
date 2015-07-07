@@ -60,15 +60,14 @@ socket.on('face', function (data) {
 						+"<p class='salaDisponible'>Horarios disponibles</p>"
 						+"</div>"
 						salasDiv.append(div);
-						$.post( "/calendar/availability?face_id="+data.faceId, { resourceID: resp3[a].apps$property[2].value } )
-							.success(function(respSalas){
-								console.log(respSalas);
-							});
 						salaList['sala'+a] = resp3[a].apps$property[2].value;
-						console.log(salaList);
 					}
 					$('.sala').click(function(){
 						console.log(this.id);
+						$.post( "/calendar/availability?face_id="+data.faceId, { resourceID: salaList[this.id] } )
+							.success(function(respSalas){
+								console.log(respSalas);
+							});
 						$('.salaUp').addClass('salaSub');
 						$('.salaUp').removeClass('salaUp');
 						$('.sala').addClass('salaSub');

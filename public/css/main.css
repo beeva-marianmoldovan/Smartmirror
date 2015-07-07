@@ -307,6 +307,7 @@ body, html {
 	top: 20%;
 	left: 15%;
 	display: inline-block;
+	z-index: 999;
 	cursor: pointer;
 	-webkit-transition: all ease-in-out 0.7s;
 	-moz-transition: all ease-in-out 0.7s;
@@ -324,6 +325,7 @@ body, html {
 	top: 78%;
 	left: 5%;
 	display: inline-block;
+	z-index: 999;
 	cursor: pointer;
 	-webkit-transition: all ease-in-out 0.7s;
 	-moz-transition: all ease-in-out 0.7s;
@@ -340,6 +342,7 @@ body, html {
 	top: 26%;
 	left: 50%;
 	display: inline-block;
+	z-index: 999;
 	cursor: pointer;
 	-webkit-transition: all ease-in-out 0.7s;
 	-moz-transition: all ease-in-out 0.7s;
@@ -357,6 +360,7 @@ body, html {
 	top: 78%;
 	left: 25%;
 	display: inline-block;
+	z-index: 999;
 	cursor: pointer;
 	-webkit-transition: all ease-in-out 0.7s;
 	-moz-transition: all ease-in-out 0.7s;
@@ -374,6 +378,7 @@ body, html {
 	top: 45%;
 	left: 50%;
 	display: inline-block;
+	z-index: 999;
 	cursor: pointer;
 	-webkit-transition: all ease-in-out 0.7s;
 	-moz-transition: all ease-in-out 0.7s;
@@ -391,6 +396,7 @@ body, html {
 	top: 78%;
 	left: 63%;
 	display: inline-block;
+	z-index: 999;
 	cursor: pointer;
 	-webkit-transition: all ease-in-out 0.7s;
 	-moz-transition: all ease-in-out 0.7s;
@@ -408,6 +414,7 @@ body, html {
 	top: 45%;
 	left: 20%;
 	display: inline-block;
+	z-index: 999;
 	cursor: pointer;
 	-webkit-transition: all ease-in-out 0.7s;
 	-moz-transition: all ease-in-out 0.7s;
@@ -425,6 +432,7 @@ body, html {
 	top: 78%;
 	left: 81%;
 	display: inline-block;
+	z-index: 999;
 	cursor: pointer;
 	-webkit-transition: all ease-in-out 0.7s;
 	-moz-transition: all ease-in-out 0.7s;
@@ -437,6 +445,7 @@ body, html {
 	position: absolute;
 	top: 35%;
 	left: 30%;
+	z-index: 999;
 	display: inline-block;
 	-webkit-transition: all ease-in-out 0.7s;
 	-moz-transition: all ease-in-out 0.7s;
@@ -449,6 +458,7 @@ body, html {
 	position: absolute;
 	top: 78%;
 	left: 45%;
+	z-index: 999;
 	display: inline-block;
 	-webkit-transition: all ease-in-out 0.7s;
 	-moz-transition: all ease-in-out 0.7s;
@@ -614,6 +624,7 @@ body, html {
 		height: 46%!important;
 		margin-left: 2%;
 		margin-top: 13%!important;
+		font-size: 55px!important;
 		background-color: lightslategray;
 	}
 	.salaUp {
