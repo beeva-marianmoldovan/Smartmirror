@@ -1,23 +1,20 @@
-var mongoose    = require( 'mongoose' );
-var User        = mongoose.model('User');
-var _           = require('lodash');
-var google      = require('../lib/googleapis.js');
-var googleApps  = require('google-apps-admin-sdk');
+var mongoose      = require( 'mongoose' );
+var User          = mongoose.model('User');
+var _             = require('lodash');
+var google        = require('../lib/googleapis.js');
+var googleApps    = require('google-apps-admin-sdk');
 
+var OAuth2Client  = google.auth.OAuth2;
+var plus          = google.plus('v1');
+var calendar      = google.calendar('v3');
 
-
-var OAuth2Client = google.auth.OAuth2;
-var plus = google.plus('v1');
-var calendar = google.calendar('v3');
-
-// Client ID and client secret are available at
-// https://code.google.com/apis/console
-var CLIENT_ID = '258658410251-na8agl3ilfpg6b39eodnf64h18i7ef3g.apps.googleusercontent.com';
+var CLIENT_ID     = '258658410251-na8agl3ilfpg6b39eodnf64h18i7ef3g.apps.googleusercontent.com';
 var CLIENT_SECRET = 'q6J-AcHuM5pQi3np7Z2QDvmy';
-var REDIRECT_URL = 'http://localhost:8000/oauth2callback';
+var REDIRECT_URL  = 'http://localhost:8000/oauth2callback';
 
-var oauth2Client = new OAuth2Client(CLIENT_ID, CLIENT_SECRET, REDIRECT_URL);
-// Idem: Comunicación para REST
+var oauth2Client  = new OAuth2Client(CLIENT_ID, CLIENT_SECRET, REDIRECT_URL);
+
+
 exports.get_next_events =  function(request, res) {
 	 var userId = request.query.face_id;
    
