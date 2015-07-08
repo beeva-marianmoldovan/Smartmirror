@@ -2,19 +2,13 @@
 
 var days 		= ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
 var months 		= ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
-var dayAbbr 	= ['dom','lun','mar','mie','jue','vie','sab'];
-var today 		= 'hoy';
-var tomorrow 	= 'mañana';
-var in_days 	= 'días';
-var datelabel 	= 'Día';
 var morning 	= ['Buenos días','Que tengas un día super cool', 'Que tengas un día MALACA MALACA'];
 var afternoon 	= ['¡Hola bebé!','You look sexy!','Looking good today!'];
 var evening 	= ['Wow, You look hot!','You look nice!','Hi, sexy!'];
 var feed		= 'http://meneame.feedsportal.com/rss';
 var contWelcome = 0, contFeed = 0;
-var queueFeeds = [], queueEvents=[], salaList={}, horariosSalaActual;
+var queueFeeds = [], queueEvents=[], salaList={};
 var usuario, ambiente, agenda, salaActual, nombreSalaPrinp;
-var statusPanel = false;
 var voiceEngine = new VoiceEngine();
 //voiceEngine.start();
 
@@ -47,13 +41,11 @@ socket.on('face', function (data) {
 	}
 	if(data.message=='known_face' || data.message=='user_registered'){
 		$.get('/user?faceId='+data.faceId).success(function(resp){
-			console.log('resp: ',resp);
 			if(resp[0].tokens.length>0){
 				$('#QRcode').remove();
 				$('.welcomeMessage').remove();
 				usuario=resp;
 				$.get('/calendar/resources?face_id='+data.faceId).success(function(resp3){
-					console.log('salas: ',resp3);
 					for(var a = 0; a < resp3.length; a++){
 						var nombreSala = resp3[a].apps$property[1].value.match("Sala \[0-9*]");
 						var salasDiv = $('#reservarOptions');
@@ -64,12 +56,12 @@ socket.on('face', function (data) {
 						salaList['sala'+a] = resp3[a].apps$property[2].value;
 					}
 					$('.sala').click(function(){
-						console.log(this);
 						nombreSalaPrinp = $('#'+this.id)[0].attributes[1].value;
-						console.log('nombreSalaPrimp: ', nombreSalaPrinp);
 						$.post( "/calendar/availability?face_id="+data.faceId, { resourceID: salaList[this.id] } )
 							.success(function(respSalas){
-								console.log(this);
+								console.log('respSalas',respSalas);
+								$('#calendar1').removeClass('show');
+								$('#calendar1').addClass('hide');
 								$('.horasReserva').removeClass('fondoOcupada');
 								$('.horasReserva').addClass('fondoLibre');
 								salaActual = this.data.replace('resourceID=','');
@@ -84,16 +76,17 @@ socket.on('face', function (data) {
 									var horaFin = (moment(horariosMoment[e].end).hour())+minutosFinal;
 									var panelHorarios = $('#calendar1').children();
 									for (var i=0;i<panelHorarios.length; i++){
-										//var idInt = parseFloat(panelHorarios[i].id);
 										var  valorCompara = $('#'+panelHorarios[i].id)[0].attributes[1].value;
-										//console.log(panelHorarios[i].val());
 										if(valorCompara >= horaInicio && valorCompara < horaFin){
 											$('#'+panelHorarios[i].id).removeClass('fondoLibre');
 											$('#'+panelHorarios[i].id).addClass('fondoOcupada');
 										}
 									}
-									console.log(respSalas);
 								}
+								setTimeout(function(){
+									$('#calendar1').removeClass('hide');
+									$('#calendar1').addClass('show');
+								},200)
 							});
 						$('.salaUp').addClass('salaSub');
 						$('.salaUp').removeClass('salaUp');
@@ -104,27 +97,29 @@ socket.on('face', function (data) {
 						setTimeout(function(){
 							$('#calendar1').removeClass('erase');
 						},200)
-						setTimeout(function(){
-							$('#calendar1').removeClass('hide');
-							$('#calendar1').addClass('show');
-						},300)
 					})
 				})
 				$('.horasReserva').click(function(){
-					console.log($('#'+this.id)[0].attributes[1].value);
+					var date = new Date().toISOString().substr(0, 11);
+					var rightNowStart = date+this.innerText.substr(0,5)+":00+02:00";
+					var rightNowEnd = date+this.innerText.substr(7,6)+":00+02:00";
+					var node = rightNowStart.replace(/\s+/, "");
+					var node2 = rightNowEnd.replace(/\s+/, "");
+					console.log(node);
+					console.log(node2);
 					$.post( "/calendar/create?face_id="+data.faceId,
-					{
-						"location":nombreSalaPrinp,
-						"start": {
-						"dateTime":"2015-07-08T18:30:00+02:00"
-					},
-						"end": {
-						"dateTime":"2015-07-08T19:00:00+02:00"
-					},
-						"attendees": [{
+						{
+							"location":nombreSalaPrinp,
+							"start": {
+								"dateTime":node
+							},
+							"end": {
+								"dateTime":node2
+							},
+							"attendees": [{
 
-									"email":salaActual
-					}]
+										"email":salaActual
+						}]
 					})
 					$('#'+this.id).removeClass('fondoLibre');
 					$('#'+this.id).addClass('fondoOcupada');
@@ -181,15 +176,16 @@ var weatherParams = {
 		'units':'metric',
 		'lang':'es'
 	};
+function getAmbient(){
+	$.get('/ambient').success(function(resp){
+		$('#insideWeather').remove();
+		ambiente=resp;
+		var ambientDiv = $('.more-right');
+		var div ="<div id='insideWeather' style='display: block;'><span class='formatoIcono icon dimmed wi-thermometer-internal'></span>"+ambiente[0].temperature+"º</div><div class='forecast small dimmed' style='display: block;'></div></div>"
+		ambientDiv.append(div);
 
-$.get('/ambient').success(function(resp){
-	ambiente=resp;
-	console.log(ambiente[0].temperature);
-	var ambientDiv = $('.more-right');
-	var div ="<div id='insideWeather' style='display: block;'><span class='formatoIcono icon dimmed wi-thermometer-internal'></span>"+ambiente[0].temperature+"º</div><div class='forecast small dimmed' style='display: block;'></div></div>"
-	ambientDiv.append(div);
-
-})
+	})
+}
 $.get('/twitter').success(function(resp){
 	queueFeeds=resp;
 	printFeed();
@@ -418,8 +414,9 @@ function updateCurrentWeather() {
 
 $( document ).ready(function() {
 	updateTime();
+	getAmbient();
+	setInterval(getAmbient, 300000);
 	updateCurrentWeather();
-	//$('#calendar1').
 	$('#calendar1').addClass('calendar2');
 
 	$('#topRightContainer').html("<div class='more-right'>"
