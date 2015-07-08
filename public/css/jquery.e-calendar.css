@@ -17,10 +17,11 @@
 }
 .calendar2{
     cursor: default;
-    /* width: 600px; */
-    height: 70%;
+    height: 55%;
     margin-left: 2%;
     margin-top: 13%;
+    padding-left: 10%;
+    padding-top: 10%;
 }
 
 .calendar-sm .c-pad-top {

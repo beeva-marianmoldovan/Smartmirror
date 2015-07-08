@@ -617,15 +617,32 @@ body, html {
 	font-size: 50px;
 	top: 5px;
 }
+.horasReserva{
+	width: 14%;
+	height: 14%;
+	border-radius: 3px;
+	display: inline-block;
+	font-size: 20px;
+	line-height: 7;
+	font-weight: bold;
+	padding-bottom: 9px;
+	cursor: pointer;
+}
+.fondoLibre{
+	background-color: #358C2C;
+}
+.fondoOcupada {
+	background-color: #d3514d;
+}
 @media (max-height: 900px){
 	.calendar2 {
 		cursor: default;
-		/* width: 600px; */
-		height: 46%!important;
+		height: 34%!important;
 		margin-left: 2%;
-		margin-top: 13%!important;
 		font-size: 55px!important;
 		background-color: lightslategray;
+		padding-top: 17%!important;
+		margin-top: 0%!important;
 	}
 	.salaUp {
 		left: 5%;
