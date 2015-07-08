@@ -33,6 +33,7 @@
     "socket.io": "~1.3.5",
     "socket.io-client": "^1.3.5",
     "string-template": "^0.2.1",
+    "tripwire": "^0.10.0",
     "twitter": "^1.2.5"
   }
 }

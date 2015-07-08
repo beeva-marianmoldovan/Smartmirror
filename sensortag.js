@@ -1,5 +1,8 @@
 var noble = require('noble');
 var request = require('request');
+var tripwire = require('tripwire');
+
+
 // Ignoring me...
 var uuid = "0000ffb700001000800000805f9b34fb";
 
@@ -27,7 +30,7 @@ noble.on('discover', function(peripheral) {
 function workout(peripheral) {
 	peripheral.on('disconnect', function() {
 		console.log("Beacon disconnected");
-	    process.exit(0);
+		process.exit(0);
 	});
 
 	peripheral.connect(function(error) {
@@ -56,6 +59,7 @@ function workout(peripheral) {
 						if(char.uuid === 'ffb7'){
 							console.log('fuck yeah');
 							char.read(function(err, data){
+								tripwire.clearTripwire();
 								if(err) console.error(err);
 								var sensingData = {"temperature" : data.readUInt32LE(0)/10, "pression" : data.readUInt32LE(4)/10};
 								sensingData['place'] = 'beeva';
@@ -75,3 +79,6 @@ function workout(peripheral) {
 
 	});	
 };
+
+
+tripwire.resetTripwire(60000);

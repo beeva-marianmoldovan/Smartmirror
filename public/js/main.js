@@ -12,8 +12,8 @@ var afternoon 	= ['¡Hola bebé!','You look sexy!','Looking good today!'];
 var evening 	= ['Wow, You look hot!','You look nice!','Hi, sexy!'];
 var feed		= 'http://meneame.feedsportal.com/rss';
 var contWelcome = 0, contFeed = 0;
-var queueFeeds = [], queueEvents=[], salaList={};
-var usuario, ambiente, agenda;
+var queueFeeds = [], queueEvents=[], salaList={}, horariosSalaActual;
+var usuario, ambiente, agenda, salaActual, nombreSalaPrinp;
 var statusPanel = false;
 var voiceEngine = new VoiceEngine();
 //voiceEngine.start();
@@ -21,6 +21,7 @@ var voiceEngine = new VoiceEngine();
 moment.locale('es');
 
 var socket = io.connect('http://localhost:3000');
+
 
 socket.on('face', function (data) {
 	console.log(data);
@@ -56,17 +57,43 @@ socket.on('face', function (data) {
 					for(var a = 0; a < resp3.length; a++){
 						var nombreSala = resp3[a].apps$property[1].value.match("Sala \[0-9*]");
 						var salasDiv = $('#reservarOptions');
-						var div ="<div id='sala"+a+"'class='sala'>"+nombreSala[0]
+						var div ="<div id='sala"+a+"' value='"+resp3[a].apps$property[1].value+"' class='sala'>"+nombreSala[0]
 						+"<p class='salaDisponible'>Horarios disponibles</p>"
 						+"</div>"
 						salasDiv.append(div);
 						salaList['sala'+a] = resp3[a].apps$property[2].value;
 					}
 					$('.sala').click(function(){
-						console.log(this.id);
+						console.log(this);
+						nombreSalaPrinp = $('#'+this.id)[0].attributes[1].value;
+						console.log('nombreSalaPrimp: ', nombreSalaPrinp);
 						$.post( "/calendar/availability?face_id="+data.faceId, { resourceID: salaList[this.id] } )
 							.success(function(respSalas){
-								console.log(respSalas);
+								console.log(this);
+								$('.horasReserva').removeClass('fondoOcupada');
+								$('.horasReserva').addClass('fondoLibre');
+								salaActual = this.data.replace('resourceID=','');
+								salaActual = salaActual.replace('%40','@');
+								var horariosMoment = respSalas.calendars[salaActual].busy;
+								for(var e=0; e<respSalas.calendars[salaActual].busy.length;e++){
+									var minutosInicio = moment(horariosMoment[e].start).minutes();
+									var minutosFinal = moment(horariosMoment[e].end).minutes();
+									if(minutosInicio > 0) minutosInicio = 0.5;
+									if(minutosFinal > 0) minutosFinal = 0.5;
+									var horaInicio = (moment(horariosMoment[e].start).hour())+minutosInicio;
+									var horaFin = (moment(horariosMoment[e].end).hour())+minutosFinal;
+									var panelHorarios = $('#calendar1').children();
+									for (var i=0;i<panelHorarios.length; i++){
+										//var idInt = parseFloat(panelHorarios[i].id);
+										var  valorCompara = $('#'+panelHorarios[i].id)[0].attributes[1].value;
+										//console.log(panelHorarios[i].val());
+										if(valorCompara >= horaInicio && valorCompara < horaFin){
+											$('#'+panelHorarios[i].id).removeClass('fondoLibre');
+											$('#'+panelHorarios[i].id).addClass('fondoOcupada');
+										}
+									}
+									console.log(respSalas);
+								}
 							});
 						$('.salaUp').addClass('salaSub');
 						$('.salaUp').removeClass('salaUp');
@@ -82,6 +109,25 @@ socket.on('face', function (data) {
 							$('#calendar1').addClass('show');
 						},300)
 					})
+				})
+				$('.horasReserva').click(function(){
+					console.log($('#'+this.id)[0].attributes[1].value);
+					$.post( "/calendar/create?face_id="+data.faceId,
+					{
+						"location":nombreSalaPrinp,
+						"start": {
+						"dateTime":"2015-07-08T18:30:00+02:00"
+					},
+						"end": {
+						"dateTime":"2015-07-08T19:00:00+02:00"
+					},
+						"attendees": [{
+
+									"email":salaActual
+					}]
+					})
+					$('#'+this.id).removeClass('fondoLibre');
+					$('#'+this.id).addClass('fondoOcupada');
 				})
 				$.get('/calendar/next?face_id='+data.faceId).success(function(resp2){
 					console.log('resp2: ',resp2);
@@ -384,9 +430,9 @@ $( document ).ready(function() {
 $('#gestion').click(function(){
 	openGestion();
 })
-//$('#topLeftContainer').click(function(){
-//	iniciar();
-//})
+$('#inicio').click(function(){
+	iniciar();
+})
 $('#agenda').click(function(){
 	openAgenda();
 })
