@@ -8,7 +8,7 @@ var evening 	= ['Wow, You look hot!','You look nice!','Hi, sexy!'];
 var feed		= 'http://meneame.feedsportal.com/rss';
 var contWelcome = 0, contFeed = 0;
 var queueFeeds = [], queueEvents=[], salaList={};
-var usuario, ambiente, agenda, salaActual, nombreSalaPrinp;
+var usuario, ambiente, agenda, salaActual, nombreSalaPrinp,faceID;
 var voiceEngine = new VoiceEngine();
 //voiceEngine.start();
 
@@ -16,19 +16,17 @@ moment.locale('es');
 
 var socket = io.connect('http://localhost:3000');
 
-
 socket.on('face', function (data) {
-	console.log(data);
+	faceID = data.faceId;
 	if(data.message=='face_detected'){
-			$('#QRcode').remove();
-			var QRdiv = $('body');
-			var div = "<div class='WelcomeMessage'>Te estoy viendo, dejame que recuerde si te conozco.</div>"
-			QRdiv.append(div);
+		$('#QRcode').remove();
+		var QRdiv = $('body');
+		var div = "<div class='WelcomeMessage'>Te estoy viendo, dejame que recuerde si te conozco.</div>"
+		QRdiv.append(div);
 	}
 	if(data.message=='new_face'){
-		$.get( '/login?user=' + data.faceId).success(function(results){
+		$.get( '/login?user=' + faceID).success(function(results){
 			$('.welcomeMessage').remove();
-			console.log(results);
 			var QRdiv = $('body');
 			var div = "<div id='QRcode' class='loginQR hide'>"
 				+"<img src='"+ results.image.path +"'/>" + "</div>"
@@ -40,118 +38,59 @@ socket.on('face', function (data) {
 		});
 	}
 	if(data.message=='known_face' || data.message=='user_registered'){
-		$.get('/user?faceId='+data.faceId).success(function(resp){
+		$.get('/user?faceId='+faceID).success(function(resp){
 			if(resp[0].tokens.length>0){
 				$('#QRcode').remove();
 				$('.welcomeMessage').remove();
 				usuario=resp;
-				$.get('/calendar/resources?face_id='+data.faceId).success(function(resp3){
+				$.get('/calendar/resources?face_id='+faceID).success(function(resp3){
 					for(var a = 0; a < resp3.length; a++){
 						var nombreSala = resp3[a].apps$property[1].value.match("Sala \[0-9*]");
 						var salasDiv = $('#reservarOptions');
 						var div ="<div id='sala"+a+"' value='"+resp3[a].apps$property[1].value+"' class='sala'>"+nombreSala[0]
-						+"<p class='salaDisponible'>Horarios disponibles</p>"
-						+"</div>"
+							+"<p class='salaDisponible'>Horarios disponibles</p>"
+							+"</div>"
 						salasDiv.append(div);
 						salaList['sala'+a] = resp3[a].apps$property[2].value;
 					}
 					$('.sala').click(function(){
 						nombreSalaPrinp = $('#'+this.id)[0].attributes[1].value;
-						$.post( "/calendar/availability?face_id="+data.faceId, { resourceID: salaList[this.id] } )
-							.success(function(respSalas){
-								console.log('respSalas',respSalas);
-								$('#calendar1').removeClass('show');
-								$('#calendar1').addClass('hide');
-								$('.horasReserva').removeClass('fondoOcupada');
-								$('.horasReserva').addClass('fondoLibre');
-								salaActual = this.data.replace('resourceID=','');
-								salaActual = salaActual.replace('%40','@');
-								var horariosMoment = respSalas.calendars[salaActual].busy;
-								for(var e=0; e<respSalas.calendars[salaActual].busy.length;e++){
-									var minutosInicio = moment(horariosMoment[e].start).minutes();
-									var minutosFinal = moment(horariosMoment[e].end).minutes();
-									if(minutosInicio > 0) minutosInicio = 0.5;
-									if(minutosFinal > 0) minutosFinal = 0.5;
-									var horaInicio = (moment(horariosMoment[e].start).hour())+minutosInicio;
-									var horaFin = (moment(horariosMoment[e].end).hour())+minutosFinal;
-									var panelHorarios = $('#calendar1').children();
-									for (var i=0;i<panelHorarios.length; i++){
-										var  valorCompara = $('#'+panelHorarios[i].id)[0].attributes[1].value;
-										if(valorCompara >= horaInicio && valorCompara < horaFin){
-											$('#'+panelHorarios[i].id).removeClass('fondoLibre');
-											$('#'+panelHorarios[i].id).addClass('fondoOcupada');
-										}
-									}
-								}
-								setTimeout(function(){
-									$('#calendar1').removeClass('hide');
-									$('#calendar1').addClass('show');
-								},200)
-							});
-						$('.salaUp').addClass('salaSub');
-						$('.salaUp').removeClass('salaUp');
-						$('.sala').addClass('salaSub');
-						$('.sala').removeClass('sala');
-						$('#'+this.id).removeClass('salaSub');
-						$('#'+this.id).addClass('salaUp');
-						setTimeout(function(){
-							$('#calendar1').removeClass('erase');
-						},200)
+						var idLabel = this.id;
+						loadSalasAvailability(faceID, idLabel);
 					})
 				})
 				$('.horasReserva').click(function(){
+					var label = this.id;
 					var date = new Date().toISOString().substr(0, 11);
 					var rightNowStart = date+this.innerText.substr(0,5)+":00+02:00";
 					var rightNowEnd = date+this.innerText.substr(7,6)+":00+02:00";
-					var node = rightNowStart.replace(/\s+/, "");
-					var node2 = rightNowEnd.replace(/\s+/, "");
-					console.log(node);
-					console.log(node2);
-					$.post( "/calendar/create?face_id="+data.faceId,
-						{
-							"location":nombreSalaPrinp,
-							"start": {
-								"dateTime":node
-							},
-							"end": {
-								"dateTime":node2
-							},
-							"attendees": [{
-
-										"email":salaActual
-						}]
-					})
-					$('#'+this.id).removeClass('fondoLibre');
-					$('#'+this.id).addClass('fondoOcupada');
+					reservarSala(nombreSalaPrinp,salaActual,faceID,rightNowStart,rightNowEnd, label);
 				})
-				$.get('/calendar/next?face_id='+data.faceId).success(function(resp2){
-					console.log('resp2: ',resp2);
-						agenda=resp2;
-						console.log('agenda: ',agenda);
-						for(var a=0; a<agenda.length;a++) {
-							var evento = {};
-							evento.title = agenda[a].summary;
-							if (agenda[a].description == undefined)evento.description = '';
-							else evento.description = agenda[a].description;
-							evento.datetime = new Date(agenda[a].start.dateTime);
-							evento.datetime.setMonth(evento.datetime.getMonth() + 1);
-							queueEvents.push(evento);
-						}
-						$('#calendar').eCalendar(
-							{weekDays: ['Dom', 'Lun', 'Mar', 'Mier', 'Jue', 'Vie', 'Sab'],
-								months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-								textArrows: {previous: '<', next: '>'},
-								eventTitle: 'Eventos',
-								url: '',
-								events: queueEvents});
-						$('#calendar').addClass('calendar');
-						iniciar();
+				$.get('/calendar/next?face_id='+faceID).success(function(resp2){
+					agenda=resp2;
+					for(var a=0; a<agenda.length;a++) {
+						var evento = {};
+						evento.title = agenda[a].summary;
+						if (agenda[a].description == undefined)evento.description = '';
+						else evento.description = agenda[a].description;
+						evento.datetime = new Date(agenda[a].start.dateTime);
+						evento.datetime.setMonth(evento.datetime.getMonth() + 1);
+						queueEvents.push(evento);
+					}
+					$('#calendar').eCalendar(
+						{weekDays: ['Dom', 'Lun', 'Mar', 'Mier', 'Jue', 'Vie', 'Sab'],
+							months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+							textArrows: {previous: '<', next: '>'},
+							eventTitle: 'Eventos',
+							url: '',
+							events: queueEvents});
+					$('#calendar').addClass('calendar');
+					iniciar();
 				})
 			}
 			else {
 				$('.welcomeMessage').remove();
-				$.get( '/login?user='+data.faceId).success(function(results){
-					console.log(results);
+				$.get( '/login?user='+faceID).success(function(results){
 					var QRdiv = $('body');
 					var div = "<div id='QRcode' class='loginQR hide'>"
 						+"<img src='"+ results.image.path +"'/>" + "</div>"
@@ -172,10 +111,67 @@ socket.on('face', function (data) {
 });
 
 var weatherParams = {
-		'q':'Madrid, España',
-		'units':'metric',
-		'lang':'es'
-	};
+	'q':'Madrid, España',
+	'units':'metric',
+	'lang':'es'
+};
+
+function loadSalasAvailability(faceID,idLabel){
+	$.post( "/calendar/availability?face_id="+faceID, { resourceID: salaList[idLabel] } )
+		.success(function(respSalas){
+			console.log(this);
+			$('#calendar1').removeClass('show');
+			$('#calendar1').addClass('hide');
+			$('.horasReserva').removeClass('fondoOcupada');
+			$('.horasReserva').addClass('fondoLibre');
+			salaActual = this.data.replace('resourceID=','');
+			salaActual = salaActual.replace('%40','@');
+			var horariosMoment = respSalas.calendars[salaActual].busy;
+			for(var e=0; e<respSalas.calendars[salaActual].busy.length;e++){
+				var minutosInicio = moment(horariosMoment[e].start).minutes();
+				var minutosFinal = moment(horariosMoment[e].end).minutes();
+				if(minutosInicio > 0) minutosInicio = 0.5;
+				if(minutosFinal > 0) minutosFinal = 0.5;
+				var horaInicio = (moment(horariosMoment[e].start).hour())+minutosInicio;
+				var horaFin = (moment(horariosMoment[e].end).hour())+minutosFinal;
+				var panelHorarios = $('#calendar1').children();
+				for (var i=0;i<panelHorarios.length; i++){
+					var  valorCompara = $('#'+panelHorarios[i].id)[0].attributes[1].value;
+					if(valorCompara >= horaInicio && valorCompara < horaFin){
+						$('#'+panelHorarios[i].id).removeClass('fondoLibre');
+						$('#'+panelHorarios[i].id).addClass('fondoOcupada');
+					}
+				}
+			}
+			setTimeout(function(){
+				$('#calendar1').removeClass('hide');
+				$('#calendar1').addClass('show');
+			},300)
+		});
+	$('.salaUp').addClass('salaSub');
+	$('.salaUp').removeClass('salaUp');
+	$('.sala').addClass('salaSub');
+	$('.sala').removeClass('sala');
+	$('#'+idLabel).removeClass('salaSub');
+	$('#'+idLabel).addClass('salaUp');
+	setTimeout(function(){
+		$('#calendar1').removeClass('erase');
+	},200)
+}
+
+function reservarSala(nombreSalaPrinp, salaActual, faceID, start, end, label){
+	var node = start.replace(/\s+/, "");
+	var node2 = end.replace(/\s+/, "");
+	$.post( "/calendar/create?face_id="+faceID,
+		{
+			"location":nombreSalaPrinp,
+			"start": {"dateTime":node},
+			"end": {"dateTime":node2},
+			"attendees": [{"email":salaActual}]
+		})
+	$('#'+label).removeClass('fondoLibre');
+	$('#'+label).addClass('fondoOcupada');
+}
 function getAmbient(){
 	$.get('/ambient').success(function(resp){
 		$('#insideWeather').remove();
@@ -346,6 +342,10 @@ function openAgenda(){
 	$('#calendar').removeClass('erase');
 }
 $('#reservarSala').click(function(){
+	reservar();
+})
+
+function reservar(){
 	setTimeout(function() {
 		$('#menuGestion').addClass('erase');
 		$('#calendar').addClass('erase');
@@ -357,8 +357,8 @@ $('#reservarSala').click(function(){
 		$('#reservarOptions').removeClass('hide');
 		$('#reservarOptions').addClass('show');
 	}, 200);
+}
 
-})
 function updateCurrentWeather() {
 
 	var iconTable = {

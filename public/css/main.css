@@ -635,20 +635,35 @@ body, html {
 	background-color: #d3514d;
 }
 @media (max-height: 900px){
+	.calendar .c-pad-top {
+		padding-top: 1%!important;
+	}
+	.newsh{
+		font-size: 15px;
+	}
+	#insideWeather {
+		margin-top: -18%;
+	}
+	.more-right {
+		top: 65%;
+	}
 	.calendar2 {
 		cursor: default;
 		height: 34%!important;
 		margin-left: 2%;
-		font-size: 55px!important;
-		background-color: lightslategray;
-		padding-top: 17%!important;
+		font-size: 35px!important;
+		/*background-color: lightslategray;*/
+		padding-top: 7%!important;
 		margin-top: 0%!important;
 	}
+	.salaSub {
+		margin-top: 4%;
+	}
 	.salaUp {
-		left: 5%;
+		left: 7%;
 		top: 18%;
 		width: 15%;
-		height: 19%;
+		height: 15%;
 		border-radius: 100px;
 		background-color: #acacac;
 		position: absolute;
@@ -659,8 +674,18 @@ body, html {
 		-ms-transition: all ease-in-out 0.3s;
 		-o-transition: all ease-in-out 0.3s;
 		transition: all ease-in-out 0.3s;
-		font-size: 60px;
+		font-size: 40px;
 	}
+	.sala{
+		height: 17%;
+		line-height: 0.5;
+		-webkit-transition: all ease-in-out 0.3s;
+		-moz-transition: all ease-in-out 0.3s;
+		-ms-transition: all ease-in-out 0.3s;
+		-o-transition: all ease-in-out 0.3s;
+		transition: all ease-in-out 0.3s;
+	}
+}
 	.welcomePhraseSub {
 		position: absolute;
 		top: 90%;
@@ -673,6 +698,17 @@ body, html {
 		-o-transition: all ease-in-out 0.7s;
 		transition: all ease-in-out 0.7s;
 	}
+	.imagenMicro {
+		left: 34%;
+		-webkit-transition: all ease-in-out 0.7s;
+		-moz-transition: all ease-in-out 0.7s;
+		-ms-transition: all ease-in-out 0.7s;
+		-o-transition: all ease-in-out 0.7s;
+		transition: all ease-in-out 0.7s;
+	}
+	.horasReserva {
+		line-height: 1.5;
+		margin-bottom: 5px;
 }
 @font-face {
   font-family: 'HelveticaNeue-UltraLight';
