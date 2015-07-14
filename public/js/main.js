@@ -8,7 +8,7 @@ var evening 	= ['Wow, You look hot!','You look nice!','Hi, sexy!'];
 var feed		= 'http://meneame.feedsportal.com/rss';
 var contWelcome = 0, contFeed = 0;
 var queueFeeds = [], queueEvents=[], salaList={};
-var usuario, ambiente, agenda, salaActual, nombreSalaPrinp,faceID, keepSessionTime = 150000;
+var usuario, ambiente, agenda, salaActual, nombreSalaPrinp,faceID, keepSessionTime = 12000;
 var voiceEngine = new VoiceEngine();
 //voiceEngine.start();
 
@@ -151,7 +151,7 @@ function loadSalasAvailability(faceID,idLabel){
 			setTimeout(function(){
 				$('#calendar1').removeClass('hide');
 				$('#calendar1').addClass('show');
-			},1000)
+			},500)
 		});
 	$('.salaUp').addClass('salaSub');
 	$('.salaUp').removeClass('salaUp');
@@ -254,12 +254,9 @@ function iniciar() {
 		$("#welcomePhrase").removeClass('welcomePhrase');
 		$("#welcomePhrase").addClass('welcomePhraseSub');
 		$('#container').css('display', 'none');
-		$('#menuGestion').addClass('erase');
 		$('#calendar').addClass('erase');
 		$('#reservarOptions').addClass('erase');
 		$('#menuOptions').removeClass('erase');
-		$(".fichasGestion").removeClass('unminify');
-		$(".fichasGestion").addClass('minify');
 	}, 200);
 	setTimeout(function() {
 		$('#gestion').removeClass('gestionSub');
@@ -287,15 +284,12 @@ function standBy(){
 	queueEvents=[];
 	setTimeout(function() {
 		$('#menuOptions').addClass('erase');
-		$('#menuGestion').addClass('erase');
 		$('.sala').remove();
 		$('.salaUp').remove();
 		$('.salaSub').remove();
 		$('#reservarOptions').addClass('erase');
 		$('#calendar').addClass('erase');
 		$('#calendar1').addClass('erase');
-		$(".fichasGestion").removeClass('unminify');
-		$(".fichasGestion").addClass('minify');
 		$('#container').css('display', 'block');
 	}, 100);
 	setTimeout(function() {
@@ -309,7 +303,6 @@ function openGestion(){
 	$('#container').css('display', 'none');
 	$('#calendar').addClass('erase');
 	$('#reservarOptions').addClass('erase');
-	$('#menuGestion').removeClass('erase');
 
 	setTimeout(function() {
 		$('#gestion').removeClass('gestion');
@@ -325,13 +318,10 @@ function openGestion(){
 		$('#menuOptions').removeClass('erase');
 		$('#comandos').removeClass('hide');
 		$('#comandos').addClass('show');
-		$(".fichasGestion").removeClass('minify');
-		$(".fichasGestion").addClass('unminify');
 	}, 200);
 }
 function openAgenda(){
 	loadCalendar();
-	$('#menuGestion').addClass('erase');
 	$('#reservarOptions').addClass('erase');
 	$('#container').removeClass('show');
 	$('#container').addClass('hide');
@@ -352,16 +342,23 @@ function openAgenda(){
 	$('#comandos').addClass('show');
 	$('#calendar').removeClass('erase');
 }
-$('#reservarSala').click(function(){
-	reservar();
-})
 
 function reservar(){
+	$('#gestion').removeClass('gestion');
+	$('#gestion').addClass('gestionSub');
+	$('#agenda').removeClass('agenda');
+	$('#agenda').addClass('agendaSub');
+	$('#imagenMicro').removeClass('imagenMicro');
+	$('#imagenMicro').addClass('imagenMicroSub');
+	$('#salir').removeClass('salir');
+	$('#salir').addClass('salirSub');
+	$('#inicio').removeClass('inicio');
+	$('#inicio').addClass('inicioSub');
+	$('#menuOptions').removeClass('erase');
+	$('#comandos').removeClass('hide');
+	$('#comandos').addClass('show');
 	setTimeout(function() {
-		$('#menuGestion').addClass('erase');
 		$('#calendar').addClass('erase');
-		$(".fichasGestion").removeClass('unminify');
-		$(".fichasGestion").addClass('minify');
 		$(".reservarOptions").removeClass('erase');
 	}, 100);
 	setTimeout(function() {
@@ -435,8 +432,11 @@ $( document ).ready(function() {
 		+ "</div>"
 		+ "</div>");
 })
-$('#gestion').click(function(){
-	openGestion();
+$('#prox').click(function(){
+	reservar();
+})
+$('#ahora').click(function(){
+	//openGestion();
 })
 $('#inicio').click(function(){
 	iniciar();
