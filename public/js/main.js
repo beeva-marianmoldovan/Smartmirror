@@ -8,7 +8,7 @@ var evening 	= ['Wow, You look hot!','You look nice!','Hi, sexy!'];
 var feed		= 'http://meneame.feedsportal.com/rss';
 var contWelcome = 0, contFeed = 0;
 var queueFeeds = [], queueEvents=[], salaList={};
-var usuario, ambiente, agenda, salaActual, nombreSalaPrinp,faceID;
+var usuario, ambiente, agenda, salaActual, nombreSalaPrinp,faceID, keepSessionTime = 150000;
 var voiceEngine = new VoiceEngine();
 //voiceEngine.start();
 
@@ -35,6 +35,7 @@ socket.on('face', function (data) {
 				$('#QRcode').removeClass('hide');
 				$('#QRcode').addClass('show');
 			},200)
+			keepSessionTime = 300000;
 		});
 	}
 	if(data.message=='known_face' || data.message=='user_registered'){
@@ -106,7 +107,7 @@ socket.on('face', function (data) {
 	if(data.message=='no_face_now'){
 		setTimeout(function(){
 			standBy();
-		},3000)
+		},keepSessionTime)
 	}
 });
 

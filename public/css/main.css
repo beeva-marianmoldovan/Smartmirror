@@ -634,7 +634,7 @@ body, html {
 .fondoOcupada {
 	background-color: #d3514d;
 }
-@media (max-height: 900px){
+@media (max-height: 1000px){
 	.calendar .c-pad-top {
 		padding-top: 1%!important;
 	}
@@ -652,7 +652,6 @@ body, html {
 		height: 34%!important;
 		margin-left: 2%;
 		font-size: 35px!important;
-		/*background-color: lightslategray;*/
 		padding-top: 7%!important;
 		margin-top: 0%!important;
 	}
