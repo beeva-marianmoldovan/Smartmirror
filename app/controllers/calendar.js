@@ -55,7 +55,12 @@ exports.create_event = function(request, res) {
   var userId = request.query.face_id;
 
   var dataEvent = request.body;
-  dataEvent.summary = "Evento creado desde SmartMirror";
+
+  console.log(dataEvent.location);
+  var nombreSala = dataEvent.location.match("Sala \[0-9*]");
+  console.log(nombreSala[0]);
+
+  dataEvent.summary = "Evento en "+nombreSala[0]+" creado desde SmartMirror";
   console.log(dataEvent);
 
   User.findOne({'faceId' : userId}, function(err, user){
