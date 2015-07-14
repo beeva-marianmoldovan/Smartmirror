@@ -245,7 +245,7 @@ function iniciar() {
 			var container = $('#middleContainer');
 			var index = Math.floor(Math.random() * morning.length + 0);
 			var welcomePhrase = morning[index];
-			var div = "<div id='welcomePhrase' class='welcomePhrase'>" + welcomePhrase + ", " + usuario[0].name + "</div>";
+			var div = "<div id='welcomePhrase' class='welcomePhrase'>" + welcomePhrase + ", " + usuario[0].name.split(" ")[0] + "</div>";
 			container.append(div);
 			contWelcome=1;
 		}, 100);
@@ -275,7 +275,6 @@ function iniciar() {
 	}, 300);
 }
 function standBy(){
-
 	$('#comandos').removeClass('show');
 	$('#comandos').addClass('hide');
 	$('#reservarOptions').removeClass('show');
@@ -343,7 +342,6 @@ function openAgenda(){
 	$('#comandos').addClass('show');
 	$('#calendar').removeClass('erase');
 }
-
 function reservar(){
 	$('#gestion').removeClass('gestion');
 	$('#gestion').addClass('gestionSub');

@@ -645,6 +645,15 @@ body, html {
 	width: 170px;
 }
 @media (max-height: 1200px){
+	.gestion{
+		height: 18%;
+	}
+	.agenda{
+		height: 15%;
+	}
+	.salir .inicio{
+		height: 9%;
+	}
 	.calendar .c-pad-top {
 		padding-top: 1%!important;
 	}
@@ -717,7 +726,9 @@ body, html {
 		transition: all ease-in-out 0.7s;
 	}
 	.imagenMicro {
-		left: 34%;
+		left: 36%;
+		top: 38%;
+		width: 100px;
 		-webkit-transition: all ease-in-out 0.7s;
 		-moz-transition: all ease-in-out 0.7s;
 		-ms-transition: all ease-in-out 0.7s;
