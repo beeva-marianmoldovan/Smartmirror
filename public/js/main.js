@@ -69,27 +69,7 @@ socket.on('face', function (data) {
 					var rightNowEnd = date+this.textContent.substr(7,6)+":00+02:00";
 					reservarSala(nombreSalaPrinp,salaActual,faceID,rightNowStart,rightNowEnd, label);
 				})
-				$.get('/calendar/next?face_id='+faceID).success(function(resp2){
-					agenda=resp2;
-					for(var a=0; a<agenda.length;a++) {
-						var evento = {};
-						evento.title = agenda[a].summary;
-						if (agenda[a].description == undefined)evento.description = '';
-						else evento.description = agenda[a].description;
-						evento.datetime = new Date(agenda[a].start.dateTime);
-						evento.datetime.setMonth(evento.datetime.getMonth() + 1);
-						queueEvents.push(evento);
-					}
-					$('#calendar').eCalendar(
-						{weekDays: ['Dom', 'Lun', 'Mar', 'Mier', 'Jue', 'Vie', 'Sab'],
-							months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-							textArrows: {previous: '<', next: '>'},
-							eventTitle: 'Eventos',
-							url: '',
-							events: queueEvents});
-					$('#calendar').addClass('calendar');
-					iniciar();
-				})
+				iniciar();
 			}
 			else {
 				$('.welcomeMessage').remove();
@@ -118,6 +98,30 @@ var weatherParams = {
 	'units':'metric',
 	'lang':'es'
 };
+ function loadCalendar() {
+	 queueEvents = [];
+	 $.get('/calendar/next?face_id='+faceID).success(function(resp2){
+		 agenda=resp2;
+		 for(var a=0; a<agenda.length;a++) {
+			 var evento = {};
+			 evento.title = agenda[a].summary;
+			 if (agenda[a].description == undefined)evento.description = '';
+			 else evento.description = agenda[a].description;
+			 evento.datetime = new Date(agenda[a].start.dateTime);
+			 evento.datetime.setMonth(evento.datetime.getMonth() + 1);
+			 queueEvents.push(evento);
+		 }
+		 $('#calendar').eCalendar(
+			 {weekDays: ['Dom', 'Lun', 'Mar', 'Mier', 'Jue', 'Vie', 'Sab'],
+				 months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+				 textArrows: {previous: '<', next: '>'},
+				 eventTitle: 'Eventos',
+				 url: '',
+				 events: queueEvents});
+		 $('#calendar').addClass('calendar');
+	 })
+ }
+
 
 function loadSalasAvailability(faceID,idLabel){
 	$.post( "/calendar/availability?face_id="+faceID, { resourceID: salaList[idLabel] } )
@@ -326,6 +330,7 @@ function openGestion(){
 	}, 200);
 }
 function openAgenda(){
+	loadCalendar();
 	$('#menuGestion').addClass('erase');
 	$('#reservarOptions').addClass('erase');
 	$('#container').removeClass('show');
