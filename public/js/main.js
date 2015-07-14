@@ -2,7 +2,7 @@
 
 var days 		= ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
 var months 		= ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
-var morning 	= ['Buenos días','Que tengas un día super cool', 'Que tengas un día MALACA MALACA'];
+var morning 	= ['Buenos días','Que tengas un día super cool', 'Propicios días'];
 var afternoon 	= ['¡Hola bebé!','You look sexy!','Looking good today!'];
 var evening 	= ['Wow, You look hot!','You look nice!','Hi, sexy!'];
 var feed		= 'http://meneame.feedsportal.com/rss';
@@ -55,6 +55,8 @@ socket.on('face', function (data) {
 						salaList['sala'+a] = resp3[a].apps$property[2].value;
 					}
 					$('.sala').click(function(){
+						$('#calendar1').removeClass('show');
+						$('#calendar1').addClass('hide');
 						nombreSalaPrinp = $('#'+this.id)[0].attributes[1].value;
 						var idLabel = this.id;
 						loadSalasAvailability(faceID, idLabel);
@@ -121,8 +123,6 @@ function loadSalasAvailability(faceID,idLabel){
 	$.post( "/calendar/availability?face_id="+faceID, { resourceID: salaList[idLabel] } )
 		.success(function(respSalas){
 			console.log(this);
-			$('#calendar1').removeClass('show');
-			$('#calendar1').addClass('hide');
 			$('.horasReserva').removeClass('fondoOcupada');
 			$('.horasReserva').addClass('fondoLibre');
 			salaActual = this.data.replace('resourceID=','');
@@ -147,7 +147,7 @@ function loadSalasAvailability(faceID,idLabel){
 			setTimeout(function(){
 				$('#calendar1').removeClass('hide');
 				$('#calendar1').addClass('show');
-			},300)
+			},1000)
 		});
 	$('.salaUp').addClass('salaSub');
 	$('.salaUp').removeClass('salaUp');
