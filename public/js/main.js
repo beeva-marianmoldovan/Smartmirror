@@ -240,6 +240,8 @@ function iniciar() {
 	$('#container').addClass('hide');
 	$('#reservarOptions').removeClass('show');
 	$('#reservarOptions').addClass('hide');
+	$('#reservarAhora').removeClass('show');
+	$('#reservarAhora').addClass('hide');
 	if (contWelcome==0) {
 		setTimeout(function () {
 			var container = $('#middleContainer');
@@ -257,6 +259,7 @@ function iniciar() {
 		$('#container').css('display', 'none');
 		$('#calendar').addClass('erase');
 		$('#reservarOptions').addClass('erase');
+		$('#reservarAhora').addClass('erase');
 		$('#menuOptions').removeClass('erase');
 	}, 200);
 	setTimeout(function() {
@@ -279,6 +282,8 @@ function standBy(){
 	$('#comandos').addClass('hide');
 	$('#reservarOptions').removeClass('show');
 	$('#reservarOptions').addClass('hide');
+	$('#reservarAhora').removeClass('show');
+	$('#reservarAhora').addClass('hide');
 	$('#welcomePhrase').remove();
 	contWelcome=0;
 	queueEvents=[];
@@ -288,6 +293,7 @@ function standBy(){
 		$('.salaUp').remove();
 		$('.salaSub').remove();
 		$('#reservarOptions').addClass('erase');
+		$('#reservarAhora').addClass('erase');
 		$('#calendar').addClass('erase');
 		$('#calendar1').addClass('erase');
 		$('#container').css('display', 'block');
@@ -323,6 +329,7 @@ function openGestion(){
 function openAgenda(){
 	loadCalendar();
 	$('#reservarOptions').addClass('erase');
+	$('#reservarAhora').addClass('erase');
 	$('#container').removeClass('show');
 	$('#container').addClass('hide');
 	$('#container').css('display', 'none');
@@ -353,16 +360,46 @@ function reservar(){
 	$('#salir').addClass('salirSub');
 	$('#inicio').removeClass('inicio');
 	$('#inicio').addClass('inicioSub');
-	$('#menuOptions').removeClass('erase');
 	$('#comandos').removeClass('hide');
 	$('#comandos').addClass('show');
+	$('#reservarAhora').removeClass('show');
+	$('#reservarAhora').addClass('hide');
 	setTimeout(function() {
 		$('#calendar').addClass('erase');
-		$(".reservarOptions").removeClass('erase');
+		$('#reservarAhora').addClass('erase');
+		$("#reservarOptions").removeClass('erase');
+		$('#menuOptions').removeClass('erase');
 	}, 100);
 	setTimeout(function() {
 		$('#reservarOptions').removeClass('hide');
 		$('#reservarOptions').addClass('show');
+	}, 200);
+}
+
+function reservarAhora(){
+	$('#gestion').removeClass('gestion');
+	$('#gestion').addClass('gestionSub');
+	$('#agenda').removeClass('agenda');
+	$('#agenda').addClass('agendaSub');
+	$('#imagenMicro').removeClass('imagenMicro');
+	$('#imagenMicro').addClass('imagenMicroSub');
+	$('#salir').removeClass('salir');
+	$('#salir').addClass('salirSub');
+	$('#inicio').removeClass('inicio');
+	$('#inicio').addClass('inicioSub');
+	$('#comandos').removeClass('hide');
+	$('#comandos').addClass('show');
+	$('#reservarOptions').removeClass('show');
+	$('#reservarOptions').addClass('hide');
+	setTimeout(function() {
+		$('#calendar').addClass('erase');
+		$('#reservarOptions').addClass('erase');
+		$("#reservarAhora").removeClass('erase');
+		$('#menuOptions').removeClass('erase');
+	}, 100);
+	setTimeout(function() {
+		$('#reservarAhora').removeClass('hide');
+		$('#reservarAhora').addClass('show');
 	}, 200);
 }
 
@@ -435,7 +472,7 @@ $('#prox').click(function(){
 	reservar();
 })
 $('#ahora').click(function(){
-	//openGestion();
+	reservarAhora();
 })
 $('#inicio').click(function(){
 	iniciar();

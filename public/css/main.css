@@ -644,6 +644,31 @@ body, html {
 	text-align: right;
 	width: 170px;
 }
+.reservarAhora{
+	background-color: lightgray;
+	width: 80%;
+	margin-left: 5%;
+	border-radius: 5px;
+	padding-left: 20px;
+	margin-bottom: 2%;
+}
+.detalleSala{
+	width: 30%;
+	display: inline-block;
+}
+.cap{
+	font-size: 30px;
+	vertical-align: middle;
+	color: #767676;
+	font-weight: bolder;
+}
+.equ{
+	font-size: 20px;
+	vertical-align: middle;
+	color: #767676;
+	font-weight: bolder;
+	float: right;
+}
 @media (max-height: 1200px){
 	.gestion{
 		height: 18%;
