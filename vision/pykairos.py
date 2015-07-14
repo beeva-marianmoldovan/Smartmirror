@@ -12,7 +12,7 @@ camera.rotation = 180
 time.sleep(0.5)
 
 HOST = 'localhost'
-GROUP = 'facecroptest2'
+GROUP = 'xfacecroptest2'
 
 socketIO = SocketIO('http://' + HOST, 3000, LoggingNamespace)
 
@@ -26,6 +26,7 @@ def get_image():
 def capture_face():
 	img = get_image()
 	faces = detect_face(img)
+	print faces
 	if faces is not None and len(faces) > 0:
 		cutFace = selectAndCrop(img, faces)
 		return cutFace
@@ -59,14 +60,14 @@ def enroll(image, user):
 	payload = { 'gallery_name': GROUP, 'selector' : 'FACE'}
 	payload['image'] = image 
 	payload['subject_id'] = user
-	headers = {'Content-Type' : 'application/json', 'app_id' : 'e4f0bc81', 'app_key' : 'x562701d11fc9a9c7eff9a08805ef8ae'}
+	headers = {'Content-Type' : 'application/json', 'app_id' : 'e4f0bc81', 'app_key' : 'a562701d11fc9a9c7eff9a08805ef8ae'}
 	r = requests.post("https://api.kairos.com/enroll", data=json.dumps(payload), headers=headers)
 	return r
 
 def recognize(image):
 	payload = { 'gallery_name': GROUP, 'threshold':0.75, 'max_num_results' : 3}
 	payload['image'] = image
-	headers = {'Content-Type' : 'application/json', 'app_id' : 'e4f0bc81', 'app_key' : 'x562701d11fc9a9c7eff9a08805ef8ae'}
+	headers = {'Content-Type' : 'application/json', 'app_id' : 'e4f0bc81', 'app_key' : 'a562701d11fc9a9c7eff9a08805ef8ae'}
 	r = requests.post("https://api.kairos.com/recognize", data=json.dumps(payload), headers=headers)
 	return r
 
@@ -118,13 +119,11 @@ while True:
 				print result['status'] + ', ' + result['subject'] + ', ' + result['confidence']
 				lastHadFace = True
 				print 'New Face'
-	elif lastHadFace:
+	elif face is None and lastHadFace:
 		lastHadFace = False
 		socketIO.emit('face', {'message': 'no_face_now'})
 		print 'No face now'
 	else:
-		print faces
-		print lastHadFace
 		print 'No changes...'
 
-	time.sleep(1)
+	time.sleep(2)
