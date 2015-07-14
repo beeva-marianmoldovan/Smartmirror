@@ -65,8 +65,8 @@ socket.on('face', function (data) {
 				$('.horasReserva').click(function(){
 					var label = this.id;
 					var date = new Date().toISOString().substr(0, 11);
-					var rightNowStart = date+this.innerText.substr(0,5)+":00+02:00";
-					var rightNowEnd = date+this.innerText.substr(7,6)+":00+02:00";
+					var rightNowStart = date+this.textContent.substr(0,5)+":00+02:00";
+					var rightNowEnd = date+this.textContent.substr(7,6)+":00+02:00";
 					reservarSala(nombreSalaPrinp,salaActual,faceID,rightNowStart,rightNowEnd, label);
 				})
 				$.get('/calendar/next?face_id='+faceID).success(function(resp2){
@@ -280,11 +280,16 @@ function standBy(){
 	$('#reservarOptions').addClass('hide');
 	$('#welcomePhrase').remove();
 	contWelcome=0;
+	queueEvents=[];
 	setTimeout(function() {
 		$('#menuOptions').addClass('erase');
 		$('#menuGestion').addClass('erase');
+		$('.sala').remove();
+		$('.salaUp').remove();
+		$('.salaSub').remove();
 		$('#reservarOptions').addClass('erase');
 		$('#calendar').addClass('erase');
+		$('#calendar1').addClass('erase');
 		$(".fichasGestion").removeClass('unminify');
 		$(".fichasGestion").addClass('minify');
 		$('#container').css('display', 'block');
