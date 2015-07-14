@@ -40,7 +40,8 @@ socket.on('face', function (data) {
 	}
 	if(data.message=='known_face' || data.message=='user_registered'){
 		$.get('/user?faceId='+faceID).success(function(resp){
-			if(resp[0].tokens.length>0){
+			console.log(resp);
+			if(resp.length > 0 && resp[0].tokens.length>0){
 				$('#QRcode').remove();
 				$('.welcomeMessage').remove();
 				usuario=resp;
