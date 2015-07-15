@@ -49,8 +49,10 @@ socket.on('face', function (data) {
 					for(var a = 0; a < resp3.length; a++){
 						var nombreSala = resp3[a].apps$property[1].value.match("Sala \[0-9*]");
 						var salasDiv = $('#reservarOptions');
-						var div ="<div id='sala"+a+"' value='"+resp3[a].apps$property[1].value+"' class='sala'>"+nombreSala[0]
-							+"<p class='salaDisponible'>Horarios disponibles</p>"
+						var div ="<div id='sala"+a+"' value='"+resp3[a].apps$property[1].value+"' class='sala'>"
+							+"<div class='detalleSala'>"+nombreSala[0]+"<p class='salaDisponible'>Horarios disponibles ahora</p>"+"</div>"
+							+"<div class='detalleSala cap'><p>Max. "+ Math.floor((Math.random() * 14) + 4) +" personas</p></div>"
+							+"<div class='detalleSala equ'><p>Telefono on board</p><p>Proyector</p></div>"
 							+"</div>"
 						salasDiv.append(div);
 						salaList['sala'+a] = resp3[a].apps$property[2].value;
@@ -127,20 +129,32 @@ var weatherParams = {
 function loadSalasAvailability(faceID,idLabel){
 	$.post( "/calendar/availability?face_id="+faceID, { resourceID: salaList[idLabel] } )
 		.success(function(respSalas){
-			console.log(this);
+			//console.log(this);
+			$('.ahoraOption').removeClass('fondoOcupada');
+			$('.ahoraOption').addClass('fondoLibre');
 			$('.horasReserva').removeClass('fondoOcupada');
 			$('.horasReserva').addClass('fondoLibre');
 			salaActual = this.data.replace('resourceID=','');
 			salaActual = salaActual.replace('%40','@');
+			var now = new Date();
+			var horaActual = now.getHours();
+			var minutoActual = now.toTimeString().substring(3,5);
+			//console.log(horaActual, minutoActual);
 			var horariosMoment = respSalas.calendars[salaActual].busy;
 			for(var e=0; e<respSalas.calendars[salaActual].busy.length;e++){
+				//console.log(horaActual,moment(horariosMoment[e].start).hour(),moment(horariosMoment[e].end).hour());
+				if(horaActual>=(moment(horariosMoment[e].start).hour()) && horaActual<=(moment(horariosMoment[e].end).hour()) ){
+					//console.log('entra');
+					$('.ahoraOption').removeClass('fondoLibre');
+					$('.ahoraOption').addClass('fondoOcupada');
+				}
 				var minutosInicio = moment(horariosMoment[e].start).minutes();
 				var minutosFinal = moment(horariosMoment[e].end).minutes();
 				if(minutosInicio > 0) minutosInicio = 0.5;
 				if(minutosFinal > 0) minutosFinal = 0.5;
 				var horaInicio = (moment(horariosMoment[e].start).hour())+minutosInicio;
 				var horaFin = (moment(horariosMoment[e].end).hour())+minutosFinal;
-				var panelHorarios = $('#calendar1').children();
+				var panelHorarios = $('#calendar1').children(".horasReserva");
 				for (var i=0;i<panelHorarios.length; i++){
 					var  valorCompara = $('#'+panelHorarios[i].id)[0].attributes[1].value;
 					if(valorCompara >= horaInicio && valorCompara < horaFin){
@@ -154,12 +168,29 @@ function loadSalasAvailability(faceID,idLabel){
 				$('#calendar1').addClass('show');
 			},500)
 		});
-	$('.salaUp').addClass('salaSub');
-	$('.salaUp').removeClass('salaUp');
-	$('.sala').addClass('salaSub');
-	$('.sala').removeClass('sala');
-	$('#'+idLabel).removeClass('salaSub');
-	$('#'+idLabel).addClass('salaUp');
+	setTimeout(function(){
+		$('.sala').addClass('salaSub');
+		$('.sala').removeClass('sala');
+		$('#salaAhora').addClass('erase');
+	},50)
+	setTimeout(function(){
+		$('.salaUp').addClass('salaSub');
+		$('.salaUp').removeClass('salaUp');
+	},70)
+	setTimeout(function(){
+		$('.salasub').children('.cap').addClass('hide');
+		$('.salasub').children('.equ').addClass('hide');
+		$('.salasub').children().children('.salaDisponible').addClass('hide');
+	},75)
+	setTimeout(function(){
+		$('#'+idLabel).removeClass('salaSub');
+		$('#'+idLabel).addClass('salaUp');
+	},80)
+	setTimeout(function(){
+		$('.salaUp').children('.cap').removeClass('hide');
+		$('.salaUp').children('.equ').removeClass('hide');
+		$('.salaUp').children().children('.salaDisponible').removeClass('hide');
+	},100)
 	setTimeout(function(){
 		$('#calendar1').removeClass('erase');
 	},200)
@@ -468,11 +499,8 @@ $( document ).ready(function() {
 		+ "</div>"
 		+ "</div>");
 })
-$('#prox').click(function(){
+$('#gestion').click(function(){
 	reservar();
-})
-$('#ahora').click(function(){
-	reservarAhora();
 })
 $('#inicio').click(function(){
 	iniciar();

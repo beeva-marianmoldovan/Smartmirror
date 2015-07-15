@@ -262,7 +262,7 @@ body, html {
 	transition: all ease-in-out 0.8s;
 }
 .erase {
-	display: none;
+	display: none!important;
 }
 .ayuda {
 	position: absolute;
@@ -529,18 +529,36 @@ body, html {
 	transition: all ease-in-out 0.7s;
 }
 .reservarOptions{
-
 }
 .sala{
-	width: 20%;
-	height: 14%;
-	border-radius: 100px;
+	width: 80%;
+	border-radius: 5px;
 	background-color: #acacac;
-	margin-top: 3%;
-	margin-left: 20%;
+	margin-bottom: 1%;
+	margin-left: 7%;
 	display: inline-block;
 	cursor: pointer;
 	line-height: 1;
+	padding-left: 1%;
+	font-size: 45px;
+	-webkit-transition: all ease-in-out 0.3s;
+	-moz-transition: all ease-in-out 0.3s;
+	-ms-transition: all ease-in-out 0.3s;
+	-o-transition: all ease-in-out 0.3s;
+	transition: all ease-in-out 0.3s;
+}
+.salaAhora{
+	width: 79%;
+	border-radius: 5px;
+	background-color: #838383;
+	margin-bottom: 1%;
+	margin-left: 7%;
+	display: inline-block;
+	cursor: pointer;
+	line-height: 1;
+	text-align: center;
+	padding: 10px;
+	font-size: 40px;
 	-webkit-transition: all ease-in-out 0.3s;
 	-moz-transition: all ease-in-out 0.3s;
 	-ms-transition: all ease-in-out 0.3s;
@@ -548,16 +566,15 @@ body, html {
 	transition: all ease-in-out 0.3s;
 }
 .salaUp{
-	left: 5%;
-	top: 15%;
+	left: 7%;
+	top: 17%;
 	font-size: 70px;
-	width: 200px;
-	height: 200px;
-	border-radius: 100px;
+	border-radius: 5px;
 	background-color: #acacac;
 	position: absolute;
-	display: inline-block;
+	padding-left: 1%;
 	cursor: pointer;
+	overflow: hidden;
 	-webkit-transition: all ease-in-out 0.3s;
 	-moz-transition: all ease-in-out 0.3s;
 	-ms-transition: all ease-in-out 0.3s;
@@ -574,6 +591,7 @@ body, html {
 	margin-top: 2%;
 	display: inline-block;
 	cursor: pointer;
+	overflow: hidden;
 	-webkit-transition: all ease-in-out 0.3s;
 	-moz-transition: all ease-in-out 0.3s;
 	-ms-transition: all ease-in-out 0.3s;
@@ -581,18 +599,18 @@ body, html {
 	transition: all ease-in-out 0.3s;
 }
 .salaDisponible{
-	font-size: 18px;
-	padding-left: 20px;
+	font-size: 16px;
+	padding-left: 1%;
 	color: rgb(66, 118, 119);
 	font-weight: bolder;
-	width: 200px;
+	display: inline-block;
 }
 .salaNoDisponible{
-	font-size: 18px;
-	padding-left: 10px;
+	font-size: 16px;
+	padding-left: 1%;
 	color: rgb(194, 47, 47);
 	font-weight: bolder;
-	width: 200px;
+	display: inline-block;
 }
 .loginQR{
 	width: 300px;
@@ -669,6 +687,16 @@ body, html {
 	font-weight: bolder;
 	float: right;
 }
+.ahoraOption{
+	width: 86%;
+	position: absolute;
+	/*background-color: #358C2C;*/
+	text-align: center;
+	font-size: 40px;
+	margin-top: -6%;
+	border-radius: 5px;
+	padding-left: 20px;
+}
 @media (max-height: 1200px){
 	.gestion{
 		height: 18%;
@@ -711,13 +739,14 @@ body, html {
 	}
 	.salaDisponible {
 		font-size: 13px;
+		padding-left: 1px;
 	}
 	.salaUp {
 		left: 7%;
-		top: 18%;
-		width: 15%;
-		height: 15%;
-		border-radius: 100px;
+		top: 20%;
+		width: 45%;
+		height: 14%;
+		border-radius: 5px;
 		background-color: #acacac;
 		position: absolute;
 		display: inline-block;
@@ -729,14 +758,21 @@ body, html {
 		transition: all ease-in-out 0.3s;
 		font-size: 40px;
 	}
-	.sala{
-		height: 17%;
+	.sala {
 		line-height: 0.5;
+		font-size: 10px;
+		height: 11%;
 		-webkit-transition: all ease-in-out 0.3s;
 		-moz-transition: all ease-in-out 0.3s;
 		-ms-transition: all ease-in-out 0.3s;
 		-o-transition: all ease-in-out 0.3s;
 		transition: all ease-in-out 0.3s;
+	}
+	.cap {
+		font-size: 12px;
+	}
+	.equ {
+		font-size: 12px;
 	}
 	.welcomePhraseSub {
 		position: absolute;
@@ -764,6 +800,36 @@ body, html {
 		line-height: 1.5;
 		font-size: 13px;
 		width: 12%;
+	}
+	.ahoraOption {
+		width: 34%;
+		right: 9%;
+		font-size: 40px;
+		margin-top: -4%;
+	}
+	.detalleSala {
+		width: 35%;
+		display: inline-block;
+	}
+	.salaUp > .cap{
+		font-size: 12px;
+		position: absolute;
+		top: 30%;
+		left: 42%;
+	}
+	.salaUp > .equ{
+		font-size: 12px;
+		position: absolute;
+		top: 10%;
+		left: 75%;
+	}
+	.sala > .equ{
+		position: absolute;
+	}
+	.salaAhora {
+		width: 80%;
+		padding: 5px;
+		font-size: 28px;
 	}
 }
 @font-face {
