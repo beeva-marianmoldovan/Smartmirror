@@ -334,29 +334,6 @@ function standBy(){
 		$('#container').addClass('show');
 	}, 200);
 }
-function openGestion(){
-	$('#container').removeClass('show');
-	$('#container').addClass('hide');
-	$('#container').css('display', 'none');
-	$('#calendar').addClass('erase');
-	$('#reservarOptions').addClass('erase');
-
-	setTimeout(function() {
-		$('#gestion').removeClass('gestion');
-		$('#gestion').addClass('gestionSub');
-		$('#agenda').removeClass('agenda');
-		$('#agenda').addClass('agendaSub');
-		$('#imagenMicro').removeClass('imagenMicro');
-		$('#imagenMicro').addClass('imagenMicroSub');
-		$('#salir').removeClass('salir');
-		$('#salir').addClass('salirSub');
-		$('#inicio').removeClass('inicio');
-		$('#inicio').addClass('inicioSub');
-		$('#menuOptions').removeClass('erase');
-		$('#comandos').removeClass('hide');
-		$('#comandos').addClass('show');
-	}, 200);
-}
 function openAgenda(){
 	loadCalendar();
 	$('#reservarOptions').addClass('erase');
@@ -395,45 +372,30 @@ function reservar(){
 	$('#comandos').addClass('show');
 	$('#reservarAhora').removeClass('show');
 	$('#reservarAhora').addClass('hide');
+	$('#calendar1').removeClass('show');
+	$('#calendar1').addClass('hide');
 	setTimeout(function() {
 		$('#calendar').addClass('erase');
+		$('#calendar1').addClass('erase');
 		$('#reservarAhora').addClass('erase');
 		$("#reservarOptions").removeClass('erase');
 		$('#menuOptions').removeClass('erase');
+		$('.salaUP').addClass('sala');
+		$('.salaUP').removeClass('salaUp');
+		$('.salaSub').addClass('sala');
+		$('.salaSub').removeClass('salaSub');
 	}, 100);
 	setTimeout(function() {
 		$('#reservarOptions').removeClass('hide');
 		$('#reservarOptions').addClass('show');
-	}, 200);
-}
-
-function reservarAhora(){
-	$('#gestion').removeClass('gestion');
-	$('#gestion').addClass('gestionSub');
-	$('#agenda').removeClass('agenda');
-	$('#agenda').addClass('agendaSub');
-	$('#imagenMicro').removeClass('imagenMicro');
-	$('#imagenMicro').addClass('imagenMicroSub');
-	$('#salir').removeClass('salir');
-	$('#salir').addClass('salirSub');
-	$('#inicio').removeClass('inicio');
-	$('#inicio').addClass('inicioSub');
-	$('#comandos').removeClass('hide');
-	$('#comandos').addClass('show');
-	$('#reservarOptions').removeClass('show');
-	$('#reservarOptions').addClass('hide');
+	}, 300);
 	setTimeout(function() {
-		$('#calendar').addClass('erase');
-		$('#reservarOptions').addClass('erase');
-		$("#reservarAhora").removeClass('erase');
-		$('#menuOptions').removeClass('erase');
-	}, 100);
-	setTimeout(function() {
-		$('#reservarAhora').removeClass('hide');
-		$('#reservarAhora').addClass('show');
-	}, 200);
+		$('.detalleSala').removeClass('hide');
+		$('.detalleSala').addClass('show');
+		$('.salaDisponible').removeClass('hide');
+		$('.salaDisponible').addClass('show');
+	}, 1000);
 }
-
 function updateCurrentWeather() {
 
 	var iconTable = {
@@ -516,8 +478,8 @@ $('#salir').click(function(){
 ///  CONTROLES DE VOZ
 /////////////////////////
 
-voiceEngine.addAction(new VoiceAction("gestión", function(){
-	openGestion();
+voiceEngine.addAction(new VoiceAction("reservar", function(){
+	reservar();
 }));
 voiceEngine.addAction(new VoiceAction("agenda", function(){
 	openAgenda();
