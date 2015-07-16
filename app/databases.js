@@ -34,3 +34,14 @@ var Ambient = new Schema({
     pression         : { type : Number }
 });
 mongoose.model( 'Ambient', Ambient );
+
+var Room = new Schema({
+    location         : { type : String },
+    floor            : { type : String },
+    room             : { type : String },
+    capacity         : { type : String },
+    resources        : { type : String },
+    name             : { type : String },
+    roomId           : { type : String }  
+});
+mongoose.model( 'Room', Room );
