@@ -11,7 +11,7 @@ module.exports = function(app) {
 		.post(calendar.create_event);
 
 	app.route('/calendar/resources')
-		.get(calendar.get_calendar_resources);
+		.get(calendar.get_calendar_rooms);
 
 	app.route('/calendar/availability')
 		.post(calendar.get_calendars_availabily);			
