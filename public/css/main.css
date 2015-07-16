@@ -262,7 +262,7 @@ body, html {
 	transition: all ease-in-out 0.8s;
 }
 .erase {
-	display: none;
+	display: none!important;
 }
 .ayuda {
 	position: absolute;
@@ -300,7 +300,7 @@ body, html {
 }
 .gestion {
 	width: 20%;
-	height: 14%;
+	height: 13%;
 	border-radius: 100px;
 	background-color: #acacac;
 	position: absolute;
@@ -529,18 +529,36 @@ body, html {
 	transition: all ease-in-out 0.7s;
 }
 .reservarOptions{
-
 }
 .sala{
-	width: 20%;
-	height: 14%;
-	border-radius: 100px;
+	width: 80%;
+	border-radius: 5px;
 	background-color: #acacac;
-	margin-top: 3%;
-	margin-left: 20%;
+	margin-bottom: 1%;
+	margin-left: 7%;
 	display: inline-block;
 	cursor: pointer;
 	line-height: 1;
+	padding-left: 1%;
+	font-size: 45px;
+	-webkit-transition: all ease-in-out 0.3s;
+	-moz-transition: all ease-in-out 0.3s;
+	-ms-transition: all ease-in-out 0.3s;
+	-o-transition: all ease-in-out 0.3s;
+	transition: all ease-in-out 0.3s;
+}
+.salaAhora{
+	width: 79%;
+	border-radius: 5px;
+	background-color: #838383;
+	margin-bottom: 1%;
+	margin-left: 7%;
+	display: inline-block;
+	cursor: pointer;
+	line-height: 1;
+	text-align: center;
+	padding: 10px;
+	font-size: 40px;
 	-webkit-transition: all ease-in-out 0.3s;
 	-moz-transition: all ease-in-out 0.3s;
 	-ms-transition: all ease-in-out 0.3s;
@@ -548,15 +566,15 @@ body, html {
 	transition: all ease-in-out 0.3s;
 }
 .salaUp{
-	left: 5%;
-	top: 15%;
-	width: 200px;
-	height: 200px;
-	border-radius: 100px;
+	left: 7%;
+	top: 17%;
+	font-size: 70px;
+	border-radius: 5px;
 	background-color: #acacac;
 	position: absolute;
-	display: inline-block;
+	padding-left: 1%;
 	cursor: pointer;
+	overflow: hidden;
 	-webkit-transition: all ease-in-out 0.3s;
 	-moz-transition: all ease-in-out 0.3s;
 	-ms-transition: all ease-in-out 0.3s;
@@ -570,8 +588,10 @@ body, html {
 	background-color: #acacac;
 	font-size: 26px;
 	margin-left: 10%;
+	margin-top: 2%;
 	display: inline-block;
 	cursor: pointer;
+	overflow: hidden;
 	-webkit-transition: all ease-in-out 0.3s;
 	-moz-transition: all ease-in-out 0.3s;
 	-ms-transition: all ease-in-out 0.3s;
@@ -579,18 +599,18 @@ body, html {
 	transition: all ease-in-out 0.3s;
 }
 .salaDisponible{
-	font-size: 18px;
-	padding-left: 20px;
+	font-size: 16px;
+	padding-left: 1%;
 	color: rgb(66, 118, 119);
 	font-weight: bolder;
-	width: 200px;
+	display: inline-block;
 }
 .salaNoDisponible{
-	font-size: 18px;
-	padding-left: 10px;
+	font-size: 16px;
+	padding-left: 1%;
 	color: rgb(194, 47, 47);
 	font-weight: bolder;
-	width: 200px;
+	display: inline-block;
 }
 .loginQR{
 	width: 300px;
@@ -634,7 +654,61 @@ body, html {
 .fondoOcupada {
 	background-color: #d3514d;
 }
+.apendice{
+	font-size: 20px;
+	line-height: 1px;
+	color: white;
+	font-weight: bold;
+	text-align: right;
+	width: 170px;
+}
+.reservarAhora{
+	background-color: lightgray;
+	width: 80%;
+	margin-left: 5%;
+	border-radius: 5px;
+	padding-left: 20px;
+	margin-bottom: 2%;
+}
+.detalleSala{
+	width: 30%;
+	display: inline-block;
+}
+.cap{
+	font-size: 25px;
+	vertical-align: top;
+	color: #767676;
+	font-weight: bolder;
+	margin-top: 3%;
+	margin-left: 4%;
+}
+.equ{
+	font-size: 20px;
+	vertical-align: middle;
+	color: #767676;
+	font-weight: bolder;
+	float: right;
+}
+.ahoraOption{
+	width: 86%;
+	position: absolute;
+	/*background-color: #358C2C;*/
+	text-align: center;
+	font-size: 40px;
+	margin-top: -6%;
+	border-radius: 5px;
+	padding-left: 20px;
+}
 @media (max-height: 1200px){
+	.gestion{
+		height: 18%;
+	}
+	.agenda{
+		height: 15%;
+	}
+	.salir .inicio{
+		height: 9%;
+	}
 	.calendar .c-pad-top {
 		padding-top: 1%!important;
 	}
@@ -648,22 +722,33 @@ body, html {
 		top: 65%;
 	}
 	.calendar2 {
-		cursor: default;
 		height: 34%!important;
-		margin-left: 2%;
 		font-size: 35px!important;
-		padding-top: 7%!important;
+		padding-top: 8%!important;
 		margin-top: 0%!important;
 	}
+	.apendice{
+		font-size: 12px;
+		line-height: 1px;
+		color: white;
+		font-weight: bold;
+		text-align: right;
+		width: 170px;
+		margin-top: -3%;
+	}
 	.salaSub {
-		margin-top: 4%;
+		margin-top: 6%;
+	}
+	.salaDisponible {
+		font-size: 13px;
+		padding-left: 1px;
 	}
 	.salaUp {
 		left: 7%;
-		top: 18%;
-		width: 15%;
-		height: 15%;
-		border-radius: 100px;
+		top: 20%;
+		width: 45%;
+		height: 14%;
+		border-radius: 5px;
 		background-color: #acacac;
 		position: absolute;
 		display: inline-block;
@@ -675,16 +760,23 @@ body, html {
 		transition: all ease-in-out 0.3s;
 		font-size: 40px;
 	}
-	.sala{
-		height: 17%;
+	.sala {
 		line-height: 0.5;
+		font-size: 10px;
+		height: 11%;
 		-webkit-transition: all ease-in-out 0.3s;
 		-moz-transition: all ease-in-out 0.3s;
 		-ms-transition: all ease-in-out 0.3s;
 		-o-transition: all ease-in-out 0.3s;
 		transition: all ease-in-out 0.3s;
 	}
-}
+	.cap {
+		font-size: 12px;
+		margin-top: 0%;
+	}
+	.equ {
+		font-size: 12px;
+	}
 	.welcomePhraseSub {
 		position: absolute;
 		top: 90%;
@@ -698,7 +790,9 @@ body, html {
 		transition: all ease-in-out 0.7s;
 	}
 	.imagenMicro {
-		left: 34%;
+		left: 36%;
+		top: 38%;
+		width: 100px;
 		-webkit-transition: all ease-in-out 0.7s;
 		-moz-transition: all ease-in-out 0.7s;
 		-ms-transition: all ease-in-out 0.7s;
@@ -707,7 +801,39 @@ body, html {
 	}
 	.horasReserva {
 		line-height: 1.5;
-		margin-bottom: 5px;
+		font-size: 13px;
+		width: 12%;
+	}
+	.ahoraOption {
+		width: 34%;
+		right: 9%;
+		font-size: 40px;
+		margin-top: -4%;
+	}
+	.detalleSala {
+		width: 35%;
+		display: inline-block;
+	}
+	.salaUp > .cap{
+		font-size: 12px;
+		position: absolute;
+		top: 30%;
+		left: 42%;
+	}
+	.salaUp > .equ{
+		font-size: 12px;
+		position: absolute;
+		top: 10%;
+		left: 75%;
+	}
+	.sala > .equ{
+		position: absolute;
+	}
+	.salaAhora {
+		width: 80%;
+		padding: 5px;
+		font-size: 28px;
+	}
 }
 @font-face {
   font-family: 'HelveticaNeue-UltraLight';

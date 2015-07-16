@@ -8,7 +8,7 @@ var evening 	= ['Wow, You look hot!','You look nice!','Hi, sexy!'];
 var feed		= 'http://meneame.feedsportal.com/rss';
 var contWelcome = 0, contFeed = 0;
 var queueFeeds = [], queueEvents=[], salaList={};
-var usuario, ambiente, agenda, salaActual, nombreSalaPrinp,faceID, keepSessionTime = 150000;
+var usuario, ambiente, agenda, salaActual, nombreSalaPrinp,faceID, keepSessionTime = 12000;
 var voiceEngine = new VoiceEngine();
 //voiceEngine.start();
 
@@ -40,7 +40,8 @@ socket.on('face', function (data) {
 	}
 	if(data.message=='known_face' || data.message=='user_registered'){
 		$.get('/user?faceId='+faceID).success(function(resp){
-			if(resp[0].tokens.length>0){
+			console.log(resp);
+			if(resp.length > 0 && resp[0].tokens.length>0){
 				$('#QRcode').remove();
 				$('.welcomeMessage').remove();
 				usuario=resp;
@@ -48,8 +49,10 @@ socket.on('face', function (data) {
 					for(var a = 0; a < resp3.length; a++){
 						var nombreSala = resp3[a].apps$property[1].value.match("Sala \[0-9*]");
 						var salasDiv = $('#reservarOptions');
-						var div ="<div id='sala"+a+"' value='"+resp3[a].apps$property[1].value+"' class='sala'>"+nombreSala[0]
-							+"<p class='salaDisponible'>Horarios disponibles</p>"
+						var div ="<div id='sala"+a+"' value='"+resp3[a].apps$property[1].value+"' class='sala'>"
+							+"<div class='detalleSala'>"+nombreSala[0]+"<p class='salaDisponible'>Horarios disponibles ahora</p>"+"</div>"
+							+"<div class='detalleSala cap'><p>Max. "+ Math.floor((Math.random() * 14) + 4) +" personas</p></div>"
+							+"<div class='detalleSala equ'><p>Telefono on board</p><p>Proyector</p></div>"
 							+"</div>"
 						salasDiv.append(div);
 						salaList['sala'+a] = resp3[a].apps$property[2].value;
@@ -126,20 +129,32 @@ var weatherParams = {
 function loadSalasAvailability(faceID,idLabel){
 	$.post( "/calendar/availability?face_id="+faceID, { resourceID: salaList[idLabel] } )
 		.success(function(respSalas){
-			console.log(this);
+			//console.log(this);
+			$('.ahoraOption').removeClass('fondoOcupada');
+			$('.ahoraOption').addClass('fondoLibre');
 			$('.horasReserva').removeClass('fondoOcupada');
 			$('.horasReserva').addClass('fondoLibre');
 			salaActual = this.data.replace('resourceID=','');
 			salaActual = salaActual.replace('%40','@');
+			var now = new Date();
+			var horaActual = now.getHours();
+			var minutoActual = now.toTimeString().substring(3,5);
+			//console.log(horaActual, minutoActual);
 			var horariosMoment = respSalas.calendars[salaActual].busy;
 			for(var e=0; e<respSalas.calendars[salaActual].busy.length;e++){
+				//console.log(horaActual,moment(horariosMoment[e].start).hour(),moment(horariosMoment[e].end).hour());
+				if(horaActual>=(moment(horariosMoment[e].start).hour()) && horaActual<=(moment(horariosMoment[e].end).hour()) ){
+					//console.log('entra');
+					$('.ahoraOption').removeClass('fondoLibre');
+					$('.ahoraOption').addClass('fondoOcupada');
+				}
 				var minutosInicio = moment(horariosMoment[e].start).minutes();
 				var minutosFinal = moment(horariosMoment[e].end).minutes();
 				if(minutosInicio > 0) minutosInicio = 0.5;
 				if(minutosFinal > 0) minutosFinal = 0.5;
 				var horaInicio = (moment(horariosMoment[e].start).hour())+minutosInicio;
 				var horaFin = (moment(horariosMoment[e].end).hour())+minutosFinal;
-				var panelHorarios = $('#calendar1').children();
+				var panelHorarios = $('#calendar1').children(".horasReserva");
 				for (var i=0;i<panelHorarios.length; i++){
 					var  valorCompara = $('#'+panelHorarios[i].id)[0].attributes[1].value;
 					if(valorCompara >= horaInicio && valorCompara < horaFin){
@@ -151,14 +166,31 @@ function loadSalasAvailability(faceID,idLabel){
 			setTimeout(function(){
 				$('#calendar1').removeClass('hide');
 				$('#calendar1').addClass('show');
-			},1000)
+			},500)
 		});
-	$('.salaUp').addClass('salaSub');
-	$('.salaUp').removeClass('salaUp');
-	$('.sala').addClass('salaSub');
-	$('.sala').removeClass('sala');
-	$('#'+idLabel).removeClass('salaSub');
-	$('#'+idLabel).addClass('salaUp');
+	setTimeout(function(){
+		$('.sala').addClass('salaSub');
+		$('.sala').removeClass('sala');
+		$('#salaAhora').addClass('erase');
+	},50)
+	setTimeout(function(){
+		$('.salaUp').addClass('salaSub');
+		$('.salaUp').removeClass('salaUp');
+	},70)
+	setTimeout(function(){
+		$('.salasub').children('.cap').addClass('hide');
+		$('.salasub').children('.equ').addClass('hide');
+		$('.salasub').children().children('.salaDisponible').addClass('hide');
+	},75)
+	setTimeout(function(){
+		$('#'+idLabel).removeClass('salaSub');
+		$('#'+idLabel).addClass('salaUp');
+	},80)
+	setTimeout(function(){
+		$('.salaUp').children('.cap').removeClass('hide');
+		$('.salaUp').children('.equ').removeClass('hide');
+		$('.salaUp').children().children('.salaDisponible').removeClass('hide');
+	},100)
 	setTimeout(function(){
 		$('#calendar1').removeClass('erase');
 	},200)
@@ -239,12 +271,14 @@ function iniciar() {
 	$('#container').addClass('hide');
 	$('#reservarOptions').removeClass('show');
 	$('#reservarOptions').addClass('hide');
+	$('#reservarAhora').removeClass('show');
+	$('#reservarAhora').addClass('hide');
 	if (contWelcome==0) {
 		setTimeout(function () {
 			var container = $('#middleContainer');
 			var index = Math.floor(Math.random() * morning.length + 0);
 			var welcomePhrase = morning[index];
-			var div = "<div id='welcomePhrase' class='welcomePhrase'>" + welcomePhrase + ", " + usuario[0].name + "</div>";
+			var div = "<div id='welcomePhrase' class='welcomePhrase'>" + welcomePhrase + ", " + usuario[0].name.split(" ")[0] + "</div>";
 			container.append(div);
 			contWelcome=1;
 		}, 100);
@@ -254,12 +288,10 @@ function iniciar() {
 		$("#welcomePhrase").removeClass('welcomePhrase');
 		$("#welcomePhrase").addClass('welcomePhraseSub');
 		$('#container').css('display', 'none');
-		$('#menuGestion').addClass('erase');
 		$('#calendar').addClass('erase');
 		$('#reservarOptions').addClass('erase');
+		$('#reservarAhora').addClass('erase');
 		$('#menuOptions').removeClass('erase');
-		$(".fichasGestion").removeClass('unminify');
-		$(".fichasGestion").addClass('minify');
 	}, 200);
 	setTimeout(function() {
 		$('#gestion').removeClass('gestionSub');
@@ -277,25 +309,24 @@ function iniciar() {
 	}, 300);
 }
 function standBy(){
-
 	$('#comandos').removeClass('show');
 	$('#comandos').addClass('hide');
 	$('#reservarOptions').removeClass('show');
 	$('#reservarOptions').addClass('hide');
+	$('#reservarAhora').removeClass('show');
+	$('#reservarAhora').addClass('hide');
 	$('#welcomePhrase').remove();
 	contWelcome=0;
 	queueEvents=[];
 	setTimeout(function() {
 		$('#menuOptions').addClass('erase');
-		$('#menuGestion').addClass('erase');
 		$('.sala').remove();
 		$('.salaUp').remove();
 		$('.salaSub').remove();
 		$('#reservarOptions').addClass('erase');
+		$('#reservarAhora').addClass('erase');
 		$('#calendar').addClass('erase');
 		$('#calendar1').addClass('erase');
-		$(".fichasGestion").removeClass('unminify');
-		$(".fichasGestion").addClass('minify');
 		$('#container').css('display', 'block');
 	}, 100);
 	setTimeout(function() {
@@ -303,36 +334,10 @@ function standBy(){
 		$('#container').addClass('show');
 	}, 200);
 }
-function openGestion(){
-	$('#container').removeClass('show');
-	$('#container').addClass('hide');
-	$('#container').css('display', 'none');
-	$('#calendar').addClass('erase');
-	$('#reservarOptions').addClass('erase');
-	$('#menuGestion').removeClass('erase');
-
-	setTimeout(function() {
-		$('#gestion').removeClass('gestion');
-		$('#gestion').addClass('gestionSub');
-		$('#agenda').removeClass('agenda');
-		$('#agenda').addClass('agendaSub');
-		$('#imagenMicro').removeClass('imagenMicro');
-		$('#imagenMicro').addClass('imagenMicroSub');
-		$('#salir').removeClass('salir');
-		$('#salir').addClass('salirSub');
-		$('#inicio').removeClass('inicio');
-		$('#inicio').addClass('inicioSub');
-		$('#menuOptions').removeClass('erase');
-		$('#comandos').removeClass('hide');
-		$('#comandos').addClass('show');
-		$(".fichasGestion").removeClass('minify');
-		$(".fichasGestion").addClass('unminify');
-	}, 200);
-}
 function openAgenda(){
 	loadCalendar();
-	$('#menuGestion').addClass('erase');
 	$('#reservarOptions').addClass('erase');
+	$('#reservarAhora').addClass('erase');
 	$('#container').removeClass('show');
 	$('#container').addClass('hide');
 	$('#container').css('display', 'none');
@@ -352,24 +357,45 @@ function openAgenda(){
 	$('#comandos').addClass('show');
 	$('#calendar').removeClass('erase');
 }
-$('#reservarSala').click(function(){
-	reservar();
-})
-
 function reservar(){
+	$('#gestion').removeClass('gestion');
+	$('#gestion').addClass('gestionSub');
+	$('#agenda').removeClass('agenda');
+	$('#agenda').addClass('agendaSub');
+	$('#imagenMicro').removeClass('imagenMicro');
+	$('#imagenMicro').addClass('imagenMicroSub');
+	$('#salir').removeClass('salir');
+	$('#salir').addClass('salirSub');
+	$('#inicio').removeClass('inicio');
+	$('#inicio').addClass('inicioSub');
+	$('#comandos').removeClass('hide');
+	$('#comandos').addClass('show');
+	$('#reservarAhora').removeClass('show');
+	$('#reservarAhora').addClass('hide');
+	$('#calendar1').removeClass('show');
+	$('#calendar1').addClass('hide');
 	setTimeout(function() {
-		$('#menuGestion').addClass('erase');
 		$('#calendar').addClass('erase');
-		$(".fichasGestion").removeClass('unminify');
-		$(".fichasGestion").addClass('minify');
-		$(".reservarOptions").removeClass('erase');
+		$('#calendar1').addClass('erase');
+		$('#reservarAhora').addClass('erase');
+		$("#reservarOptions").removeClass('erase');
+		$('#menuOptions').removeClass('erase');
+		$('.salaUP').addClass('sala');
+		$('.salaUP').removeClass('salaUp');
+		$('.salaSub').addClass('sala');
+		$('.salaSub').removeClass('salaSub');
 	}, 100);
 	setTimeout(function() {
 		$('#reservarOptions').removeClass('hide');
 		$('#reservarOptions').addClass('show');
-	}, 200);
+	}, 300);
+	setTimeout(function() {
+		$('.detalleSala').removeClass('hide');
+		$('.detalleSala').addClass('show');
+		$('.salaDisponible').removeClass('hide');
+		$('.salaDisponible').addClass('show');
+	}, 1000);
 }
-
 function updateCurrentWeather() {
 
 	var iconTable = {
@@ -436,7 +462,7 @@ $( document ).ready(function() {
 		+ "</div>");
 })
 $('#gestion').click(function(){
-	openGestion();
+	reservar();
 })
 $('#inicio').click(function(){
 	iniciar();
@@ -452,8 +478,8 @@ $('#salir').click(function(){
 ///  CONTROLES DE VOZ
 /////////////////////////
 
-voiceEngine.addAction(new VoiceAction("gestión", function(){
-	openGestion();
+voiceEngine.addAction(new VoiceAction("reservar", function(){
+	reservar();
 }));
 voiceEngine.addAction(new VoiceAction("agenda", function(){
 	openAgenda();
