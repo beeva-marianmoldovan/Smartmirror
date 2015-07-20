@@ -46,16 +46,17 @@ socket.on('face', function (data) {
 				$('.welcomeMessage').remove();
 				usuario=resp;
 				$.get('/calendar/resources?face_id='+faceID).success(function(resp3){
+					console.log('resources: ',resp3);
 					for(var a = 0; a < resp3.length; a++){
-						var nombreSala = resp3[a].apps$property[1].value.match("Sala \[0-9*]");
 						var salasDiv = $('#reservarOptions');
-						var div ="<div id='sala"+a+"' value='"+resp3[a].apps$property[1].value+"' class='sala'>"
-							+"<div class='detalleSala'>"+nombreSala[0]+"<p class='salaDisponible'>Horarios disponibles ahora</p>"+"</div>"
-							+"<div class='detalleSala cap'><p>Max. "+ Math.floor((Math.random() * 14) + 4) +" personas</p></div>"
-							+"<div class='detalleSala equ'><p>Telefono on board</p><p>Proyector</p></div>"
+						if(resp3[a].resources==undefined) resp3[a].resources = '';
+						var div ="<div id='sala"+a+"' value='"+resp3[a].roomId+"' class='sala'>"
+							+"<div class='detalleSala'>"+resp3[a].room+"<p class='salaDisponible'>Horarios disponibles ahora</p>"+"</div>"
+							+"<div class='detalleSala cap'><p>"+ resp3[a].capacity+" personas</p></div>"
+							+"<div class='detalleSala equ'><p>"+ resp3[a].resources+"</p></div>"
 							+"</div>"
 						salasDiv.append(div);
-						salaList['sala'+a] = resp3[a].apps$property[2].value;
+						salaList['sala'+a] = resp3[a].roomId;
 					}
 					$('.sala').click(function(){
 						$('#calendar1').removeClass('show');
@@ -71,6 +72,20 @@ socket.on('face', function (data) {
 					var rightNowStart = date+this.textContent.substr(0,5)+":00+02:00";
 					var rightNowEnd = date+this.textContent.substr(7,6)+":00+02:00";
 					reservarSala(nombreSalaPrinp,salaActual,faceID,rightNowStart,rightNowEnd, label);
+				})
+				$('.salaAhora').click(function(){
+					var label = this.id;
+					var date = new Date().toISOString().substr(0, 11);
+					var now = new Date();
+					var horaActual = now.getHours();
+					var minutoActual = now.getMinutes();
+					if(minutoActual>30) { minutoActual='00'; horaActual= horaActual+1; var horaFin = horaActual; var minutoFin = '30'; }
+					else { minutoActual='30'; var horaFin= horaActual+1;var minutoFin = '00'}
+					console.log(date, horaActual, minutoActual);
+					var rightNowStart = date+horaActual+':'+minutoActual+":00+02:00";
+					var rightNowEnd = date+horaFin+':'+minutoFin+":00+02:00";
+					console.log(rightNowStart,rightNowEnd);
+					//reservarSala(nombreSalaPrinp,salaActual,faceID,rightNowStart,rightNowEnd, label);
 				})
 				iniciar();
 			}
