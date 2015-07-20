@@ -8,7 +8,7 @@ var evening 	= ['Wow, You look hot!','You look nice!','Hi, sexy!'];
 var feed		= 'http://meneame.feedsportal.com/rss';
 var contWelcome = 0, contFeed = 0;
 var queueFeeds = [], queueEvents=[], salaList={};
-var usuario, ambiente, agenda, salaActual, nombreSalaPrinp,faceID, keepSessionTime = 12000;
+var usuario, ambiente, agenda, salaActual, nombreSalaPrinp,faceID, keepSessionTime = 12000, locationSala, salaReservarAhora, nombreSalaAhora;
 var voiceEngine = new VoiceEngine();
 //voiceEngine.start();
 
@@ -49,9 +49,12 @@ socket.on('face', function (data) {
 					console.log('resources: ',resp3);
 					for(var a = 0; a < resp3.length; a++){
 						var salasDiv = $('#reservarOptions');
+						var idDeSala = resp3[a].roomId;
+						if(resp3[a].availability.calendars[idDeSala].busy.length==0) { var textoDisponibilidad = "Horarios disponibles ahora"; var claseDisponibilidad = "salaDisponible"; salaReservarAhora = idDeSala; nombreSalaAhora = resp3[a].name }
+							else {var textoDisponibilidad = "Horarios no disponibles ahora"; var claseDisponibilidad = "salaNoDisponible";}
 						if(resp3[a].resources==undefined) resp3[a].resources = '';
 						var div ="<div id='sala"+a+"' value='"+resp3[a].roomId+"' class='sala'>"
-							+"<div class='detalleSala'>"+resp3[a].room+"<p class='salaDisponible'>Horarios disponibles ahora</p>"+"</div>"
+							+"<div class='detalleSala'>"+resp3[a].room+"<p class='"+claseDisponibilidad+"'>"+textoDisponibilidad+"</p>"+"</div>"
 							+"<div class='detalleSala cap'><p>"+ resp3[a].capacity+" personas</p></div>"
 							+"<div class='detalleSala equ'><p>"+ resp3[a].resources+"</p></div>"
 							+"</div>"
@@ -85,7 +88,7 @@ socket.on('face', function (data) {
 					var rightNowStart = date+horaActual+':'+minutoActual+":00+02:00";
 					var rightNowEnd = date+horaFin+':'+minutoFin+":00+02:00";
 					console.log(rightNowStart,rightNowEnd);
-					//reservarSala(nombreSalaPrinp,salaActual,faceID,rightNowStart,rightNowEnd, label);
+					reservarSala(salaReservarAhora, nombreSalaAhora, faceID,rightNowStart,rightNowEnd, label);
 				})
 				iniciar();
 			}
@@ -214,6 +217,7 @@ function loadSalasAvailability(faceID,idLabel){
 function reservarSala(nombreSalaPrinp, salaActual, faceID, start, end, label){
 	var node = start.replace(/\s+/, "");
 	var node2 = end.replace(/\s+/, "");
+	console.log('datos reserva: ', nombreSalaPrinp, salaActual, faceID, node, node2, label);
 	$.post( "/calendar/create?face_id="+faceID,
 		{
 			"location":nombreSalaPrinp,
