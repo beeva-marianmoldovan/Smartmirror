@@ -220,10 +220,10 @@ function reservarSala(nombreSalaPrinp, salaActual, faceID, start, end, label){
 	console.log('datos reserva: ', nombreSalaPrinp, salaActual, faceID, node, node2, label);
 	$.post( "/calendar/create?face_id="+faceID,
 		{
-			"location":nombreSalaPrinp,
+			"location":salaActual,
 			"start": {"dateTime":node},
 			"end": {"dateTime":node2},
-			"attendees": [{"email":salaActual}]
+			"attendees": [{"email":nombreSalaPrinp}]
 		})
 	$('#'+label).removeClass('fondoLibre');
 	$('#'+label).addClass('fondoOcupada');
