@@ -250,13 +250,9 @@ exports.get_calendars_availabily = function(request, res) {
   var userId = request.query.face_id;
   var sala = request.body.resourceID;
   console.log(sala);
-   
-   User.findOne({'faceId' : userId}, function(err, user){
-    if(err){
-      console.log('The API returned an error: ' + err);
-      response.status(500).end();
-    }
-    else{  
+
+  find_user(userId)
+    .then(function(user){
       var tokens = user.tokens[0];
       oauth2Client.setCredentials(tokens);
   
@@ -276,7 +272,6 @@ exports.get_calendars_availabily = function(request, res) {
           console.log('The API returned an error: ' + err);
           response.status(500).end();
         });
-    }
-   });
+    });
 }
 
