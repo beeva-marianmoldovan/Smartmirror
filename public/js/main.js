@@ -50,7 +50,7 @@ socket.on('face', function (data) {
 					for(var a = 0; a < resp3.length; a++){
 						var salasDiv = $('#reservarOptions');
 						var idDeSala = resp3[a].roomId;
-						if(resp3[a].availability.calendars[idDeSala].busy.length==0) { var textoDisponibilidad = "Horarios disponibles ahora"; var claseDisponibilidad = "salaDisponible"; salaReservarAhora = idDeSala; nombreSalaAhora = resp3[a].name }
+						if(resp3[a].availability.calendars[idDeSala].busy.length==0 && resp3[a].room != 'Sala 3') { var textoDisponibilidad = "Horarios disponibles ahora"; var claseDisponibilidad = "salaDisponible"; salaReservarAhora = idDeSala; nombreSalaAhora = resp3[a].name }
 							else {var textoDisponibilidad = "Horarios no disponibles ahora"; var claseDisponibilidad = "salaNoDisponible";}
 						if(resp3[a].resources==undefined) resp3[a].resources = '';
 						var div ="<div id='sala"+a+"' value='"+resp3[a].roomId+"' class='sala'>"
