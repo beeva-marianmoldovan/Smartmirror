@@ -250,8 +250,33 @@ exports.get_calendars_availabily = function(request, res) {
   var userId = request.query.face_id;
   var sala = request.body.resourceID;
   console.log(sala);
-   
-   User.findOne({'faceId' : userId}, function(err, user){
+
+  find_user(userId)
+    .then(function(user){
+      var tokens = user.tokens[0];
+      oauth2Client.setCredentials(tokens);
+  
+      var todayMin = new Date();
+      var todayMax = new Date();
+      todayMin.setHours(0, 0, 0, 0);
+      todayMax.setHours(23, 59, 59, 0);
+
+      console.log('timeMin: '+todayMin+ ' timeMax: '+todayMax);
+
+      get_availability_room(oauth2Client, sala, todayMin, todayMax)
+        .then(function(response) {
+          console.log(response);
+          res.json(response);
+        })
+        .catch(function(e){
+          console.log('The API returned an error: ' + err);
+          response.status(500).end();
+        });
+    });
+
+
+
+   /*User.findOne({'faceId' : userId}, function(err, user){
     if(err){
       console.log('The API returned an error: ' + err);
       response.status(500).end();
@@ -277,6 +302,6 @@ exports.get_calendars_availabily = function(request, res) {
           response.status(500).end();
         });
     }
-   });
+   });*/
 }
 
