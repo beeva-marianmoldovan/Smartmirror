@@ -64,7 +64,11 @@ socket.on('face', function (data) {
 					$('.sala').click(function(){
 						$('#calendar1').removeClass('show');
 						$('#calendar1').addClass('hide');
-						nombreSalaPrinp = $('#'+this.id)[0].attributes[1].value;
+						var idSalaLabel = $('#'+this.id)[0].attributes[1].value;
+						for (var u = 0; u<resp3.length; u++){
+							if(resp3[u].roomId == idSalaLabel ) nombreSalaPrinp = resp3[u].name;
+						}
+						console.log(nombreSalaPrinp);
 						var idLabel = this.id;
 						loadSalasAvailability(faceID, idLabel);
 					})
@@ -88,7 +92,7 @@ socket.on('face', function (data) {
 					var rightNowStart = date+horaActual+':'+minutoActual+":00+02:00";
 					var rightNowEnd = date+horaFin+':'+minutoFin+":00+02:00";
 					console.log(rightNowStart,rightNowEnd);
-					reservarSala(salaReservarAhora, nombreSalaAhora, faceID,rightNowStart,rightNowEnd, label);
+					reservarSala(nombreSalaAhora, salaReservarAhora,faceID,rightNowStart,rightNowEnd, label);
 				})
 				iniciar();
 			}
@@ -220,10 +224,10 @@ function reservarSala(nombreSalaPrinp, salaActual, faceID, start, end, label){
 	console.log('datos reserva: ', nombreSalaPrinp, salaActual, faceID, node, node2, label);
 	$.post( "/calendar/create?face_id="+faceID,
 		{
-			"location":salaActual,
+			"location":nombreSalaPrinp,
 			"start": {"dateTime":node},
 			"end": {"dateTime":node2},
-			"attendees": [{"email":nombreSalaPrinp}]
+			"attendees": [{"email":salaActual}]
 		})
 	$('#'+label).removeClass('fondoLibre');
 	$('#'+label).addClass('fondoOcupada');
@@ -391,6 +395,7 @@ function reservar(){
 	$('#comandos').addClass('show');
 	$('#reservarAhora').removeClass('show');
 	$('#reservarAhora').addClass('hide');
+	$('#salaAhora').removeClass('erase');
 	$('#calendar1').removeClass('show');
 	$('#calendar1').addClass('hide');
 	setTimeout(function() {
