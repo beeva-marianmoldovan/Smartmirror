@@ -18,75 +18,135 @@ var moment        = require('moment');
 
 var oauth2Client  = new OAuth2Client(CLIENT_ID, CLIENT_SECRET, REDIRECT_URL);
 
-
-exports.get_next_events =  function(request, res) {
-	 var userId = request.query.face_id;
-   
-   User.findOne({'faceId' : userId}, function(err, user){
-    console.log(err, user);
-    if(err){
-      console.log('The API returned an error: ' + err);
-      response.status(500).end();
-    }
-    else if(user && user.tokens) {  
-      var tokens = user.tokens[0];
-      oauth2Client.setCredentials(tokens);
-  
-      calendar.events.list({
-        auth: oauth2Client, 
-        calendarId: 'primary',
-        timeMin: (new Date()).toISOString(),
-        maxResults: 10,
-        singleEvents: true,
-        orderBy: 'startTime'
-      }, function(err, response){
-        if (err) {
-          console.log('The API returned an error: ' + err);
-          res.status(500).end();
-          return;
-        }
-          var events = response.items;
-          console.log(events);
-          res.json(events);
+function find_user(faceID) {
+  return new Promise(function (resolve, reject) {
+     User.findOneAsync({'faceId' : faceID})
+      .then(function(user){
+        resolve(user);
+      })
+      .catch(function(e){
+        reject(e);
       });
-    }
-    else res.status(404).end();
-
-   });
+  }); 
 }
 
-exports.create_quick_event = function(request, res) {
-  var userId = request.query.face_id;
+function get_calendar_resources(cal){
+  return new Promise(function (resolve, reject) {
+    cal.list({}, function(error, resources){
+      if (error)
+        reject(error);
+      else
+        resolve(resources);
+    })
+  });
+}
 
-  var dataEvent = request.body;
-  //console.log(dataEvent)
+function save_room(room) {
+  return new Promise(function (resolve, reject) {
+    var nombreSala = rec.apps$property[1].value.match("Sala \[0-9*]");
+    var str = rec.apps$property[1].value;
+    var str_split =  str.split("-");
+    var str_split2 =  str.split("/");
+    var capacidad = (str_split2[1].split("-"))[0];
 
-  var now = moment(); 
-  console.log(now);
+    var recur;
+    if (str_split[4]) {
+      recur = str_split[4];
+      if (str_split[5]) {
+        recur = recur + ", "+str_split[5];
+      }
+    }
+    
+    var room = new Room({
+      'location'    : str_split[1],
+      'floor'       : str_split[2],
+      'room'        : nombreSala,
+      'capacity'    : capacidad,
+      'resources'   : recur,
+      'name'        : rec.apps$property[1].value,
+      'roomId'      : rec.apps$property[2].value
+    });
 
-  var end = moment().add(1, 'hour');
-  console.log(end);
+    room.save(function(error, doc){
+      if (error)
+        reject(error);
+      else {
+        var sala = doc.toObject();
+        sala['message'] = 'room_created';
+        console.log(sala);
+        //salas.push(obj);
+        resolve(sala);
+      }
+    });
+  });
+}
+
+function get_availability_room(user, room, timeMin, timeMax) {
+  var parameters = {
+    items : [{id: room}],
+    timeMin: timeMin,
+    timeMax: timeMax,
+    timeZone: 'Europe/Madrid'
+  }
+
+  return new Promise(function (resolve, reject) {
+    calendar.freebusy.query({
+      auth: user,
+      resource: parameters
+    }, function(err, response){
+      if (err) {
+        console.log('Calendar availability -> The API returned an error: ' + err);
+        reject(err);
+      }
+      else {
+        resolve(response);
+      }
+    });
+  });
+}
+
+exports.get_next_events =  function(request, res) {
+   find_user(request.query.face_id)
+    .then(function(user){
+      if(user && user.tokens) {  
+        var tokens = user.tokens[0];
+        oauth2Client.setCredentials(tokens);
+    
+        calendar.events.list({
+          auth: oauth2Client, 
+          calendarId: 'primary',
+          timeMin: (new Date()).toISOString(),
+          maxResults: 10,
+          singleEvents: true,
+          orderBy: 'startTime'
+        }, function(err, response){
+          if (err) {
+            console.log('The API returned an error: ' + err);
+            res.status(500).end();
+            return;
+          }
+            var events = response.items;
+            console.log(events);
+            res.json(events);
+        });
+      }
+      else res.status(404).end();
+
+    })
+    .catch(function(e){
+      console.log('The API returned an error: ' + err);
+      response.status(500).end();
+    });
 }
 
 exports.create_event = function(request, res) {
   var userId = request.query.face_id;
-
   var dataEvent = request.body;
-
-  console.log(dataEvent.location);
   var nombreSala = dataEvent.location.match("Sala \[0-9*]");
-  console.log(nombreSala[0]);
-
   dataEvent.summary = "Evento en "+nombreSala[0]+" creado desde SmartMirror";
-  console.log(dataEvent);
 
-  User.findOne({'faceId' : userId}, function(err, user){
-    console.log(err, user);
-    if(err){
-      console.log('The API returned an error: ' + err);
-      response.status(500).end();
-    }
-    else{  
+  find_user(request.query.face_id)
+    .then(function(user){
       var tokens = user.tokens[0];
       oauth2Client.setCredentials(tokens);
 
@@ -102,18 +162,21 @@ exports.create_event = function(request, res) {
         console.log('Event created: %s', event.htmlLink);
         res.json(event.htmlLink);
       });
-    }
-  });
+    })
+    .catch(function(e){
+      console.log('The API returned an error: ' + err);
+      response.status(500).end();
+    });
 }
 
 exports.get_calendar_rooms = function(request, res) {
-  var userId = request.query.face_id;
-  User.findOneAsync({'faceId' : userId})
+  var tokens;
+  find_user(request.query.face_id)
     .then(function(user){
-      var tokens = user.tokens[0];
+      tokens = user.tokens[0];
       var client = new googleApps.Client('beeva.com', tokens['access_token'], tokens['refresh_token'], CLIENT_ID, CLIENT_SECRET);
       var calendar = new googleApps.CalendarResource(client);
-      return getCalendarResources(calendar);
+      return get_calendar_resources(calendar);
     })
     .then(function(resources){
       var recursos_response = JSON.parse(resources.body);
@@ -121,53 +184,54 @@ exports.get_calendar_rooms = function(request, res) {
       var salas = [];
 
       Promise.each(recursos, function(rec){
+        //busco en mongo la sala
         return Room.findAsync({'roomId' : rec.apps$property[2].value})
           .then(function(sala){
+
+            oauth2Client.setCredentials(tokens);
+            var todayMin = new Date();
+            var todayMax = new Date(todayMin);
+            todayMax.setHours ( todayMin.getHours() + 1 );
+
+            //no está, la guardo
             if (sala.length == 0) {
-              var nombreSala = rec.apps$property[1].value.match("Sala \[0-9*]");
-              var str = rec.apps$property[1].value;
-              var str_split =  str.split("-");
-              var str_split2 =  str.split("/");
-              var capacidad = (str_split2[1].split("-"))[0];
+              save_room(rec)
+                .then(function(sala){
+                  
+                  get_availability_room(oauth2Client, sala, todayMin, todayMax)
+                    .then(function(response) {
+                      console.log("Disponibilidad --> ",response);
+                    })
+                    .catch(function(e){
+                      console.log('The API returned an error: ' + err);
+                      response.status(500).end();
+                    });
 
-              var recur;
-              if (str_split[4]) {
-                recur = str_split[4];
-                if (str_split[5]) {
-                  recur = recur + ", "+str_split[5];
-                }
-              }
-
-              var room = new Room({
-                'location'    : str_split[1],
-                'floor'       : str_split[2],
-                'room'        : nombreSala,
-                'capacity'    : capacidad,
-                'resources'   : recur,
-                'name'        : rec.apps$property[1].value,
-                'roomId'      : rec.apps$property[2].value
-              });
-
-              return new Promise(function (resolve, reject) {
-                room.save(function(error, doc){
-                  if (error)
-                    reject(error);
-                  else {
-                    var obj = doc.toObject();
-                    obj['message'] = 'room_created';
-                    console.log(obj);
-                    salas.push(obj);
-                    resolve(salas);
-                  }
-
+                  salas.push(sala);
+                  resolve(salas);
                 })
-              });
+                .catch(function(e){
+                  console.log('The API returned an error: ' + err);
+                  response.status(500).end();
+                });
             }
             else {
               return new Promise(function (resolve, reject) {
-                console.log("************** SALA **************", sala);
-                salas.push(sala[0]);
-                resolve();
+
+                var room = sala[0].toObject();
+              
+                get_availability_room(oauth2Client, sala[0].roomId, todayMin, todayMax)
+                    .then(function(response) {
+
+                      room.availability = response;
+                      salas.push(room);
+                      resolve();
+
+                    })
+                    .catch(function(e){
+                      console.log('The API returned an error: ' + e);
+                      res.status(500).end();
+                    });
               });
             }
           })
@@ -175,18 +239,11 @@ exports.get_calendar_rooms = function(request, res) {
       .then(function(){
         res.send(salas);
       })
-    });
-}
-
-function getCalendarResources(cal){
-  return new Promise(function (resolve, reject) {
-    cal.list({}, function(error, resources){
-      if (error)
-        reject(error);
-      else
-        resolve(resources);
     })
-  });
+    .catch(function(e){
+      console.log('The API returned an error: ' + err);
+      response.status(500).end();
+    });
 }
 
 exports.get_calendars_availabily = function(request, res) {
@@ -195,7 +252,6 @@ exports.get_calendars_availabily = function(request, res) {
   console.log(sala);
    
    User.findOne({'faceId' : userId}, function(err, user){
-    console.log(err, user);
     if(err){
       console.log('The API returned an error: ' + err);
       response.status(500).end();
@@ -204,9 +260,6 @@ exports.get_calendars_availabily = function(request, res) {
       var tokens = user.tokens[0];
       oauth2Client.setCredentials(tokens);
   
-      var sala1 = "beeva.com_36303135313532312d363937@resource.calendar.google.com"; //ES-Av de Burgos,16D-Planta 10-Sala 1/Cap 8-PROYECTOR-TLF
-      var sala2 = "beeva.com_2d3436323439343032373036@resource.calendar.google.com"; //ES-Av de Burgos,16D-Planta 10-Sala 2/Cap 8-BOARD
-
       var todayMin = new Date();
       var todayMax = new Date();
       todayMin.setHours(0, 0, 0, 0);
@@ -214,26 +267,16 @@ exports.get_calendars_availabily = function(request, res) {
 
       console.log('timeMin: '+todayMin+ ' timeMax: '+todayMax);
 
-      var parameters = {
-        items : [{id: sala}],
-        timeMin: todayMin,
-        timeMax: todayMax,
-        timeZone: 'Europe/Madrid'
-      }
-
-      calendar.freebusy.query({
-        auth: oauth2Client,
-        resource: parameters
-      }, function(err, response){
-        if (err) {
-          console.log('Calendar availability -> The API returned an error: ' + err);
-          res.status(500).end();
-          return;
-        }
-          //var events = response.items;
+      get_availability_room(oauth2Client, sala, todayMin, todayMax)
+        .then(function(response) {
           console.log(response);
           res.json(response);
-      });
+        })
+        .catch(function(e){
+          console.log('The API returned an error: ' + err);
+          response.status(500).end();
+        });
     }
    });
 }
+

@@ -42,6 +42,6 @@ var Room = new Schema({
     capacity         : { type : String },
     resources        : { type : String },
     name             : { type : String },
-    roomId           : { type : String }  
+    roomId           : { type : String }
 });
 mongoose.model( 'Room', Room );
