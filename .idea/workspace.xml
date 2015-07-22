@@ -2,8 +2,41 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="818c0eb2-2a79-49a9-87bd-c5a2adcb0621" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/start.sh" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/1006,793590330.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/10498,348601000.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/10734,142670323.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/11161,673364502.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/12642,757258173.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/12731,568178370.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/13300,433163039.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/14364,88517697.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/16817,307963483.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/23080,507266807.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/242,952218517.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/24217,242143689.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/2720,799333179.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/27646,649214004.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/27646,677111946.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/27698,294393546.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/27698,337536957.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/2822,493083089.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/325,328081625.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/32754,495600308.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/5771,495314122.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/7262,613898667.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/7278,699935244.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/7385,678652077.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/7450,781223644.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/8279,382438362.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/9134,799246557.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/9156,90973516.png" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app.js" afterPath="$PROJECT_DIR$/app.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/controllers/calendar.js" afterPath="$PROJECT_DIR$/app/controllers/calendar.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/main.js" afterPath="$PROJECT_DIR$/public/js/main.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/controllers/oauth2.js" afterPath="$PROJECT_DIR$/app/controllers/oauth2.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/package.json" afterPath="$PROJECT_DIR$/package.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/voice.py" afterPath="$PROJECT_DIR$/voice.py" />
     </list>
     <ignored path="Smartmirror.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -40,14 +73,14 @@
       <file leaf-file-name="main.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/public/js/main.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.33777776" vertical-offset="658" max-vertical-offset="10314">
-              <caret line="45" column="29" selection-start-line="45" selection-start-column="29" selection-end-line="45" selection-end-column="29" />
+            <state vertical-scroll-proportion="0.093333334" vertical-offset="2262" max-vertical-offset="10314">
+              <caret line="128" column="37" selection-start-line="128" selection-start-column="37" selection-end-line="128" selection-end-column="37" />
               <folding>
-                <marker date="1437574234331" expanded="true" signature="11875:11890" placeholder="..." />
-                <marker date="1437574234331" expanded="true" signature="12038:12053" placeholder="..." />
-                <marker date="1437574234331" expanded="true" signature="19686:19701" placeholder="..." />
-                <marker date="1437574234331" expanded="true" signature="19827:19842" placeholder="..." />
-                <marker date="1437574234331" expanded="true" signature="19941:19956" placeholder="..." />
+                <marker date="1437574373859" expanded="true" signature="11886:11901" placeholder="..." />
+                <marker date="1437574373859" expanded="true" signature="12049:12064" placeholder="..." />
+                <marker date="1437574373859" expanded="true" signature="19697:19712" placeholder="..." />
+                <marker date="1437574373859" expanded="true" signature="19838:19853" placeholder="..." />
+                <marker date="1437574373859" expanded="true" signature="19952:19967" placeholder="..." />
               </folding>
             </state>
           </provider>
@@ -76,8 +109,8 @@
       <file leaf-file-name="calendar.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/controllers/calendar.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="3096" max-vertical-offset="4950">
-              <caret line="233" column="6" selection-start-line="233" selection-start-column="6" selection-end-line="233" selection-end-column="6" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="3078" max-vertical-offset="4950">
+              <caret line="232" column="6" selection-start-line="232" selection-start-column="6" selection-end-line="232" selection-end-column="6" />
               <folding />
             </state>
           </provider>
@@ -427,11 +460,11 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4860">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1437574234331" expanded="true" signature="11875:11890" placeholder="..." />
-            <marker date="1437574234331" expanded="true" signature="12038:12053" placeholder="..." />
-            <marker date="1437574234331" expanded="true" signature="19686:19701" placeholder="..." />
-            <marker date="1437574234331" expanded="true" signature="19827:19842" placeholder="..." />
-            <marker date="1437574234331" expanded="true" signature="19941:19956" placeholder="..." />
+            <marker date="1437574373859" expanded="true" signature="11886:11901" placeholder="..." />
+            <marker date="1437574373859" expanded="true" signature="12049:12064" placeholder="..." />
+            <marker date="1437574373859" expanded="true" signature="19697:19712" placeholder="..." />
+            <marker date="1437574373859" expanded="true" signature="19838:19853" placeholder="..." />
+            <marker date="1437574373859" expanded="true" signature="19952:19967" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -478,11 +511,11 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="2060" max-vertical-offset="4068">
           <caret line="133" column="27" selection-start-line="133" selection-start-column="27" selection-end-line="133" selection-end-column="27" />
           <folding>
-            <marker date="1437574234331" expanded="true" signature="11875:11890" placeholder="..." />
-            <marker date="1437574234331" expanded="true" signature="12038:12053" placeholder="..." />
-            <marker date="1437574234331" expanded="true" signature="19686:19701" placeholder="..." />
-            <marker date="1437574234331" expanded="true" signature="19827:19842" placeholder="..." />
-            <marker date="1437574234331" expanded="true" signature="19941:19956" placeholder="..." />
+            <marker date="1437574373859" expanded="true" signature="11886:11901" placeholder="..." />
+            <marker date="1437574373859" expanded="true" signature="12049:12064" placeholder="..." />
+            <marker date="1437574373859" expanded="true" signature="19697:19712" placeholder="..." />
+            <marker date="1437574373859" expanded="true" signature="19838:19853" placeholder="..." />
+            <marker date="1437574373859" expanded="true" signature="19952:19967" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -714,8 +747,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/controllers/calendar.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="3096" max-vertical-offset="4950">
-          <caret line="233" column="6" selection-start-line="233" selection-start-column="6" selection-end-line="233" selection-end-column="6" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="3078" max-vertical-offset="4950">
+          <caret line="232" column="6" selection-start-line="232" selection-start-column="6" selection-end-line="232" selection-end-column="6" />
           <folding />
         </state>
       </provider>
@@ -754,14 +787,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/public/js/main.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33777776" vertical-offset="658" max-vertical-offset="10314">
-          <caret line="45" column="29" selection-start-line="45" selection-start-column="29" selection-end-line="45" selection-end-column="29" />
+        <state vertical-scroll-proportion="0.093333334" vertical-offset="2262" max-vertical-offset="10314">
+          <caret line="128" column="37" selection-start-line="128" selection-start-column="37" selection-end-line="128" selection-end-column="37" />
           <folding>
-            <marker date="1437574234331" expanded="true" signature="11875:11890" placeholder="..." />
-            <marker date="1437574234331" expanded="true" signature="12038:12053" placeholder="..." />
-            <marker date="1437574234331" expanded="true" signature="19686:19701" placeholder="..." />
-            <marker date="1437574234331" expanded="true" signature="19827:19842" placeholder="..." />
-            <marker date="1437574234331" expanded="true" signature="19941:19956" placeholder="..." />
+            <marker date="1437574373859" expanded="true" signature="11886:11901" placeholder="..." />
+            <marker date="1437574373859" expanded="true" signature="12049:12064" placeholder="..." />
+            <marker date="1437574373859" expanded="true" signature="19697:19712" placeholder="..." />
+            <marker date="1437574373859" expanded="true" signature="19838:19853" placeholder="..." />
+            <marker date="1437574373859" expanded="true" signature="19952:19967" placeholder="..." />
           </folding>
         </state>
       </provider>
