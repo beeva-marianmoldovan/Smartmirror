@@ -29,18 +29,25 @@ def capture_face():
 	print faces
 	if faces is not None and len(faces) > 0:
 		cutFace = selectAndCrop(img, faces)
-		return cutFace
+		ratio = float(320)/len(cutFace)
+		if ratio < 1:
+			small = cv2.resize(cutFace, (int(len(cutFace[0])*ratio), int(len(cutFace)*ratio)))
+		else:
+			small = cutFace
+		smallGray = cv2.cvtColor(small, cv2.COLOR_BGR2GRAY)
+		return smallGray
 
 def crop_center(image):
 	height = len(image)
 	width = len(image[0])
-	return image[height*0.1:height*0.8,width*0.2:width*0.8]
+	ratio = float(640)/height
+	small = cv2.resize(image, (int(width*ratio), int(height*ratio)))
+	return small
 
 def save_image(image):
 	cv2.imwrite(str(time.time()) + '.png', image) 
 
 def show_image(image):
-	print str(len(image)) + ', ' + str(len(image[0]))
 	cv2.imshow('image',image)
 	cv2.waitKey(0)
 	cv2.destroyAllWindows()
@@ -60,14 +67,14 @@ def enroll(image, user):
 	payload = { 'gallery_name': GROUP, 'selector' : 'FACE'}
 	payload['image'] = image 
 	payload['subject_id'] = user
-	headers = {'Content-Type' : 'application/json', 'app_id' : 'e4f0bc81', 'app_key' : 'a562701d11fc9a9c7eff9a08805ef8ae'}
+	headers = {'Content-Type' : 'application/json', 'app_id' : 'e4f0bc81', 'app_key' : 'x562701d11fc9a9c7eff9a08805ef8ae'}
 	r = requests.post("https://api.kairos.com/enroll", data=json.dumps(payload), headers=headers)
 	return r
 
 def recognize(image):
 	payload = { 'gallery_name': GROUP, 'threshold':0.75, 'max_num_results' : 3}
 	payload['image'] = image
-	headers = {'Content-Type' : 'application/json', 'app_id' : 'e4f0bc81', 'app_key' : 'a562701d11fc9a9c7eff9a08805ef8ae'}
+	headers = {'Content-Type' : 'application/json', 'app_id' : 'e4f0bc81', 'app_key' : 'x562701d11fc9a9c7eff9a08805ef8ae'}
 	r = requests.post("https://api.kairos.com/recognize", data=json.dumps(payload), headers=headers)
 	return r
 
