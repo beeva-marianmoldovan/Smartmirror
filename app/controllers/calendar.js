@@ -73,7 +73,6 @@ function save_room(room) {
       else {
         var sala = doc.toObject();
         sala['message'] = 'room_created';
-        console.log(sala);
         //salas.push(obj);
         resolve(sala);
       }
@@ -126,7 +125,6 @@ exports.get_next_events =  function(request, res) {
             return;
           }
             var events = response.items;
-            console.log(events);
             res.json(events);
         });
       }
@@ -159,7 +157,6 @@ exports.create_event = function(request, res) {
           console.log('There was an error contacting the Calendar service: ' + err);
           return;
         }
-        console.log('Event created: %s', event.htmlLink);
         res.json(event.htmlLink);
       });
     })
@@ -200,7 +197,6 @@ exports.get_calendar_rooms = function(request, res) {
                   
                   get_availability_room(oauth2Client, sala, todayMin, todayMax)
                     .then(function(response) {
-                      console.log("Disponibilidad --> ",response);
                     })
                     .catch(function(e){
                       console.log('The API returned an error: ' + err);
@@ -249,7 +245,6 @@ exports.get_calendar_rooms = function(request, res) {
 exports.get_calendars_availabily = function(request, res) {
   var userId = request.query.face_id;
   var sala = request.body.resourceID;
-  console.log(sala);
 
   find_user(userId)
     .then(function(user){
@@ -261,11 +256,8 @@ exports.get_calendars_availabily = function(request, res) {
       todayMin.setHours(0, 0, 0, 0);
       todayMax.setHours(23, 59, 59, 0);
 
-      console.log('timeMin: '+todayMin+ ' timeMax: '+todayMax);
-
       get_availability_room(oauth2Client, sala, todayMin, todayMax)
         .then(function(response) {
-          console.log(response);
           res.json(response);
         })
         .catch(function(e){
