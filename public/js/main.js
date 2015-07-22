@@ -37,7 +37,6 @@ socket.on('face', function (data) {
 		});
 	}
 	if(data.message=='known_face' || data.message=='user_registered'){
-		callMicro();
 		$.get('/user?faceId='+faceID).success(function(resp){
 			console.log(resp);
 			if(resp.length > 0 && resp[0].tokens.length>0){
@@ -45,6 +44,7 @@ socket.on('face', function (data) {
 				$('.welcomeMessage').remove();
 				validateAccess = true;
 				usuario=resp;
+				callMicro();
 				$.get('/calendar/resources?face_id='+faceID).success(function(resp3){
 					console.log('resources: ',resp3);
 					resultadoSalas = resp3;
@@ -127,7 +127,7 @@ var weatherParams = {
 };
 function callMicro(){
 	console.log('encendiendo micro');
-	//if(validateAccess){
+	if(validateAccess){
 		$.get('http://127.0.0.1:8080/').success(function(response){
 			console.log('llamada realizada: ', response);
 			traducir(response.outcomes[0]);
@@ -136,7 +136,7 @@ function callMicro(){
 			console.log('error reconocimiento: ', err)
 			callMicro();
 		})
-	//}
+	}
 }
 function traducir(texto) {
 	console.log(texto);
@@ -422,6 +422,8 @@ function standBy(){
 		$('#container').removeClass('hide');
 		$('#container').addClass('show');
 	}, 200);
+	validateAccess = false;
+
 }
 function openAgenda(){
 	loadCalendar();
