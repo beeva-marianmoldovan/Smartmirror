@@ -31,7 +31,6 @@ function getAccessToken(oauth2Client, callback) {
     scope: 'https://www.googleapis.com/auth/calendar' // can be a space-delimited string or an array of scopes
   });
 
-  console.log('Visit the url: ', url);
   rl.question('Enter the code here:', function(code) {
     // request access token
     oauth2Client.getToken(code, function(err, tokens) {
@@ -62,13 +61,11 @@ exports.apiLogin = function (req, res){
   var code = qr.image(url, { type: 'png' });  
   var output = fs.createWriteStream('public/images/'+timestamp+'.png');
 
-  console.log(url);
   code.on('end', function () { 
      res.json({'url':url}, {'image':output});
   });
 
   code.pipe(output);
-  console.log("Last User", lastUser);
   
 }
 
@@ -86,7 +83,6 @@ exports.apiOauthCallback = function (req, res){
         return;
       }
       else {
-        console.log("Callback Last User", lastUser);
         var user = new User({
           'name'    : profile.displayName,
           'faceId'  : lastUser

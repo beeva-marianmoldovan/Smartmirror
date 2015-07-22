@@ -207,7 +207,7 @@ exports.get_calendar_rooms = function(request, res) {
                   resolve(salas);
                 })
                 .catch(function(e){
-                  console.log('The API returned an error: ' + err);
+                  console.log('The API returned an error: ' + e);
                   response.status(500).end();
                 });
             }
