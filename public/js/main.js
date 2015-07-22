@@ -128,7 +128,7 @@ var weatherParams = {
 function callMicro(){
 	console.log('encendiendo micro');
 	//if(validateAccess){
-		$.get('http://localhost:8000/start').success(function(response){
+		$.get('http://localhost:8000/voice/start').success(function(response){
 			console.log('llamada realizada: ', response);
 			traducir(response.outcomes[0]);
 			callMicro();
