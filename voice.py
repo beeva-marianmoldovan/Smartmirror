@@ -1,6 +1,6 @@
 import wit, cherrypy, cherrypy_cors
 cherrypy_cors.install()
-access_token = '2R77H7ORMONTVQKMY53JITM5VJQ3NPR5'
+access_token = ''
 class WitAi(object):
 	@cherrypy.expose
 	def index(self):
