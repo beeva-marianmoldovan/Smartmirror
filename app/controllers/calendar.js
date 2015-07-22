@@ -43,8 +43,8 @@ function get_calendar_resources(cal){
 
 function save_room(room) {
   return new Promise(function (resolve, reject) {
-    var nombreSala = rec.apps$property[1].value.match("Sala \[0-9*]");
-    var str = rec.apps$property[1].value;
+    var nombreSala = room.apps$property[1].value.match("Sala \[0-9*]");
+    var str = room.apps$property[1].value;
     var str_split =  str.split("-");
     var str_split2 =  str.split("/");
     var capacidad = (str_split2[1].split("-"))[0];
@@ -57,24 +57,23 @@ function save_room(room) {
       }
     }
     
-    var room = new Room({
+    var new_room = new Room({
       'location'    : str_split[1],
       'floor'       : str_split[2],
       'room'        : nombreSala,
       'capacity'    : capacidad,
       'resources'   : recur,
-      'name'        : rec.apps$property[1].value,
-      'roomId'      : rec.apps$property[2].value
+      'name'        : room.apps$property[1].value,
+      'roomId'      : room.apps$property[2].value
     });
 
-    room.save(function(error, doc){
+    new_room.save(function(error, doc){
       if (error)
         reject(error);
       else {
-        var sala = doc.toObject();
-        sala['message'] = 'room_created';
-        //salas.push(obj);
-        resolve(sala);
+        var nueva_sala = doc.toObject();
+        nueva_sala['message'] = 'room_created';
+        resolve(nueva_sala);
       }
     });
   });
@@ -193,22 +192,27 @@ exports.get_calendar_rooms = function(request, res) {
             //no está, la guardo
             if (sala.length == 0) {
               save_room(rec)
-                .then(function(sala){
+                .then(function(nueva_sala){
                   
-                  get_availability_room(oauth2Client, sala, todayMin, todayMax)
+                  return new Promise(function (resolve, reject) {
+
+                    get_availability_room(oauth2Client, nueva_sala.roomId, todayMin, todayMax)
                     .then(function(response) {
+                      
+                      nueva_sala.availability = response;
+                      salas.push(nueva_sala);
+                      resolve();
                     })
                     .catch(function(e){
-                      console.log('The API returned an error: ' + err);
-                      response.status(500).end();
+                      console.log('The API returned an error: ' + e);
+                      res.status(500).end();
                     });
 
-                  salas.push(sala);
-                  resolve(salas);
+                  });
                 })
                 .catch(function(e){
                   console.log('The API returned an error: ' + e);
-                  response.status(500).end();
+                  res.status(500).end();
                 });
             }
             else {
