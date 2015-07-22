@@ -4,6 +4,7 @@
 require('./app/databases');
 
 var app = require('./config/express')();
+var proxy = require('proxy-express');
 
 require( './app/routes/user.js' )(app);
 require( './app/routes/ambient.js' )(app);
@@ -32,6 +33,17 @@ io.on('connection', function(socket){
 });
 
 socketServer.listen(3000);
+
+
+app.use(proxy('127.0.0.1', {
+	prefix : '/voice',
+	request: {
+		query:{
+			autoend:true,
+			access_token:'X2R77H7ORMONTVQKMY53JITM5VJQ3NPR5'
+		}
+	}
+}));
 
 var server = app.listen(8000, function () {
 

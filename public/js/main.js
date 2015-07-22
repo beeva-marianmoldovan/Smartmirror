@@ -6,11 +6,9 @@ var morning 	= ['Buenos días','Que tengas un día super cool', 'Propicios días
 var afternoon 	= ['¡Hola bebé!','You look sexy!','Looking good today!'];
 var evening 	= ['Wow, You look hot!','You look nice!','Hi, sexy!'];
 var feed		= 'http://meneame.feedsportal.com/rss';
-var contWelcome = 0, contFeed = 0;
+var contWelcome = 0, contFeed = 0, validateAccess = false;
 var queueFeeds = [], queueEvents=[], salaList={};
-var usuario, ambiente, agenda, salaActual, nombreSalaPrinp,faceID, keepSessionTime = 12000, locationSala, salaReservarAhora, nombreSalaAhora;
-var voiceEngine = new VoiceEngine();
-//voiceEngine.start();
+var usuario, ambiente, agenda, salaActual, nombreSalaPrinp,faceID, keepSessionTime = 12000, locationSala, salaReservarAhora, nombreSalaAhora, resultadoSalas;
 
 moment.locale('es');
 
@@ -39,27 +37,31 @@ socket.on('face', function (data) {
 		});
 	}
 	if(data.message=='known_face' || data.message=='user_registered'){
+		callMicro();
 		$.get('/user?faceId='+faceID).success(function(resp){
 			console.log(resp);
 			if(resp.length > 0 && resp[0].tokens.length>0){
 				$('#QRcode').remove();
 				$('.welcomeMessage').remove();
+				validateAccess = true;
 				usuario=resp;
 				$.get('/calendar/resources?face_id='+faceID).success(function(resp3){
 					console.log('resources: ',resp3);
+					resultadoSalas = resp3;
 					for(var a = 0; a < resp3.length; a++){
 						var salasDiv = $('#reservarOptions');
 						var idDeSala = resp3[a].roomId;
+						var NombreParaId = resp3[a].room.replace(/\s+/, "").toLowerCase();
 						if(resp3[a].availability.calendars[idDeSala].busy.length==0 && resp3[a].room != 'Sala 3') { var textoDisponibilidad = "Horarios disponibles ahora"; var claseDisponibilidad = "salaDisponible"; salaReservarAhora = idDeSala; nombreSalaAhora = resp3[a].name }
 							else {var textoDisponibilidad = "Horarios no disponibles ahora"; var claseDisponibilidad = "salaNoDisponible";}
 						if(resp3[a].resources==undefined) resp3[a].resources = '';
-						var div ="<div id='sala"+a+"' value='"+resp3[a].roomId+"' class='sala'>"
+						var div ="<div id='"+NombreParaId+"' value='"+resp3[a].roomId+"' class='sala'>"
 							+"<div class='detalleSala'>"+resp3[a].room+"<p class='"+claseDisponibilidad+"'>"+textoDisponibilidad+"</p>"+"</div>"
 							+"<div class='detalleSala cap'><p>"+ resp3[a].capacity+" personas</p></div>"
 							+"<div class='detalleSala equ'><p>"+ resp3[a].resources+"</p></div>"
 							+"</div>"
 						salasDiv.append(div);
-						salaList['sala'+a] = resp3[a].roomId;
+						salaList[NombreParaId] = resp3[a].roomId;
 					}
 					$('.sala').click(function(){
 						$('#calendar1').removeClass('show');
@@ -123,6 +125,69 @@ var weatherParams = {
 	'units':'metric',
 	'lang':'es'
 };
+function callMicro(){
+	console.log('encendiendo micro');
+	//if(validateAccess){
+		$.get('http://localhost:8000/start').success(function(response){
+			console.log('llamada realizada: ', response);
+			traducir(response.outcomes[0]);
+			callMicro();
+		}).error(function(err){
+			console.log('error reconocimiento: ', err)
+			callMicro();
+		})
+	//}
+}
+function traducir(texto) {
+	console.log(texto);
+	if(texto && texto.intent && validateAccess){
+		switch (texto.intent) {
+			case ('reservar'):
+				reservar();
+				break;
+			case ('agenda'):
+				openAgenda();
+				break;
+			case ('salir'):
+				standBy();
+				break;
+			case ('sala'):
+				for(var o=0; o< resultadoSalas.length; o++ ){
+					if (texto._text && texto._text == resultadoSalas[o].room.toLowerCase()){
+						console.log(resultadoSalas[o].room.toLowerCase());
+						nombreSalaPrinp = resultadoSalas[o].name;
+						salaActual = resultadoSalas[o].roomId;
+					}
+				}
+				if(texto.entities.number[0].value){
+					console.log(texto.entities.number[0].value);
+					var sala = 'sala'+texto.entities.number[0].value;
+					loadSalasAvailability(faceID,sala);
+				}
+				break;
+			case ('inicio'):
+				iniciar();
+				break;
+			case ('ahora'):
+				var date = new Date().toISOString().substr(0, 11);
+				var now = new Date();
+				var horaActual = now.getHours();
+				var minutoActual = now.getMinutes();
+				if(minutoActual>30) { minutoActual='00'; horaActual= horaActual+1; var horaFin = horaActual; var minutoFin = '30'; }
+				else { minutoActual='30'; var horaFin= horaActual+1;var minutoFin = '00'}
+				var rightNowStart = date+horaActual+':'+minutoActual+":00+02:00";
+				var rightNowEnd = date+horaFin+':'+minutoFin+":00+02:00";
+				reservarSala(nombreSalaAhora, salaReservarAhora,faceID,rightNowStart,rightNowEnd, 'optional');
+				break;
+			case ('hora'):
+				var date = new Date(texto.entities.datetime[0].value);
+				var date2 = moment(date);
+				date2.add(30,"m");
+				var date3 = date2.format('YYYY-MM-DDTHH:mm:ss.SSSSZ');
+				reservarSala(nombreSalaPrinp, salaActual, faceID, texto.entities.datetime[0].value, date3, 'optional');
+		}
+	}
+}
  function loadCalendar() {
 	 queueEvents = [];
 	 $.get('/calendar/next?face_id='+faceID).success(function(resp2){
@@ -149,6 +214,7 @@ var weatherParams = {
 
 
 function loadSalasAvailability(faceID,idLabel){
+	console.log('idLabel: ',idLabel);
 	$.post( "/calendar/availability?face_id="+faceID, { resourceID: salaList[idLabel] } )
 		.success(function(respSalas){
 			//console.log(this);
@@ -497,20 +563,3 @@ $('#agenda').click(function(){
 $('#salir').click(function(){
 	standBy();
 })
-
-/////////////////////////
-///  CONTROLES DE VOZ
-/////////////////////////
-
-voiceEngine.addAction(new VoiceAction("reservar", function(){
-	reservar();
-}));
-voiceEngine.addAction(new VoiceAction("agenda", function(){
-	openAgenda();
-}));
-voiceEngine.addAction(new VoiceAction("inicio", function(){
-	iniciar();
-}));
-voiceEngine.addAction(new VoiceAction("salir", function(){
-	standBy();
-}));
